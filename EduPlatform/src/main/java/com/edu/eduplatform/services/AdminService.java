@@ -27,7 +27,6 @@ import java.text.DecimalFormat;
 public class AdminService {
 
 
-
     @Autowired
     private UserRepo userRepository;
 
