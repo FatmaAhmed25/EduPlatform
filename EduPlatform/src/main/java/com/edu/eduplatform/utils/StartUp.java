@@ -1,7 +1,6 @@
 package com.edu.eduplatform.utils;
 
-import com.edu.eduplatform.dtos.AdminDTO;
-import com.edu.eduplatform.models.User;
+import com.edu.eduplatform.dtos.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,7 +19,7 @@ public class StartUp implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        AdminDTO adminUser = new AdminDTO();
+        UserDTO adminUser = new UserDTO();
         adminUser.setUsername("admin");
         adminUser.setEmail("admin@admin.com");
         adminUser.setPassword("admin");

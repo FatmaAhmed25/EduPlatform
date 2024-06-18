@@ -1,7 +1,7 @@
 package com.edu.eduplatform.services;
 
 
-import com.edu.eduplatform.dtos.AdminDTO;
+import com.edu.eduplatform.dtos.UserDTO;
 import com.edu.eduplatform.models.Admin;
 import com.edu.eduplatform.models.User;
 import com.edu.eduplatform.repos.AdminRepo;
@@ -30,7 +30,7 @@ public class AuthService {
     @Autowired
     PasswordEncoder encoder;
 
-    public boolean createAdmin(AdminDTO adminDTO) {
+    public boolean createAdmin(UserDTO adminDTO) {
         if (adminRepo.existsByEmail(adminDTO.getEmail())) {
            return false;
         }

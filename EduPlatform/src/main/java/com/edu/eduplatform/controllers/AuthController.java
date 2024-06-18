@@ -1,6 +1,6 @@
 package com.edu.eduplatform.controllers;
 
-import com.edu.eduplatform.dtos.AdminDTO;
+import com.edu.eduplatform.dtos.UserDTO;
 import com.edu.eduplatform.dtos.AuthDTO;
 import com.edu.eduplatform.dtos.AuthResponseDTO;
 import com.edu.eduplatform.models.User;
@@ -44,7 +44,7 @@ public class AuthController {
     @PostMapping("/admin")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name="BearerAuth")
-    public ResponseEntity<?> createAdmin(@RequestBody AdminDTO adminDTO) {
+    public ResponseEntity<?> createAdmin(@RequestBody UserDTO adminDTO) {
         boolean isAdminCreated = authService.createAdmin(adminDTO);
         if (isAdminCreated) {
             return ResponseEntity.ok().body("Admin created successfully");
