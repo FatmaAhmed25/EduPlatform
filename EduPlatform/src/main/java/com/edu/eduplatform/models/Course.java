@@ -4,14 +4,16 @@ package com.edu.eduplatform.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Data
 public class Course {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CourseID")
-    private Long courseId;
+    @Column(name = "CourseCode")
+    private Long courseCode;
 
     @Column(name = "Title")
     private String title;
@@ -19,15 +21,24 @@ public class Course {
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "Code")
-    private String code;
+    @Column(name = "Password", nullable = false)
+    private String password;
 
-
-    // TODO: mmken nkhleha many to many lw 3yzen msln el TAs zyhom zy el instructor aw n3mel user type gded lel TAs w nkhly el instructor y3ml assign lel Tas lel course
+    // One-to-many relationship for the course creator
     @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    private Instructor instructor;
+    @JoinColumn(name = "created_by", nullable = false)
+    private Instructor createdBy;
 
+    // Many-to-many relationship for TAs
+    @ManyToMany
+    @JoinTable(
+            name = "course_instructors",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "instructor_id")
+    )
+    private Set<Instructor> taInstrucstors = new HashSet<>();
 
-
+    public void setInstructor(Instructor instructor) {
+        this.createdBy = instructor;
+    }
 }

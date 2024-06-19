@@ -32,7 +32,6 @@ public class InstructorService {
     }
 
     @Transactional
-
     public void createCourse(Long instructorId, CourseDTO courseDTO) {
         Optional<Instructor> instructorOptional = instructorRepository.findById(instructorId);
         if (instructorOptional.isPresent()) {
@@ -44,7 +43,6 @@ public class InstructorService {
         }
         else
         {
-
             throw new RuntimeException("Instructor not found.");
         }
     }
