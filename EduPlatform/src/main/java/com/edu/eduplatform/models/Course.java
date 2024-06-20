@@ -30,7 +30,7 @@ public class Course {
 
     // One-to-many relationship for the course creator
     @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
+    @JoinColumn(name = "created_by", nullable = false )
     private Instructor createdBy;
 
     // Many-to-many relationship for TAs
