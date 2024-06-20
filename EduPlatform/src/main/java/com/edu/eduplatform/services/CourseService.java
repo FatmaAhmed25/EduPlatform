@@ -32,8 +32,8 @@ public class CourseService {
     @Autowired
     private InstructorService instructorService;
 
-//    @Autowired
-//    private  InstructorRepo instructorRepo;
+    @Autowired
+    private  InstructorRepo instructorRepo;
 
 
 
@@ -64,7 +64,7 @@ public class CourseService {
 
         // Save the course to the database
         courseRepository.save(course);
-//        instructorRepo.save(instructor);
+        instructorRepo.save(instructor);
 
     }
 }

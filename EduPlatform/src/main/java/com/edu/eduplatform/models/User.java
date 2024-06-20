@@ -19,11 +19,11 @@ public class User {
     @Column(name = "Name")
     private String username;
 
-    @Column(name = "FirstName")
-    private String firstName;
-
-    @Column(name = "LastName")
-    private String lastName;
+//    @Column(name = "FirstName")
+//    private String firstName;
+//
+//    @Column(name = "LastName")
+//    private String lastName;
 
     @Column(name = "Email", unique = true)
     private String email;
