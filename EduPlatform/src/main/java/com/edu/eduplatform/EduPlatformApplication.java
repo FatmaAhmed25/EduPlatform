@@ -21,29 +21,7 @@ import java.util.Objects;
 public class EduPlatformApplication  {
 
     public static void main(String[] args) throws IOException {
-        initializeFirebase();
         SpringApplication.run(EduPlatformApplication.class, args);
     }
 
-    private static void initializeFirebase() throws IOException {
-        // Check if Firebase is already initialized
-        if (FirebaseApp.getApps().isEmpty()) {
-            // Use getResourceAsStream to load the file from classpath
-            InputStream serviceAccount = EduPlatformApplication.class.getClassLoader()
-                    .getResourceAsStream("serviceAccountKey.json");
-
-            if (serviceAccount == null) {
-                throw new IllegalStateException("serviceAccountKey.json file not found in resources folder");
-            }
-
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .build();
-
-            // Initialize the default Firebase app
-            FirebaseApp.initializeApp(options);
-        } else {
-            System.out.println("Firebase app already initialized.");
-        }
-    }
 }

@@ -33,12 +33,6 @@ public class CourseService {
     @Autowired
     private InstructorService instructorService;
 
-
-
-
-
-
-
     @Transactional
     public void generateCourse(Long instructorId, CourseDTO courseDTO)
     {
