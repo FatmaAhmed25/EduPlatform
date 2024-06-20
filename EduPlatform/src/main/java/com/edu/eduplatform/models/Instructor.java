@@ -13,11 +13,11 @@ import java.util.Set;
 public class Instructor extends User{
 
     // One-to-many relationship for courses created by this instructor
-    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses;
 
     // Many-to-many relationship for courses where this instructor is a TA
-    @ManyToMany(mappedBy = "taInstructors", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "taInstructors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Course> taCourses = new HashSet<>();
 
     @Override

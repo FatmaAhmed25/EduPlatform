@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 @RestController
 @RequestMapping("/courses")
@@ -42,6 +43,23 @@ public class CourseController {
         }
 
 
+    }
+
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/{instructorId}/courses")
+    public ResponseEntity<List<Course>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
+        List<Course> courses = courseService.getCoursesCreatedByInstructor(instructorId);
+        return ResponseEntity.ok(courses);
+    }
+
+
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @PostMapping("/{courseId}/assign-ta/{taId}")
+    public ResponseEntity<String> assignTAToCourse(@RequestParam Long instructorId, @PathVariable Long courseId, @PathVariable Long taId) throws Exception {
+        courseService.assignTAToCourse(instructorId, courseId, taId);
+        return ResponseEntity.ok("TA assigned to course successfully");
     }
 
     @PostMapping(value ="/{courseId}/content",consumes = {"multipart/form-data"})
