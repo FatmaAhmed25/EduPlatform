@@ -21,7 +21,7 @@ import java.util.Objects;
 public class EduPlatformApplication  {
 
     public static void main(String[] args) throws IOException {
-        //initializeFirebase();
+        initializeFirebase();
         SpringApplication.run(EduPlatformApplication.class, args);
     }
 

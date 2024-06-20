@@ -109,7 +109,7 @@ public class AdminService {
             }
 
             Instructor instructor = modelMapper.map(userDTO, Instructor.class);
-            instructor.setUserType(User.UserType.ROLE_STUDENT);
+            instructor.setUserType(User.UserType.ROLE_INSTRUCTOR);
             instructor.setPassword(encoder.encode(userDTO.getPassword()));
             userRepository.save(instructor);
 

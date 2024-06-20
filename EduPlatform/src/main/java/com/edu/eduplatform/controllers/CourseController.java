@@ -4,9 +4,11 @@ import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseContentService;
 import com.edu.eduplatform.services.CourseService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,27 +19,32 @@ import java.net.URL;
 @RequestMapping("/courses")
 public class CourseController {
 
-    private final CourseContentService contentService;
-    private final CourseService courseService;
 
     @Autowired
-    public CourseController(CourseContentService contentService,CourseService courseService) {
-        this.contentService = contentService;
-        this.courseService = courseService;
-    }
-    @PostMapping("/create")
-    public ResponseEntity<CourseDTO> createCourse(
-            @RequestParam String title,
-            @RequestParam String description) {
+    private CourseContentService contentService;
+
+    @Autowired
+    private CourseService courseService;
+
+
+
+    @PostMapping("/create/{instructorId}")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    public ResponseEntity<?> createCourse(
+            @PathVariable Long instructorId,
+            @RequestBody CourseDTO courseDTO){
         try {
-            CourseDTO courseDTO = courseService.generateCourse(title, description);
-            return new ResponseEntity<>(courseDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            courseService.generateCourse(instructorId, courseDTO);
+            return ResponseEntity.ok("Course "+courseDTO.getTitle()+ " created for instructor"+instructorId+" successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
+
+
     }
 
-    @PostMapping("/{courseId}/content")
+    @PostMapping(value ="/{courseId}/content",consumes = {"multipart/form-data"})
     public ResponseEntity<String> uploadContent(
             @PathVariable String courseId,
             @RequestParam String folderName,
@@ -53,7 +60,7 @@ public class CourseController {
     @GetMapping("/{courseId}/content")
     public ResponseEntity<URL> getContentUrl(
             @PathVariable String courseId,
-            @RequestParam String fileName) {
+            @RequestParam String fileName) throws IOException {
         URL url = contentService.getFileUrl(courseId, fileName);
         return url != null ? new ResponseEntity<>(url, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -61,7 +68,7 @@ public class CourseController {
     @DeleteMapping("/{courseId}/content")
     public ResponseEntity<Void> deleteContent(
             @PathVariable String courseId,
-            @RequestParam String fileName) {
+            @RequestParam String fileName) throws IOException {
         boolean deleted = contentService.deleteFile(courseId, fileName);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

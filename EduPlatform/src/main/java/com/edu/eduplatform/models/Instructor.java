@@ -20,4 +20,9 @@ public class Instructor extends User{
     @ManyToMany(mappedBy = "taInstructors", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Course> taCourses = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "HII";
+    }
+
 }

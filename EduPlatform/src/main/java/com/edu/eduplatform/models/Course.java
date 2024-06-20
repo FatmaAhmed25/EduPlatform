@@ -12,8 +12,12 @@ import java.util.Set;
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CourseCode")
-    private Long courseCode;
+    @Column(name = "CourseID")
+    private Long courseId;
+
+
+    @Column(name = "CourseCode" , unique = true)
+    private String courseCode;
 
     @Column(name = "Title")
     private String title;
@@ -36,9 +40,13 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "instructor_id")
     )
-    private Set<Instructor> taInstrucstors = new HashSet<>();
+    private Set<Instructor> taInstructors = new HashSet<>();
 
     public void setInstructor(Instructor instructor) {
         this.createdBy = instructor;
+    }
+    @Override
+    public String toString() {
+        return "HII";
     }
 }
