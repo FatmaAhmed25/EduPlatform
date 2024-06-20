@@ -46,6 +46,14 @@ public class CourseController {
 
     }
 
+
+    @PostMapping("/{courseId}/enrollstudent")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<?> enrollStudent(@PathVariable Long courseId, @RequestParam Long studentId, @RequestParam String password) {
+        return courseService.enrollStudentInCourse(courseId, studentId, password);
+    }
+
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/{instructorId}/courses")

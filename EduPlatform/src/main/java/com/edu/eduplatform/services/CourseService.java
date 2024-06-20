@@ -3,12 +3,16 @@ package com.edu.eduplatform.services;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Instructor;
+import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.repos.CourseRepo;
 import com.edu.eduplatform.repos.InstructorRepo;
+import com.edu.eduplatform.repos.StudentRepo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.utils.IUtils.ICourseCodeGenerator;
@@ -35,9 +39,21 @@ public class CourseService {
     @Autowired
     private InstructorService instructorService;
 
+    @Autowired
+    StudentRepo studentRepo;
+
+    @Autowired
+    StudentService studentService;
 
 
+    public boolean isCourseExists(long courseId){
+        return courseRepository.existsByCourseId(courseId);
+    }
 
+    public Course getCourseById(long courseId){
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + courseId));
+    }
 
 
 
@@ -112,6 +128,50 @@ public class CourseService {
                 .map(course -> modelMapper.map(course, CourseResponseDTO.class))
                 .collect(Collectors.toList());
     }
+
+   // @Transactional
+    public ResponseEntity<?> enrollStudentInCourse(long courseId,long studentId,String coursePassword)
+    {
+        if(!studentRepo.existsById(studentId))
+        {
+            throw new EntityNotFoundException("Student not found with ID: " + studentId);
+        }
+
+
+
+
+
+        Course course=getCourseById(courseId);
+        Student student=studentService.getStudentById(studentId);
+
+        // Debug logging
+        System.out.println("Fetched Course: " + course);
+        System.out.println("Fetched Student: " + student);
+        // Check if the student is already enrolled in the course
+        if(course.getStudents().contains(student))
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
+        }
+
+
+        if (!course.getPassword().equals(coursePassword))
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
+        }
+
+        student.getCourses().add(course);
+        course.getStudents().add(student);
+
+        studentRepo.save(student);
+        courseRepository.save(course);
+
+        return ResponseEntity.ok("Student enrolled successfully.");
+
+
+
+    }
+
+
 
 
 }

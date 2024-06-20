@@ -42,6 +42,15 @@ public class Course {
     )
     private Set<Instructor> taInstructors = new HashSet<>();
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "Course_Student",
+            joinColumns = @JoinColumn(name = "CourseID"),
+            inverseJoinColumns = @JoinColumn(name = "StudentID")
+    )
+    private Set<Student> students = new HashSet<>();
+
     public void setInstructor(Instructor instructor) {
         this.createdBy = instructor;
     }
