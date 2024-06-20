@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 import com.edu.eduplatform.dtos.CourseDTO;
+import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseContentService;
 import com.edu.eduplatform.services.CourseService;
@@ -48,8 +49,8 @@ public class CourseController {
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/{instructorId}/courses")
-    public ResponseEntity<List<Course>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
-        List<Course> courses = courseService.getCoursesCreatedByInstructor(instructorId);
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
+        List<CourseResponseDTO> courses = courseService.getCoursesCreatedByInstructor(instructorId);
         return ResponseEntity.ok(courses);
     }
 

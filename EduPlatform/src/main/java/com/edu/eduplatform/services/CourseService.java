@@ -1,6 +1,7 @@
 package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.dtos.CourseDTO;
+import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Instructor;
 import com.edu.eduplatform.repos.CourseRepo;
 import com.edu.eduplatform.repos.InstructorRepo;
@@ -15,6 +16,7 @@ import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
@@ -98,14 +100,17 @@ public class CourseService {
         courseRepository.save(course);
     }
 
-    public List<Course> getCoursesCreatedByInstructor(Long instructorId) {
+
+
+    public List<CourseResponseDTO> getCoursesCreatedByInstructor(Long instructorId) {
         // Check if instructor exists
         if (!instructorService.isInstructorExists(instructorId)) {
             throw new EntityNotFoundException("Instructor not found with ID: " + instructorId);
         }
-
-        // Retrieve courses created by the instructor
-        return courseRepository.findByCreatedBy_UserID(instructorId);
+        List<Course> courses = courseRepository.findByCreatedBy_UserID(instructorId);
+        return courses.stream()
+                .map(course -> modelMapper.map(course, CourseResponseDTO.class))
+                .collect(Collectors.toList());
     }
 
 
