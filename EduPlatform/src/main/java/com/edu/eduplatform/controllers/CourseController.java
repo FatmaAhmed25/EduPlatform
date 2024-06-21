@@ -29,6 +29,23 @@ public class CourseController {
     private CourseService courseService;
 
 
+    @GetMapping("/search")
+    public List<Course> searchCourses(@RequestParam String searchTerm) {
+        return courseService.searchCourses(searchTerm);
+    }
+
+    @GetMapping("/search/by-code")
+
+    public List<Course> findByCourseCode(@RequestParam String courseCode) {
+        return courseService.findByCourseCode(courseCode);
+    }
+
+    @GetMapping("/search/by-title")
+    public List<Course> findByTitle(@RequestParam String title) {
+        return courseService.findByTitle(title);
+    }
+
+
 
     @PostMapping("/create/{instructorId}")
     @SecurityRequirement(name="BearerAuth")

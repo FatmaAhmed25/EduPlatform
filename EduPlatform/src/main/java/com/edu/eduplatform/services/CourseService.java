@@ -161,6 +161,18 @@ public class CourseService {
 
     }
 
+    public List<Course> searchCourses(String searchTerm) {
+        return courseRepository.searchByCourseCodeOrTitle(searchTerm);
+    }
+
+    public List<Course> findByCourseCode(String courseCode) {
+        return courseRepository.findByCourseCodeContainingIgnoreCase(courseCode);
+    }
+
+    public List<Course> findByTitle(String title) {
+        return courseRepository.findByTitleContainingIgnoreCase(title);
+    }
+
     //    public Course updateCourse(Long courseId, UpdateCourseDTO updateCourseDTO) {
 //        Course course = courseRepository.findById(courseId)
 //                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
@@ -186,5 +198,7 @@ public class CourseService {
 
         return courseRepository.save(course);
     }
+
+
 
 }
