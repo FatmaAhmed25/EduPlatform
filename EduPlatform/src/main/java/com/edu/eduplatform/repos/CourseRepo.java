@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface CourseRepo extends JpaRepository<Course,Long> {
     boolean existsByCourseCode(String courseCode);
+    boolean existsByCourseId(long courseId);
+
+
 
     List<Course> findByCreatedBy_UserID(Long instructorId);
 }

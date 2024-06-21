@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 import com.edu.eduplatform.dtos.CourseDTO;
+import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseContentService;
 import com.edu.eduplatform.services.CourseService;
@@ -42,14 +43,21 @@ public class CourseController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
 
+
+    @PostMapping("/{courseId}/enrollstudent")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<?> enrollStudent(@PathVariable Long courseId, @RequestParam Long studentId, @RequestParam String password) {
+        return courseService.enrollStudentInCourse(courseId, studentId, password);
     }
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/{instructorId}/courses")
-    public ResponseEntity<List<Course>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
-        List<Course> courses = courseService.getCoursesCreatedByInstructor(instructorId);
+    public ResponseEntity<List<CourseResponseDTO>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
+        List<CourseResponseDTO> courses = courseService.getCoursesCreatedByInstructor(instructorId);
         return ResponseEntity.ok(courses);
     }
 
@@ -62,6 +70,8 @@ public class CourseController {
         return ResponseEntity.ok("TA assigned to course successfully");
     }
 
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @PostMapping(value ="/{courseId}/content",consumes = {"multipart/form-data"})
     public ResponseEntity<String> uploadContent(
             @PathVariable String courseId,
@@ -74,7 +84,8 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/{courseId}/content")
     public ResponseEntity<URL> getContentUrl(
             @PathVariable String courseId,
@@ -82,7 +93,8 @@ public class CourseController {
         URL url = contentService.getFileUrl(courseId, fileName);
         return url != null ? new ResponseEntity<>(url, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @DeleteMapping("/{courseId}/content")
     public ResponseEntity<Void> deleteContent(
             @PathVariable String courseId,

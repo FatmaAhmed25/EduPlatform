@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CourseContentService {
 
-    private static final String BUCKET_NAME = "eduplatform-ed3a0.appspot.com";
+    private static final String BUCKET_NAME = "edu-storage-80f31.appspot.com";
     private final Storage storage;
 
     public CourseContentService() {
@@ -24,14 +24,16 @@ public class CourseContentService {
     }
 
     public String uploadFile(String courseId, String folderName, MultipartFile file) throws IOException {
+        System.out.println("inside upload function");
         try {
+
             String fileName = folderName + "/" + file.getOriginalFilename();
             BlobId blobId = BlobId.of(BUCKET_NAME, "courses/" + courseId + "/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getBytes());
             return fileName;
-        } catch (StorageException e) {
-            // Log or handle the exception appropriately
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new IOException("Failed to upload file to Google Cloud Storage", e);
         }
     }

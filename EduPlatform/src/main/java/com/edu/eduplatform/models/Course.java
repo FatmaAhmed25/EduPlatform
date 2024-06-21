@@ -1,16 +1,21 @@
 package com.edu.eduplatform.models;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
+
 public class Course {
     @Id
+    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CourseID")
     private Long courseId;
@@ -42,11 +47,19 @@ public class Course {
     )
     private Set<Instructor> taInstructors = new HashSet<>();
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "Course_Student",
+            joinColumns = @JoinColumn(name = "CourseID"),
+            inverseJoinColumns = @JoinColumn(name = "StudentID")
+    )
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Student> students = new HashSet<>();
+
     public void setInstructor(Instructor instructor) {
         this.createdBy = instructor;
     }
-    @Override
-    public String toString() {
-        return "HII";
-    }
+
 }
