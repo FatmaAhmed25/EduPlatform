@@ -26,10 +26,8 @@ import java.text.DecimalFormat;
 @Service
 public class AdminService {
 
-
     @Autowired
     private UserRepo userRepository;
-
 
     @Autowired
     private ModelMapper modelMapper;
@@ -42,41 +40,44 @@ public class AdminService {
         Workbook workbook = new XSSFWorkbook(file.getInputStream());
         Sheet sheet = workbook.getSheetAt(0);
 
+        StringBuilder responseMessage = new StringBuilder();
+
         for (Row row : sheet) {
-            if (userRepository.existsByEmail(row.getCell(1).getStringCellValue())) {
-                return ResponseEntity.badRequest().body("Email already exists!");
+            if (row.getRowNum() == 0) continue; // skip header row
+
+            String email = row.getCell(1).getStringCellValue();
+            if (userRepository.existsByEmail(email)) {
+                responseMessage.append("Email already exists: ").append(email).append("\n");
+                continue; // skip this user and continue with the next one
             }
 
-
-            if (row.getRowNum() == 0) continue; // skip header row
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(row.getCell(0).getStringCellValue());
-            userDTO.setEmail(row.getCell(1).getStringCellValue());
-
+            userDTO.setEmail(email);
             userDTO.setPassword(encoder.encode(convertNumericPasswordToString(row.getCell(2).getNumericCellValue())));
-           // userDTO.setBio(row.getCell(3).getStringCellValue());
 
-            if (userType == User.UserType.ROLE_STUDENT)
-            {
+            if (userType == User.UserType.ROLE_STUDENT) {
                 Student student = modelMapper.map(userDTO, Student.class);
                 student.setUserType(User.UserType.ROLE_STUDENT);
                 userRepository.save(student);
-                return ResponseEntity.ok().body("Students created successfully");
-
-
-            }
-            else if (userType == User.UserType.ROLE_INSTRUCTOR)
-            {
+                responseMessage.append("Student created: ").append(email).append("\n");
+            } else if (userType == User.UserType.ROLE_INSTRUCTOR) {
                 Instructor instructor = modelMapper.map(userDTO, Instructor.class);
                 instructor.setUserType(User.UserType.ROLE_INSTRUCTOR);
                 userRepository.save(instructor);
-                return ResponseEntity.ok().body("Instructors created successfully");
+                responseMessage.append("Instructor created: ").append(email).append("\n");
             }
         }
 
         workbook.close();
-        return ResponseEntity.internalServerError().body("Request failed!");
+
+        if (responseMessage.length() > 0) {
+            return ResponseEntity.ok(responseMessage.toString());
+        } else {
+            return ResponseEntity.internalServerError().body("Request failed!");
+        }
     }
+
     private String convertNumericPasswordToString(double numericPassword) {
         DecimalFormat df = new DecimalFormat("#");
         return df.format(numericPassword);

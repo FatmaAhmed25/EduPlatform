@@ -34,16 +34,14 @@ public class AdminController {
     @PostMapping(value = "/import/instructors", consumes = {"multipart/form-data"})
     @SecurityRequirement(name="BearerAuth")
     public ResponseEntity<?> importInstructors(@RequestParam("file") MultipartFile file) throws IOException {
-
            return adminService.importUsers(file, User.UserType.ROLE_INSTRUCTOR);
-
     }
+
     @PostMapping("/create/student")
     @SecurityRequirement(name="BearerAuth")
     public ResponseEntity<?> createStudent(@RequestBody UserDTO userDTO)
     {
         return adminService.createStudent(userDTO);
-
     }
 
     @PostMapping("/create/instructor")

@@ -132,14 +132,12 @@ public class CourseService {
    // @Transactional
     public ResponseEntity<?> enrollStudentInCourse(long courseId,long studentId,String coursePassword)
     {
+        System.out.println("in function: ");
+
         if(!studentRepo.existsById(studentId))
         {
             throw new EntityNotFoundException("Student not found with ID: " + studentId);
         }
-
-
-
-
 
         Course course=getCourseById(courseId);
         Student student=studentService.getStudentById(studentId);
@@ -170,8 +168,6 @@ public class CourseService {
 
 
     }
-
-
 
 
 }
