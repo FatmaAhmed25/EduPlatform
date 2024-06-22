@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 import com.edu.eduplatform.annotations.ValidateCourse;
+import com.edu.eduplatform.annotations.ValidateInstructor;
 import com.edu.eduplatform.annotations.ValidateStudent;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
@@ -39,8 +40,7 @@ public class CourseController {
 
 
 
-        @GetMapping("/search/by-code")
-
+    @GetMapping("/search/by-code")
     public List<Course> findByCourseCode(@RequestParam String courseCode) {
         return courseService.findByCourseCode(courseCode);
     }
@@ -52,7 +52,7 @@ public class CourseController {
 
 
 
-    @PostMapping("/create/{instructorId}")
+    @PostMapping("/create/course/{instructorId}")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     public ResponseEntity<?> createCourse(
@@ -67,7 +67,7 @@ public class CourseController {
 
     }
 
-    @PostMapping("/{courseId}/enrollstudent")
+    @PostMapping("/{courseId}/enroll-student")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<?> enrollStudent(@PathVariable @ValidateCourse Long courseId, @RequestParam @ValidateStudent Long studentId, @RequestParam String password) {
@@ -80,19 +80,27 @@ public class CourseController {
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    @GetMapping("/{instructorId}/courses")
-    public ResponseEntity<List<CourseResponseDTO>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
-        List<CourseResponseDTO> courses = courseService.getCoursesCreatedByInstructor(instructorId);
-        return ResponseEntity.ok(courses);
+    @GetMapping("/{instructorId}/get-courses/instructor")
+    public ResponseEntity<?> getCoursesCreatedByInstructor(@PathVariable @ValidateInstructor Long instructorId) {
+        try {
+            List<CourseResponseDTO> courses = courseService.getCoursesCreatedByInstructor(instructorId);
+            return ResponseEntity.ok(courses);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @PostMapping("/{courseId}/assign-ta/{taId}")
-    public ResponseEntity<String> assignTAToCourse(@RequestParam Long instructorId, @PathVariable Long courseId, @PathVariable Long taId) throws Exception {
-        courseService.assignTAToCourse(instructorId, courseId, taId);
-        return ResponseEntity.ok("TA assigned to course successfully");
+    public ResponseEntity<String> assignTAToCourse(@RequestParam @ValidateInstructor Long instructorId, @PathVariable @ValidateCourse Long courseId, @PathVariable @ValidateInstructor Long taId) throws Exception {
+        try {
+            courseService.assignTAToCourse(instructorId, courseId, taId);
+            return ResponseEntity.ok("TA assigned to course successfully");
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @SecurityRequirement(name="BearerAuth")

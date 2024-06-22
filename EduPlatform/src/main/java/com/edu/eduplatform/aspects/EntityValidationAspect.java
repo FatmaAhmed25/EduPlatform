@@ -35,11 +35,11 @@ public class EntityValidationAspect {
 
     @Before("@annotation(com.edu.eduplatform.annotations.ValidateStudent) && args(studentId,..)")
     public void validateStudent(Long studentId) {
-       try{
-           studentService.isStudentExists(studentId); // This will throw an exception if the student is not found
-       } catch (EntityNotFoundException ex) {
-           throw new EntityNotFoundException("Student not found with id: " + studentId);
-       }
+        try{
+            studentService.isStudentExists(studentId); // This will throw an exception if the student is not found
+        } catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException("Student not found with id: " + studentId);
+        }
     }
 
     @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(instructorId,..)")

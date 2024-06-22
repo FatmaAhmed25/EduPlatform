@@ -23,6 +23,9 @@ public class Announcement {
     @Column(name = "CreatedAt", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "FileName")
+    private String fileName; // Optional
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "CourseID", nullable = false)

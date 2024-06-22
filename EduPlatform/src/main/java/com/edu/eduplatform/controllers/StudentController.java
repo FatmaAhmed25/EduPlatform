@@ -20,7 +20,7 @@ public class StudentController
 
     @Autowired
     StudentService studentService;
-    @GetMapping("/enrolledCourses/{studentId}")
+    @GetMapping("/enrolled-courses/{studentId}")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public Set<Course> getEnrolledCourses(@PathVariable long studentId)

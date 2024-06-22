@@ -20,7 +20,7 @@ public class StudentService {
     @ValidateStudent
     public Student getStudentById(long studentId) {
         return studentRepo.findById(studentId)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with ID: " + studentId));
+                .orElseThrow(() -> new EntityNotFoundException("Student not found " + studentId));
     }
   
     public boolean isStudentExists(long studentId) {
@@ -33,6 +33,18 @@ public class StudentService {
     public Set<Course> getEnrolledCourses(long studentId){
         Student student=getStudentById(studentId);
         return student.getCourses();
+    }
+
+    public boolean isStudentEnrolledInCourse(long studentId,long courseId) {
+        Student student = getStudentById(studentId);
+        Set<Course> enrolledCourses = student.getCourses();
+
+        boolean isEnrolled = enrolledCourses.stream().anyMatch(course -> course.getCourseId().equals(courseId));
+
+        if (!isEnrolled) {
+            throw new EntityNotFoundException("Student with id " + studentId + " is not enrolled in course with id " + courseId);
+        }
+        return true;
     }
 
 }

@@ -41,7 +41,7 @@ public class AuthController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping("/admin")
+    @PostMapping("/create/admin")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @SecurityRequirement(name="BearerAuth")
     public ResponseEntity<?> createAdmin(@RequestBody UserDTO adminDTO) {
@@ -53,7 +53,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/authenticate-users")
     public AuthResponseDTO authenticateAndGetToken(@RequestBody AuthDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {

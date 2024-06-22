@@ -1,19 +1,15 @@
 package com.edu.eduplatform.controllers;
 
-import com.edu.eduplatform.dtos.AnnouncementDto;
-import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseService;
 import com.edu.eduplatform.services.InstructorService;
-import com.google.api.Authentication;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,31 +25,20 @@ public class InstructorController {
 
     @Autowired
     private CourseService courseService;
-    @GetMapping("/courses/{instructorId}")
-    @SecurityRequirement(name="BearerAuth")
-    public ResponseEntity<List<Course>> getCoursesByInstructorId(@PathVariable Long instructorId) {
-        List<Course> courses = instructorService.getCoursesByInstructorId(instructorId);
-        if (courses != null) {
-            return ResponseEntity.ok(courses);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
-//    @PostMapping("/courses/{instructorId}")
+
+//    @GetMapping("/courses/{instructorId}")
 //    @SecurityRequirement(name="BearerAuth")
-//    public ResponseEntity<String> createCourse(
-//            @PathVariable Long instructorId,
-//            @RequestBody CourseDTO courseDTO) {
-//        try {
-//            instructorService.createCourse(instructorId, courseDTO);
-//            return ResponseEntity.ok("Course created for instructor successfully.");
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
+//    public ResponseEntity<List<Course>> getCoursesByInstructorId(@PathVariable Long instructorId) {
+//        List<Course> courses = instructorService.getCoursesByInstructorId(instructorId);
+//        if (courses != null) {
+//            return ResponseEntity.ok(courses);
+//        } else {
+//            return ResponseEntity.notFound().build();
 //        }
 //    }
 
-    @PutMapping("updateProfile/{instructorId}")
+    @PutMapping("update-profile/{instructorId}")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     public ResponseEntity<String> updateInstructorProfile(@PathVariable Long instructorId,
@@ -66,7 +51,7 @@ public class InstructorController {
         }
     }
 
-    @PutMapping("courses/updateCourseDetails/{courseId}")
+    @PutMapping("courses/update-course-details/{courseId}")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     public ResponseEntity<String> updateCourse(@PathVariable Long courseId,
