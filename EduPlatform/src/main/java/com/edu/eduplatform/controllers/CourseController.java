@@ -29,6 +29,25 @@ public class CourseController {
     private CourseService courseService;
 
 
+    @GetMapping("/search")
+    public List<Course> searchCourses(@RequestParam String searchTerm) {
+        return courseService.searchCourses(searchTerm);
+    }
+
+
+
+        @GetMapping("/search/by-code")
+
+    public List<Course> findByCourseCode(@RequestParam String courseCode) {
+        return courseService.findByCourseCode(courseCode);
+    }
+
+    @GetMapping("/search/by-title")
+    public List<Course> findByTitle(@RequestParam String title) {
+        return courseService.findByTitle(title);
+    }
+
+
 
     @PostMapping("/create/{instructorId}")
     @SecurityRequirement(name="BearerAuth")
@@ -72,7 +91,7 @@ public class CourseController {
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    @PostMapping(value ="/{courseId}/content",consumes = {"multipart/form-data"})
+    @PostMapping(value ="/{courseId}/upload-content",consumes = {"multipart/form-data"})
     public ResponseEntity<String> uploadContent(
             @PathVariable String courseId,
             @RequestParam String folderName,
@@ -86,7 +105,7 @@ public class CourseController {
     }
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    @GetMapping("/{courseId}/content")
+    @GetMapping("/{courseId}/get-content")
     public ResponseEntity<URL> getContentUrl(
             @PathVariable String courseId,
             @RequestParam String fileName) throws IOException {
@@ -95,7 +114,7 @@ public class CourseController {
     }
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    @DeleteMapping("/{courseId}/content")
+    @DeleteMapping("/{courseId}/delete-content")
     public ResponseEntity<Void> deleteContent(
             @PathVariable String courseId,
             @RequestParam String fileName) throws IOException {

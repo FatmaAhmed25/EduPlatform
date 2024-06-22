@@ -67,6 +67,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/authenticate/**").permitAll()
+                                .requestMatchers("/courses/search/**").permitAll()
                                 .requestMatchers(SWAGGER_AUTHLIST).permitAll()
                                 .anyRequest().authenticated()
                 );
