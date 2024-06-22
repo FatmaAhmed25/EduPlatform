@@ -39,8 +39,7 @@ public class CourseController {
 
 
 
-        @GetMapping("/search/by-code")
-
+    @GetMapping("/search/by-code")
     public List<Course> findByCourseCode(@RequestParam String courseCode) {
         return courseService.findByCourseCode(courseCode);
     }
@@ -52,7 +51,7 @@ public class CourseController {
 
 
 
-    @PostMapping("/create/{instructorId}")
+    @PostMapping("/create/course/{instructorId}")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     public ResponseEntity<?> createCourse(
@@ -67,7 +66,7 @@ public class CourseController {
 
     }
 
-    @PostMapping("/{courseId}/enrollstudent")
+    @PostMapping("/{courseId}/enroll-student")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<?> enrollStudent(@PathVariable @ValidateCourse Long courseId, @RequestParam @ValidateStudent Long studentId, @RequestParam String password) {
@@ -80,7 +79,7 @@ public class CourseController {
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    @GetMapping("/{instructorId}/courses")
+    @GetMapping("/{instructorId}/get-courses/instructor")
     public ResponseEntity<List<CourseResponseDTO>> getCoursesCreatedByInstructor(@PathVariable Long instructorId) {
         List<CourseResponseDTO> courses = courseService.getCoursesCreatedByInstructor(instructorId);
         return ResponseEntity.ok(courses);
