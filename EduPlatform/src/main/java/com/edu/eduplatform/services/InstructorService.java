@@ -1,7 +1,5 @@
 package com.edu.eduplatform.services;
 
-import com.edu.eduplatform.dtos.AnnouncementDto;
-import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.models.Course;
@@ -11,12 +9,10 @@ import com.edu.eduplatform.repos.CourseRepo;
 import com.edu.eduplatform.repos.InstructorRepo;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
