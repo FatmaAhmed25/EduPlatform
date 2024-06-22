@@ -3,10 +3,10 @@ package com.edu.eduplatform.services;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
+
 import com.edu.eduplatform.models.Instructor;
 import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.repos.CourseRepo;
-import com.edu.eduplatform.repos.InstructorRepo;
 import com.edu.eduplatform.repos.StudentRepo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.utils.IUtils.ICourseCodeGenerator;
 import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +44,7 @@ public class CourseService {
 
     @Autowired
     StudentService studentService;
+
 
 
     public boolean isCourseExists(long courseId) {

@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.dtos.AnnouncementDto;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
@@ -53,21 +54,21 @@ public class InstructorService {
         return null;
     }
 
-    @Transactional
-    public void createCourse(Long instructorId, CourseDTO courseDTO) {
-        Optional<Instructor> instructorOptional = instructorRepository.findById(instructorId);
-        if (instructorOptional.isPresent()) {
-            Instructor instructor = instructorOptional.get();
-            Course course = modelMapper.map(courseDTO, Course.class);
-            course.setInstructor(instructor);
-            instructor.getCourses().add(course);
-            instructorRepository.save(instructor);
-        }
-        else
-        {
-            throw new RuntimeException("Instructor not found.");
-        }
-    }
+//    @Transactional
+//    public void createCourse(Long instructorId, CourseDTO courseDTO) {
+//        Optional<Instructor> instructorOptional = instructorRepository.findById(instructorId);
+//        if (instructorOptional.isPresent()) {
+//            Instructor instructor = instructorOptional.get();
+//            Course course = modelMapper.map(courseDTO, Course.class);
+//            course.setInstructor(instructor);
+//            instructor.getCourses().add(course);
+//            instructorRepository.save(instructor);
+//        }
+//        else
+//        {
+//            throw new RuntimeException("Instructor not found.");
+//        }
+//    }
     public Instructor updateInstructor(Long instructorId, UpdateInstructorDTO updateInstructorDTO) {
         Instructor instructor = instructorRepository.findById(instructorId)
                 .orElseThrow(() -> new EntityNotFoundException("Instructor not found"));
@@ -82,26 +83,7 @@ public class InstructorService {
         }
         return instructorRepository.save(instructor);
     }
-    public Announcement createAnnouncement(Long courseId, Long instructorId, String title, String content) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new RuntimeException("Instructor not found"));
-
-        if (!course.getCreatedBy().equals(instructor)) {
-            throw new RuntimeException("Instructor not authorized to create announcement for this course");
-        }
-
-        Announcement announcement = new Announcement();
-        announcement.setTitle(title);
-        announcement.setContent(content);
-        announcement.setCreatedAt(LocalDateTime.now());
-        announcement.setCourse(course);
-        announcement.setInstructor(instructor);
-
-        return announcementRepository.save(announcement);
-    }
 
     public List<Announcement> getAnnouncementsByCourse(Long courseId) {
         return announcementRepository.findByCourse_CourseId(courseId);

@@ -1,5 +1,6 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,6 +22,7 @@ public class Student extends User {
     @ManyToMany(mappedBy = "students", fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonBackReference
     private Set<Course> courses = new HashSet<>();
 
     @EqualsAndHashCode.Include

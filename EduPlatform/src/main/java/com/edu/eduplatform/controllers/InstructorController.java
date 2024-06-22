@@ -1,5 +1,6 @@
 package com.edu.eduplatform.controllers;
 
+import com.edu.eduplatform.dtos.AnnouncementDto;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
@@ -39,18 +40,18 @@ public class InstructorController {
         }
     }
 
-    @PostMapping("/courses/{instructorId}")
-    @SecurityRequirement(name="BearerAuth")
-    public ResponseEntity<String> createCourse(
-            @PathVariable Long instructorId,
-            @RequestBody CourseDTO courseDTO) {
-        try {
-            instructorService.createCourse(instructorId, courseDTO);
-            return ResponseEntity.ok("Course created for instructor successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @PostMapping("/courses/{instructorId}")
+//    @SecurityRequirement(name="BearerAuth")
+//    public ResponseEntity<String> createCourse(
+//            @PathVariable Long instructorId,
+//            @RequestBody CourseDTO courseDTO) {
+//        try {
+//            instructorService.createCourse(instructorId, courseDTO);
+//            return ResponseEntity.ok("Course created for instructor successfully.");
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     @PutMapping("updateProfile/{instructorId}")
     @SecurityRequirement(name="BearerAuth")
@@ -77,19 +78,7 @@ public class InstructorController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PostMapping("/{courseId}/announcements")
-    @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    public ResponseEntity<?> createAnnouncement(@PathVariable Long courseId,
-                                                @RequestParam String title,
-                                                @RequestParam String content) {
 
-        Course course = courseService.getCourseById(courseId);
-
-        Long instructorId = course.getCreatedBy().getUserID();
-        Announcement announcement = instructorService.createAnnouncement(courseId, instructorId, title, content);
-        return ResponseEntity.ok(announcement);
-    }
 
     @GetMapping("/{courseId}/announcements")
     @SecurityRequirement(name="BearerAuth")
