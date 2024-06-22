@@ -14,7 +14,7 @@ import java.io.IOException;
 public class FirebaseConfig {
     private static final String FIREBASE_APP_NAME = "edu-platform-app"; // Unique Firebase app name
     @Value("${bucket.name}")
-    private static String BUCKET_NAME;
+    private static String bucketName;
 
     @Bean
     public FirebaseApp initializeFirebaseApp() throws IOException {
@@ -23,7 +23,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket(BUCKET_NAME)
+                .setStorageBucket(bucketName)
                 .build();
 
         // Check if FirebaseApp with the specified name already exists
