@@ -1,5 +1,6 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +13,6 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
-
 public class Course {
     @Id
     @EqualsAndHashCode.Include
@@ -20,8 +20,7 @@ public class Course {
     @Column(name = "CourseID")
     private Long courseId;
 
-
-    @Column(name = "CourseCode" , unique = true)
+    @Column(name = "CourseCode", unique = true)
     private String courseCode;
 
     @Column(name = "Title")
@@ -33,12 +32,10 @@ public class Course {
     @Column(name = "Password", nullable = false)
     private String password;
 
-    // One-to-many relationship for the course creator
     @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false )
+    @JoinColumn(name = "created_by", nullable = false)
     private Instructor createdBy;
 
-    // Many-to-many relationship for TAs
     @ManyToMany
     @JoinTable(
             name = "course_instructors",
@@ -46,7 +43,6 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "instructor_id")
     )
     private Set<Instructor> taInstructors = new HashSet<>();
-
 
     @ManyToMany
     @JoinTable(
@@ -58,8 +54,11 @@ public class Course {
     @ToString.Exclude
     private Set<Student> students = new HashSet<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Announcement> announcements = new HashSet<>();
+
     public void setInstructor(Instructor instructor) {
         this.createdBy = instructor;
     }
-
 }

@@ -1,5 +1,7 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,19 +12,21 @@ import java.util.Set;
 @Data
 @Entity
 @DiscriminatorValue("Instructor")
-public class Instructor extends User{
+public class Instructor extends User {
 
-    // One-to-many relationship for courses created by this instructor
+    @JsonBackReference
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses;
 
-    // Many-to-many relationship for courses where this instructor is a TA
     @ManyToMany(mappedBy = "taInstructors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Course> taCourses = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Announcement> announcements = new HashSet<>();
 
     @Override
     public String toString() {
         return "HII";
     }
-
 }
