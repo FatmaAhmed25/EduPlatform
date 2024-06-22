@@ -18,7 +18,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket("edu-storage-80f31.appspot.com")
+                .setStorageBucket("eduplatform-ed3a0.appspot.com")
                 .build();
 
         System.out.println("Configured firebase !!");

@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Instructor;
@@ -20,6 +21,7 @@ import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +30,7 @@ public class CourseService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private  CourseRepo courseRepository;
+    private CourseRepo courseRepository;
 
     @Autowired
     private ICourseCodeGenerator courseCodeGenerator;
@@ -45,21 +47,21 @@ public class CourseService {
     @Autowired
     StudentService studentService;
 
-
-    public boolean isCourseExists(long courseId){
-        return courseRepository.existsByCourseId(courseId);
+    public boolean isCourseExists(long courseId) {
+        if (!courseRepository.existsByCourseId(courseId)) {
+            throw new EntityNotFoundException("Course with id " + courseId + " not found");
+        }
+        return true;
     }
 
-    public Course getCourseById(long courseId){
+    @ValidateCourse
+    public Course getCourseById(long courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + courseId));
     }
 
-
-
     @Transactional
-    public void generateCourse(Long instructorId, CourseDTO courseDTO)
-    {
+    public void generateCourse(Long instructorId, CourseDTO courseDTO) {
 
         // Check if instructor exists
         if (!instructorService.isInstructorExists(instructorId)) {
@@ -76,7 +78,7 @@ public class CourseService {
         Course course = modelMapper.map(courseDTO, Course.class);
         course.setCourseCode(courseCode);
         course.setPassword(password);
-        Instructor instructor=instructorService.getInstructorById(instructorId);
+        Instructor instructor = instructorService.getInstructorById(instructorId);
         course.setInstructor(instructor);
         instructor.getCourses().add(course);
 
@@ -98,7 +100,7 @@ public class CourseService {
         Course course = optionalCourse.get();
 
         // Validate if the instructor is the course creator
-        if (course.getCreatedBy().getUserID()!=instructorId) {
+        if (course.getCreatedBy().getUserID() != instructorId) {
             throw new Exception("You are not authorized to assign TAs to this course");
         }
 
@@ -117,7 +119,6 @@ public class CourseService {
     }
 
 
-
     public List<CourseResponseDTO> getCoursesCreatedByInstructor(Long instructorId) {
         // Check if instructor exists
         if (!instructorService.isInstructorExists(instructorId)) {
@@ -129,31 +130,21 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-   // @Transactional
-    public ResponseEntity<?> enrollStudentInCourse(long courseId,long studentId,String coursePassword)
-    {
-        System.out.println("in function: ");
-
-        if(!studentRepo.existsById(studentId))
-        {
-            throw new EntityNotFoundException("Student not found with ID: " + studentId);
-        }
-
-        Course course=getCourseById(courseId);
-        Student student=studentService.getStudentById(studentId);
+    // @Transactional
+    public ResponseEntity<?> enrollStudentInCourse(long courseId, long studentId, String coursePassword) {
+        Course course = getCourseById(courseId);
+        Student student = studentService.getStudentById(studentId);
 
         // Debug logging
         System.out.println("Fetched Course: " + course);
         System.out.println("Fetched Student: " + student);
         // Check if the student is already enrolled in the course
-        if(course.getStudents().contains(student))
-        {
+        if (course.getStudents().contains(student)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
         }
 
 
-        if (!course.getPassword().equals(coursePassword))
-        {
+        if (!course.getPassword().equals(coursePassword)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
         }
 
@@ -165,9 +156,5 @@ public class CourseService {
 
         return ResponseEntity.ok("Student enrolled successfully.");
 
-
-
     }
-
-
 }
