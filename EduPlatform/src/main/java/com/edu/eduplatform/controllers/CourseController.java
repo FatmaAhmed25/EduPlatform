@@ -1,11 +1,14 @@
 package com.edu.eduplatform.controllers;
 
+import com.edu.eduplatform.annotations.ValidateCourse;
+import com.edu.eduplatform.annotations.ValidateStudent;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseContentService;
 import com.edu.eduplatform.services.CourseService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,12 +67,15 @@ public class CourseController {
 
     }
 
-
     @PostMapping("/{courseId}/enrollstudent")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    public ResponseEntity<?> enrollStudent(@PathVariable Long courseId, @RequestParam Long studentId, @RequestParam String password) {
-        return courseService.enrollStudentInCourse(courseId, studentId, password);
+    public ResponseEntity<?> enrollStudent(@PathVariable @ValidateCourse Long courseId, @RequestParam @ValidateStudent Long studentId, @RequestParam String password) {
+        try {
+            return courseService.enrollStudentInCourse(courseId, studentId, password);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
     }
 
     @SecurityRequirement(name="BearerAuth")

@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
@@ -20,6 +21,7 @@ import com.edu.eduplatform.utils.IUtils.ICourseCodeGenerator;
 import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,17 +47,18 @@ public class CourseService {
     @Autowired
     StudentService studentService;
 
-
-
     public boolean isCourseExists(long courseId) {
-        return courseRepository.existsByCourseId(courseId);
+        if (!courseRepository.existsByCourseId(courseId)) {
+            throw new EntityNotFoundException("Course with id " + courseId + " not found");
+        }
+        return true;
     }
 
+    @ValidateCourse
     public Course getCourseById(long courseId) {
         return courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + courseId));
     }
-
 
     @Transactional
     public void generateCourse(Long instructorId, CourseDTO courseDTO) {
@@ -129,12 +132,6 @@ public class CourseService {
 
     // @Transactional
     public ResponseEntity<?> enrollStudentInCourse(long courseId, long studentId, String coursePassword) {
-        System.out.println("in function: ");
-
-        if (!studentRepo.existsById(studentId)) {
-            throw new EntityNotFoundException("Student not found with ID: " + studentId);
-        }
-
         Course course = getCourseById(courseId);
         Student student = studentService.getStudentById(studentId);
 
@@ -158,7 +155,6 @@ public class CourseService {
         courseRepository.save(course);
 
         return ResponseEntity.ok("Student enrolled successfully.");
-
     }
 
     public List<Course> searchCourses(String searchTerm) {
@@ -198,7 +194,4 @@ public class CourseService {
 
         return courseRepository.save(course);
     }
-
-
-
 }

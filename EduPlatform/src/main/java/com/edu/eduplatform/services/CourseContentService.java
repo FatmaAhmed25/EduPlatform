@@ -11,12 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class CourseContentService {
 
-    private static final String BUCKET_NAME = "edu-storage-80f31.appspot.com";
+    private static final String BUCKET_NAME = "eduplatform-ed3a0.appspot.com";
     private final Storage storage;
 
     public CourseContentService() {
@@ -61,5 +63,12 @@ public class CourseContentService {
             // Log or handle the exception appropriately
             throw new IOException("Failed to delete file from Google Cloud Storage", e);
         }
+    }
+    public List<String> listFiles(String courseId, String folderName) {
+        List<String> fileList = new ArrayList<>();
+        String prefix = "courses/" + courseId + "/" + folderName + "/";
+        storage.list(BUCKET_NAME, Storage.BlobListOption.prefix(prefix)).iterateAll()
+                .forEach(blob -> fileList.add(blob.getName()));
+        return fileList;
     }
 }
