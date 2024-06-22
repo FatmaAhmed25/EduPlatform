@@ -66,7 +66,7 @@ public class SecurityConfig {
                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/authenticate/**").permitAll()
+                        auth.requestMatchers("/auth/authenticate-users/**").permitAll()
                                 .requestMatchers("/courses/search/**").permitAll()
                                 .requestMatchers(SWAGGER_AUTHLIST).permitAll()
                                 .anyRequest().authenticated()

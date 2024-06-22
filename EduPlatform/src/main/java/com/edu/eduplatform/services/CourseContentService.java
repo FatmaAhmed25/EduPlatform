@@ -1,12 +1,12 @@
 package com.edu.eduplatform.services;
 
-import com.google.api.client.util.Value;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CourseContentService {
 
-   // @Value("${bucket.name}")
-    private static final String bucketName="eduplatform-e5fd6.appspot.com";
+    @Value("${bucket.name}")
+    private String bucketName;
     private final Storage storage;
 
     public CourseContentService() {
