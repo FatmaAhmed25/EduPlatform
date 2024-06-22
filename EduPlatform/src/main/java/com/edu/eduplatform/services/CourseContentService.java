@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.google.api.client.util.Value;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -17,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class CourseContentService {
-
-    private static final String BUCKET_NAME = "eduplatform-ed3a0.appspot.com";
+    @Value("${bucket.name}")
+    private static String BUCKET_NAME;
     private final Storage storage;
 
     public CourseContentService() {
