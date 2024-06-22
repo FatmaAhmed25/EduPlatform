@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.annotations.ValidateStudent;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.models.Student;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -20,9 +22,8 @@ public class StudentService {
     @ValidateStudent
     public Student getStudentById(long studentId) {
         return studentRepo.findById(studentId)
-                .orElseThrow(() -> new EntityNotFoundException("Student not found with ID: " + studentId));
+                .orElseThrow(() -> new EntityNotFoundException("Student not found " + studentId));
     }
-  
     public boolean isStudentExists(long studentId) {
         if (!studentRepo.existsById(studentId)) {
             throw new EntityNotFoundException("Student with id " + studentId + " not found");
@@ -34,5 +35,17 @@ public class StudentService {
         Student student=getStudentById(studentId);
         return student.getCourses();
     }
+    public boolean isStudentEnrolledInCourse(long studentId,long courseId) {
+        Student student = getStudentById(studentId);
+        Set<Course> enrolledCourses = student.getCourses();
+
+        boolean isEnrolled = enrolledCourses.stream().anyMatch(course -> course.getCourseId().equals(courseId));
+
+        if (!isEnrolled) {
+            throw new EntityNotFoundException("Student with id " + studentId + " is not enrolled in course with id " + courseId);
+        }
+        return true;
+    }
+
 
 }

@@ -41,9 +41,22 @@ public class EntityValidationAspect {
            throw new EntityNotFoundException("Student not found with id: " + studentId);
        }
     }
-
     @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(instructorId,..)")
     public void validateInstructor(Long instructorId) {
-        instructorService.getInstructorById(instructorId);
+        try{
+            instructorService.getInstructorById(instructorId);
+        }
+        catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException("Instructor not found with id: " + instructorId);
+        }
+    }
+    @Before("@annotation(com.edu.eduplatform.annotations.ValidateStudentEnrollmentInCourse) && args(studentId, courseId,..)")
+    public void validateStudentEnrollmentInCourse(Long studentId,Long courseId) {
+        try{
+            studentService.isStudentEnrolledInCourse(studentId,courseId);
+        }
+        catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException("Student with id "+studentId+" is not enrolled in course with id " + courseId);
+        }
     }
 }

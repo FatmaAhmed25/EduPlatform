@@ -1,12 +1,12 @@
 package com.edu.eduplatform.services;
 
-import com.google.api.client.util.Value;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,8 +18,10 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class CourseContentService {
+
     @Value("${bucket.name}")
-    private static String BUCKET_NAME;
+    private String bucketName;
+
     private final Storage storage;
 
     public CourseContentService() {
@@ -27,11 +29,9 @@ public class CourseContentService {
     }
 
     public String uploadFile(String courseId, String folderName, MultipartFile file) throws IOException {
-        System.out.println("inside upload function");
         try {
-
             String fileName = folderName + "/" + file.getOriginalFilename();
-            BlobId blobId = BlobId.of(BUCKET_NAME, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getBytes());
             return fileName;
@@ -43,7 +43,7 @@ public class CourseContentService {
 
     public URL getFileUrl(String courseId, String fileName) throws IOException {
         try {
-            BlobId blobId = BlobId.of(BUCKET_NAME, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
             Blob blob = storage.get(blobId);
             if (blob != null) {
                 return blob.signUrl(1, TimeUnit.HOURS); // URL valid for 1 hour
@@ -58,17 +58,18 @@ public class CourseContentService {
 
     public boolean deleteFile(String courseId, String fileName) throws IOException {
         try {
-            BlobId blobId = BlobId.of(BUCKET_NAME, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
             return storage.delete(blobId);
         } catch (StorageException e) {
             // Log or handle the exception appropriately
             throw new IOException("Failed to delete file from Google Cloud Storage", e);
         }
     }
+
     public List<String> listFiles(String courseId, String folderName) {
         List<String> fileList = new ArrayList<>();
         String prefix = "courses/" + courseId + "/" + folderName + "/";
-        storage.list(BUCKET_NAME, Storage.BlobListOption.prefix(prefix)).iterateAll()
+        storage.list(bucketName, Storage.BlobListOption.prefix(prefix)).iterateAll()
                 .forEach(blob -> fileList.add(blob.getName()));
         return fileList;
     }

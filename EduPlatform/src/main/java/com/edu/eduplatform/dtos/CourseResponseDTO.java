@@ -9,6 +9,4 @@ public class CourseResponseDTO {
     private String title;
     private String description;
     private String password;
-    
-
 }
