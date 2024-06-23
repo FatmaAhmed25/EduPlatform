@@ -7,6 +7,7 @@ import fitz  # PyMuPDF
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
+
 app = Flask(__name__)
 
 # Log in to huggingface and grant authorization to huggingchat
@@ -84,6 +85,36 @@ def parse_quiz_from_response(response_text):
 
     return questions
 
+# Function to parse essay questions from response text
+def parse_essay_from_response(response_text):
+    essays = []
+    essay_lines = response_text.split('\n\n')
+
+    for e_block in essay_lines:
+        if not e_block.strip():
+            continue
+
+        lines = e_block.split('\n')
+        question_text = ""
+        answer_text = ""
+
+        for line in lines:
+            line = line.strip()
+            if line.startswith("question:"):
+                question_text = line.split("question:")[1].strip()
+            elif line.startswith("answer:"):
+                answer_text = line.split("answer:")[1].strip()
+
+        if question_text and answer_text:
+            essay = {
+                "text": question_text,
+                "points": 1,  # Assuming each essay question is worth 1 point
+                "answer": answer_text #msh bn3mel save lel answer fel db
+            }
+            essays.append(essay)
+
+    return essays
+
 # Function to authenticate user
 def authenticate_user(email, password):
     url = "http://localhost:8080/auth/authenticate-users"
@@ -99,31 +130,57 @@ def authenticate_user(email, password):
         print(f"Authentication error: {str(e)}")
         return None
 
-# Function to generate PDF file with quiz title and questions
-def generate_pdf(quiz_title, quiz_questions):
-    pdf_filename = f"{quiz_title}.pdf"
+def generate_pdf(title, items, is_quiz=True):
+    pdf_filename = f"{title}.pdf"
     c = canvas.Canvas(pdf_filename, pagesize=letter)
     c.setLineWidth(.3)
     c.setFont('Helvetica', 12)
 
     # Title
-    c.drawString(100, 750, quiz_title)
-    c.line(100, 745, 500, 745)
+    c.drawString(100, 780, title)
+    c.line(100, 770, 500, 770)
 
-    # Questions
-    y_position = 700
-    for idx, question in enumerate(quiz_questions, start=1):
-        c.drawString(100, y_position, f"{idx}. {question['text']}")
-        y_position -= 20  # Space before answers
+    # Function to wrap text
+    def draw_wrapped_text(c, text, x, y, max_width, line_spacing=15):
+        lines = []
+        while text:
+            if c.stringWidth(text) <= max_width:
+                lines.append(text)
+                break
+            else:
+                # Find the maximum number of characters that fit within the width
+                for i in range(len(text)):
+                    if c.stringWidth(text[:i]) > max_width:
+                        # Split text at the last space before max_width
+                        split_at = text[:i].rfind(' ')
+                        if split_at == -1:
+                            split_at = i
+                        lines.append(text[:split_at])
+                        text = text[split_at:].strip()
+                        break
+        for line in lines:
+            c.drawString(x, y, line)
+            y -= line_spacing  # Move y down for the next line
 
-        for answer in question['answers']:
-            c.drawString(120, y_position, f"{'✓' if answer['correct'] else ' '} {answer['text']}")
-            y_position -= 15
+    # Questions or Essays
+    y_position = 750
+    max_width = 400  # Maximum width for wrapped text
+    for idx, item in enumerate(items, start=1):
+        draw_wrapped_text(c, f"{idx}. {item['text']}", 100, y_position, max_width)
+        y_position -= 35  # Space before answers
 
-        y_position -= 10  # Space between questions
+        if is_quiz:
+            for answer in item['answers']:
+                draw_wrapped_text(c, f"{'✓' if answer['correct'] else ' '} {answer['text']}", 120, y_position, max_width)
+                y_position -= 40
+        else:
+            draw_wrapped_text(c, f"Answer: {item['answer']}", 120, y_position, max_width)
+            y_position -= 98  # More space for essay answers
+
+        y_position -= 60  # Space between questions
 
         # Check if there's enough space for the next question
-        if y_position <= 50:
+        if y_position <= 30:
             c.showPage()  # Start a new page
             y_position = 750  # Reset y_position for the new page
 
@@ -142,7 +199,6 @@ def chat():
     quiz_title = request.form.get('quiz_title')  # Default title if not provided
     startTime = request.form.get('startTime')
     endTime = request.form.get('endTime')
-
 
     prompt = """
     Using strictly the following format 
@@ -185,7 +241,7 @@ def chat():
         quiz_title = "Quiz Title"
 
     # Generate PDF file with quiz title and questions
-    pdf_filename = generate_pdf(quiz_title, questions)
+    pdf_filename = generate_pdf(quiz_title, questions, is_quiz=True)
 
     # Authenticate user and get token (not changed from your original code)
     token = authenticate_user("youssefalsaeed@gmail.com", "123")
@@ -219,6 +275,90 @@ def chat():
         return send_file(pdf_filename, as_attachment=True), 200
     except requests.exceptions.RequestException as e:
         return jsonify({'error': f'Error creating quiz: {str(e)}'}), 500
+
+# Flask route for handling POST requests to /essay endpoint
+@app.route('/essay', methods=['POST'])
+def essay():
+    if 'pdf_files' not in request.files:
+        return jsonify({'error': 'Please provide one or more files in pdf_files'}), 400
+
+    # Extract form parameters
+    courseId = request.form.get('courseId')  # Default to 1 if not provided
+    essay_title = request.form.get('essay_title')  # Default title if not provided
+    startTime = request.form.get('startTime')
+    endTime = request.form.get('endTime')
+
+    prompt = """
+    Using strictly the following format 
+    DO NOT NUMBER THE QUESTIONS
+    question: (fill question text here)
+    answer: (fill answer text here)
+    Generate exactly 5 essay questions from the following text. Each answer should be fully specified.
+    """
+
+    pdf_files = request.files.getlist('pdf_files')
+
+    # Extract text from all uploaded PDFs
+    pdf_texts = []
+    for pdf_file in pdf_files:
+        pdf_bytes = pdf_file.read()
+        pdf_texts.append(extract_text_from_pdf(pdf_bytes))
+
+    combined_pdf_text = "\n\n".join(pdf_texts)
+
+    # Combine prompt and PDF text for the chatbot context
+    full_prompt = f"{prompt}\n\nContext from PDF:\n{combined_pdf_text}"
+
+    # Get the chat response
+    message_result = chatbot.chat(full_prompt)
+    response_text = message_result.wait_until_done()
+
+    # Print the model response for debugging
+    print("Model Response:")
+    print(response_text)
+
+    # Parse the response into essay format
+    essays = parse_essay_from_response(response_text)
+
+    # Ensure essay_title is not None
+    if not essay_title:
+        essay_title = "Essay Title"
+
+    # Generate PDF file with essay title and questions
+    pdf_filename = generate_pdf(essay_title, essays, is_quiz=False)
+
+    # Authenticate user and get token (not changed from your original code)
+    token = authenticate_user("youssefalsaeed@gmail.com", "123")
+    if not token:
+        return jsonify({'error': 'Failed to authenticate user'}), 401
+
+    # Prepare headers with Bearer token (not changed from your original code)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    # Prepare payload for /essays API endpoint
+    essay_payload = {
+        "title": essay_title,
+        "startTime": startTime,
+        "endTime": endTime,
+        "totalGrade": len(essays),  # Total points assuming 1 point per question
+        "courseId": courseId,
+        "questions": essays
+    }
+
+    # Print essay payload for debugging
+    print("Essay Payload:")
+    print(essay_payload)
+
+    # Send POST request to create the essay with authentication token
+    try:
+        response = requests.post("http://localhost:8080/quizzes", json=essay_payload, headers=headers)
+        response.raise_for_status()
+        return send_file(pdf_filename, as_attachment=True), 200
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': f'Error creating essay: {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
