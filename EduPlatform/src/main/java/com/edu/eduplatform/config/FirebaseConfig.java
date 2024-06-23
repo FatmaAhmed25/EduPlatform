@@ -24,7 +24,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setStorageBucket(bucketName) // Use the non-static field here
+
                 .build();
 
         // Check if FirebaseApp with the specified name already exists
