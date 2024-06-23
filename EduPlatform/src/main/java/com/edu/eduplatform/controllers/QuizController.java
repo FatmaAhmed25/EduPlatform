@@ -7,6 +7,7 @@ import com.edu.eduplatform.models.Quiz;
 import com.edu.eduplatform.services.QuizService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,14 @@ public class QuizController {
     @SecurityRequirement(name="BearerAuth")
     public Quiz createQuiz(@RequestBody QuizDTO quizDTO) {
         return quizService.createQuiz(quizDTO);
+    }
+
+
+    @GetMapping("/{quizId}/questions")
+    @SecurityRequirement(name="BearerAuth")
+    public ResponseEntity<List<String>> getQuestionsForQuiz(@PathVariable Long quizId) {
+        List<String> questions = quizService.getQuestionsByQuizId(quizId);
+        return ResponseEntity.ok(questions);
     }
 
     @PostMapping("/{quizId}/questions")

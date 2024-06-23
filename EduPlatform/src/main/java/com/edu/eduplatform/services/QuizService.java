@@ -85,4 +85,8 @@ public class QuizService {
     public List<Quiz> getQuizzesByCourseId(Long courseId) {
         return quizRepository.findByCourseCourseId(courseId);
     }
+
+    public List<String> getQuestionsByQuizId(Long quizId) {
+        return questionRepository.findTextByQuizQuizId(quizId);
+    }
 }
