@@ -5,12 +5,21 @@ import com.edu.eduplatform.models.Answer;
 import com.edu.eduplatform.models.Question;
 import com.edu.eduplatform.models.Quiz;
 import com.edu.eduplatform.services.QuizService;
+import com.edu.eduplatform.utils.quiz.pdf.PdfService;
+import com.itextpdf.text.DocumentException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,6 +29,36 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+
+    @Autowired
+    private PdfService pdfService;
+
+    @SecurityRequirement(name="BearerAuth")
+    @Operation(summary = "Generate PDF of a quiz")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "PDF generated successfully", content = {
+                    @Content(mediaType = "application/pdf")
+            }),
+            @ApiResponse(responseCode = "404", description = "Quiz not found"),
+            @ApiResponse(responseCode = "500", description = "Server error")
+    })
+    @GetMapping("/generate-pdf/{quizId}")
+    public ResponseEntity<byte[]> generatePdf(@PathVariable Long quizId) {
+        try {
+            byte[] pdfBytes = pdfService.generateQuizPdf(quizId);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "quiz.pdf");
+            return ResponseEntity.ok().headers(headers).body(pdfBytes);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @PostMapping
     @SecurityRequirement(name="BearerAuth")
     public Quiz createQuiz(@RequestBody QuizDTO quizDTO) {
