@@ -20,5 +20,5 @@ public class Answer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     @JsonIgnore
-    private Question question;
+    private MCQQuestion question;
 }

@@ -61,8 +61,9 @@ public class QuizController {
 
     @PostMapping
     @SecurityRequirement(name="BearerAuth")
-    public Quiz createQuiz(@RequestBody QuizDTO quizDTO) {
-        return quizService.createQuiz(quizDTO);
+    public ResponseEntity<Quiz> createQuiz(@RequestBody QuizDTO quizDTO) {
+        Quiz createdQuiz = quizService.createQuiz(quizDTO);
+        return ResponseEntity.ok(createdQuiz);
     }
 
 

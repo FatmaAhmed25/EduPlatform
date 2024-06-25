@@ -1,6 +1,8 @@
 package com.edu.eduplatform.utils.quiz.pdf;
 
 import com.edu.eduplatform.models.Answer;
+import com.edu.eduplatform.models.EssayQuestion;
+import com.edu.eduplatform.models.MCQQuestion;
 import com.edu.eduplatform.models.Question;
 import com.edu.eduplatform.models.Quiz;
 import com.edu.eduplatform.repos.QuizRepository;
@@ -50,17 +52,20 @@ public class PdfService {
                         FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK));
                 document.add(questionParagraph);
 
-                com.itextpdf.text.List list = new com.itextpdf.text.List(List.UNORDERED);
-                int answerIndex = 0;
-                BaseColor darkGreen = new BaseColor(0, 100, 0);  // RGB for dark green
-                for (Answer answer : question.getAnswers()) {
-                    Font answerFont = FontFactory.getFont(FontFactory.HELVETICA, 12, answer.isCorrect() ? darkGreen : BaseColor.BLACK);
-                    ListItem listItem = new ListItem(answerLabels[answerIndex] + ") " + answer.getText(), answerFont);
-                    listItem.setIndentationLeft(20);
-                    list.add(listItem);
-                    answerIndex++;
+                // Check if the question is an MCQQuestion
+                if (question instanceof MCQQuestion) {
+                    com.itextpdf.text.List list = new com.itextpdf.text.List(List.UNORDERED);
+                    int answerIndex = 0;
+                    BaseColor darkGreen = new BaseColor(0, 100, 0);  // RGB for dark green
+                    for (Answer answer : ((MCQQuestion) question).getAnswers()) {
+                        Font answerFont = FontFactory.getFont(FontFactory.HELVETICA, 12, answer.isCorrect() ? darkGreen : BaseColor.BLACK);
+                        ListItem listItem = new ListItem(answerLabels[answerIndex] + ") " + answer.getText(), answerFont);
+                        listItem.setIndentationLeft(20);
+                        list.add(listItem);
+                        answerIndex++;
+                    }
+                    document.add(list);
                 }
-                document.add(list);
 
                 // Add some spacing after each question
                 document.add(new Paragraph("\n"));

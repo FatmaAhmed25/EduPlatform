@@ -11,8 +11,8 @@ from reportlab.pdfgen import canvas
 app = Flask(__name__)
 
 # Log in to huggingface and grant authorization to huggingchat
-EMAIL = ""
-PASSWD = ""
+EMAIL = "fatmaahmed2901@gmail.com"
+PASSWD = "/2)BvnK/r,x6P5~"
 cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
 sign = Login(EMAIL, PASSWD)
 cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
@@ -70,7 +70,8 @@ def parse_quiz_from_response(response_text):
             question = {
                 "text": question_text,
                 "points": 1,  # Assuming each question is worth 1 point
-                "answers": []
+                "answers": [],
+                "questionType": "MCQ"
             }
 
             for idx, option_text in enumerate(options):
@@ -109,7 +110,8 @@ def parse_essay_from_response(response_text):
             essay = {
                 "text": question_text,
                 "points": 1,  # Assuming each essay question is worth 1 point
-                "answer": answer_text #msh bn3mel save lel answer fel db
+                "answer": answer_text ,#msh bn3mel save lel answer fel db
+                "questionType": "ESSAY"
             }
             essays.append(essay)
 
@@ -288,6 +290,7 @@ def essay():
     startTime = request.form.get('startTime')
     endTime = request.form.get('endTime')
 
+
     prompt = """
     Using strictly the following format 
     DO NOT NUMBER THE QUESTIONS
@@ -345,7 +348,8 @@ def essay():
         "endTime": endTime,
         "totalGrade": len(essays),  # Total points assuming 1 point per question
         "courseId": courseId,
-        "questions": essays
+        "questions": essays,
+
     }
 
     # Print essay payload for debugging
