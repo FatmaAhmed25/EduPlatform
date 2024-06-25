@@ -1,0 +1,46 @@
+<div class="container">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <h1>EDU</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="#">Dashboard</a></li>
+          <li><a href="#">Courses</a></li>
+          <li><a href="#">Messages</a></li>
+          <li><a href="#">Webinars</a></li>
+          <li><a href="#">Calendar</a></li>
+          <li><a href="#">Store</a></li>
+        </ul>
+      </nav>
+      <!-- <div class="sidebar-support">
+        <a href="#">Support</a>
+      </div> -->
+    </div>
+    <div class="main-content">
+      <!-- <div class="header">
+        <input type="text" placeholder="Search">
+        <div class="header-profile">
+          <span>Emily Johnson</span>
+        </div>
+      </div> -->
+      <div class="courses">
+        <h2>My Courses</h2>
+        <div class="course-list">
+            <div class="course-card" *ngFor="let course of myCourses">
+              <img [src]="'../../assets/' + course.image" alt="Course Image" class="course-image">
+              <h3>{{ course.title }}</h3>
+              <p>{{ course.nextLesson }}</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" [style.width.%]="progress">
+                  <span class="sr-only">{{ progress }}%</span>
+                </div>
+              </div>              
+              <button (click)="increaseProgress()">Increase Progress</button>                        
+            <button>To The Course</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
