@@ -4,7 +4,6 @@ import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.dtos.CourseDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
-
 import com.edu.eduplatform.models.Instructor;
 import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.repos.CourseRepo;
@@ -20,8 +19,6 @@ import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.utils.IUtils.ICourseCodeGenerator;
 import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,14 +59,13 @@ public class CourseService {
 
     @Transactional
     public void generateCourse(Long instructorId, CourseDTO courseDTO) {
-
         // Check if instructor exists
         if (!instructorService.isInstructorExists(instructorId)) {
             throw new EntityNotFoundException("Instructor not found with ID: " + instructorId);
         }
 
-        // Generate a unique course code
-        String courseCode = courseCodeGenerator.generateCode();
+        // Generate a unique course code based on course title
+        String courseCode = courseCodeGenerator.generateCode(courseDTO.getTitle());
 
         // Generate a secure password
         String password = passwordGenerator.generatePassword();
@@ -84,9 +80,8 @@ public class CourseService {
 
         // Save the course to the database
         courseRepository.save(course);
-
-
     }
+
 
     @Transactional
     public void assignTAToCourse(Long instructorId, Long courseId, Long taId) throws Exception {
@@ -100,7 +95,6 @@ public class CourseService {
         }
 
         // Check if instructor (TA) exists
-
         Instructor ta = instructorService.getInstructorById(taId);
 
         // Add the TA to the course
@@ -111,7 +105,8 @@ public class CourseService {
     }
 
 
-    public List<CourseResponseDTO> getCoursesCreatedByInstructor(Long instructorId) {
+    public List<CourseResponseDTO> getCoursesCreatedByInstructor(Long instructorId)
+    {
         // Check if instructor exists
         List<Course> courses = courseRepository.findByCreatedBy_UserID(instructorId);
         return courses.stream()
@@ -131,7 +126,6 @@ public class CourseService {
         if (course.getStudents().contains(student)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
         }
-
 
         if (!course.getPassword().equals(coursePassword)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
@@ -168,6 +162,7 @@ public class CourseService {
 //
 //        return courseRepository.save(course);
 //    }
+
     public Course updateCourse(Long courseId, UpdateCourseDTO updatedCourse) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
@@ -182,5 +177,31 @@ public class CourseService {
         }
 
         return courseRepository.save(course);
+    }
+
+    public ResponseEntity<?> enrollStudentInCourseByCode(String courseCode, Long studentId, String coursePassword) {
+        Course course = courseRepository.findByCourseCode(courseCode);
+        if (course == null) {
+            throw new EntityNotFoundException("Course not found with code: " + courseCode);
+        }
+
+        Student student = studentService.getStudentById(studentId);
+
+        // Check if the student is already enrolled in the course
+        if (course.getStudents().contains(student)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
+        }
+
+        if (!course.getPassword().equals(coursePassword)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
+        }
+
+        student.getCourses().add(course);
+        course.getStudents().add(student);
+
+        studentRepo.save(student);
+        courseRepository.save(course);
+
+        return ResponseEntity.ok("Student enrolled successfully.");
     }
 }

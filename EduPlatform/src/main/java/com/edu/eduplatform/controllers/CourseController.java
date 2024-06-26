@@ -78,6 +78,18 @@ public class CourseController {
         }
     }
 
+    @PostMapping("/enroll-by-code")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    public ResponseEntity<?> enrollStudentByCode(@RequestParam String courseCode, @RequestParam @ValidateStudent Long studentId, @RequestParam String password) {
+        try {
+            return courseService.enrollStudentInCourseByCode(courseCode, studentId, password);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        }
+    }
+
+
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/{instructorId}/get-courses/instructor")

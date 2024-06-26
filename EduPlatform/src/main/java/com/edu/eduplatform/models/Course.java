@@ -1,5 +1,6 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class Course {
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
+    @JsonIgnore
     private Instructor createdBy;
 
     @ManyToMany
@@ -42,6 +44,7 @@ public class Course {
             joinColumns = @JoinColumn(name = "course_id"),
             inverseJoinColumns = @JoinColumn(name = "instructor_id")
     )
+    @JsonIgnore
     private Set<Instructor> taInstructors = new HashSet<>();
 
     @ManyToMany
@@ -52,13 +55,16 @@ public class Course {
     )
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Student> students = new HashSet<>();
 
     @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Announcement> announcements = new HashSet<>();
 
     @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Quiz> quizzes = new HashSet<>();
 

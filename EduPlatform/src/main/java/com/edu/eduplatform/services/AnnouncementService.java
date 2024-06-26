@@ -1,17 +1,16 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.controllers.CommentWebSocketController;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
-import com.edu.eduplatform.models.Announcement;
-import com.edu.eduplatform.models.Course;
-import com.edu.eduplatform.models.Instructor;
-import com.edu.eduplatform.models.Student;
-import com.edu.eduplatform.repos.AnnouncementRepo;
-import com.edu.eduplatform.repos.CourseRepo;
-import com.edu.eduplatform.repos.InstructorRepo;
+import com.edu.eduplatform.dtos.CreateCommentDTO;
+import com.edu.eduplatform.models.*;
+import com.edu.eduplatform.repos.*;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,29 +26,29 @@ public class AnnouncementService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
     @Autowired
     CourseContentService courseContentService;
-
     @Autowired
     CourseRepo courseRepo;
     @Autowired
     InstructorRepo instructorRepo;
-
     @Autowired
     StudentService studentService;
     @Autowired
     AnnouncementRepo announcementRepo;
     @Autowired
     ModelMapper modelMapper;
-
+    @Autowired
+    UserRepo userRepo;
+    @Autowired
+    CommentRepo commentRepo;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     public void notifyStudent(Student student, String message) {
         rabbitTemplate.convertAndSend("notificationQueue", "Notify " + student.getUsername() + ": " + message);
     }
-
-
 
 
     @Transactional
@@ -58,8 +57,7 @@ public class AnnouncementService {
         String fileName =courseContentService.uploadFile(courseId.toString(), folderName, file);
         announcementDto.setFileName(fileName);
         // Create the announcement
-       createAnnouncement(courseId, instructorId, announcementDto);
-
+        createAnnouncement(courseId, instructorId, announcementDto);
     }
 
     @Transactional
@@ -83,19 +81,15 @@ public class AnnouncementService {
         for (Student student : students) {
             notifyStudent(student, "New announcement : "+announcementDto.getTitle()+"->>"+announcementDto.getContent());
         }
-
-
         return announcementRepo.save(announcement);
     }
 
 
     public List<Announcement> getAnnouncementsForStudent(Long studentId) {
-        // Step 1: Retrieve courses enrolled by the student
         Set<Course> enrolledCourses = studentService.getStudentById(studentId).getCourses();
 
         List<Announcement> announcements = new ArrayList<>();
 
-        // Step 2: Retrieve announcements for each enrolled course and sort by createdAt descending
         for (Course course : enrolledCourses) {
             List<Announcement> courseAnnouncements = announcementRepo.findByCourseOrderByCreatedAtDesc(course);
             announcements.addAll(courseAnnouncements);
@@ -107,5 +101,40 @@ public class AnnouncementService {
         return announcements;
     }
 
+    public Comment addComment(CreateCommentDTO createCommentDTO) {
+        // Find the Announcement by announcementId
+        Announcement announcement = announcementRepo.findById(createCommentDTO.getAnnouncementId())
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        // Find the User by userId
+        User user = userRepo.findById(createCommentDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Map CreateCommentDTO to Comment using ModelMapper
+        Comment comment = new Comment();
+        comment.setContent(createCommentDTO.getCommentContent());
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setAnnouncement(announcement);
+        comment.setUser(user);
+
+        // Save the comment and update the announcement
+        comment = commentRepo.save(comment);
+
+        // Add the comment to the announcement's list of comments
+        announcement.getComments().add(comment);
+        announcementRepo.save(announcement);
+
+//        messagingTemplate.convertAndSend("/topic/announcement/" + announcement.getId() + "/comments", comment);
+
+        return comment;
+    }
+
+    @Transactional
+    public List<Comment> getCommentsForAnnouncement(Long announcementId) {
+        Announcement announcement = announcementRepo.findById(announcementId)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        return commentRepo.findByAnnouncementOrderByCreatedAtAsc(announcement);
+    }
 
 }

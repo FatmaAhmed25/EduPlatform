@@ -69,6 +69,7 @@ public class SecurityConfig {
                         auth.requestMatchers("/auth/authenticate-users/**").permitAll()
                                 .requestMatchers("/courses/search/**").permitAll()
                                 .requestMatchers(SWAGGER_AUTHLIST).permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         http.authenticationProvider(authenticationProvider());
@@ -85,7 +86,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200","file://","null"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST","PUT","DELETE"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));

@@ -2,7 +2,9 @@ package com.edu.eduplatform.controllers;
 
 
 import com.edu.eduplatform.dtos.AnnouncementDTO;
+import com.edu.eduplatform.dtos.CreateCommentDTO;
 import com.edu.eduplatform.models.Announcement;
+import com.edu.eduplatform.models.Comment;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.AnnouncementService;
 import com.edu.eduplatform.services.CourseService;
@@ -51,9 +53,8 @@ public class AnnouncementController {
             @RequestParam String folderName,
             @RequestParam("file") MultipartFile file,
             @RequestParam String title,
-            @RequestParam String content
-
-    ) {
+            @RequestParam String content)
+    {
         try {
             AnnouncementDTO announcementDto=new AnnouncementDTO(title,content);
             announcementService.uploadMaterialAndNotifyStudents(instructorId, courseId, folderName, file, announcementDto);
@@ -76,7 +77,27 @@ public class AnnouncementController {
         return ResponseEntity.ok(announcement);
     }
 
+    @PostMapping("/add-comment")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
+    public ResponseEntity<?> addCommentToAnnouncement(
+            @RequestBody CreateCommentDTO createCommentDTO
+    ) {
+        try {
+            Comment comment = announcementService.addComment(createCommentDTO);
+            return ResponseEntity.ok(comment);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add comment: " + e.getMessage());
+        }
+    }
 
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
+    @GetMapping("/getComments/{announcementId}")
+    public ResponseEntity<List<Comment>> getAllCommentsForAnnouncement(@PathVariable Long announcementId) {
+        List<Comment> comments = announcementService.getCommentsForAnnouncement(announcementId);
+        return ResponseEntity.ok(comments);
+    }
 
 
 }
