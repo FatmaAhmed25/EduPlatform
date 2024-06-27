@@ -21,17 +21,21 @@ public class CourseCodeGenerator implements ICourseCodeGenerator {
     }
 
     @Override
-    public String generateCode() {
+    public String generateCode(String courseTitle) {
         String courseCode;
         do {
-            courseCode = generateRandomCode();
+            courseCode = generateRandomCode(courseTitle);
         } while (courseRepository.existsByCourseCode(courseCode)); // Ensure uniqueness
         return courseCode;
     }
 
-    private String generateRandomCode() {
-        StringBuilder code = new StringBuilder(CODE_LENGTH);
-        for (int i = 0; i < CODE_LENGTH; i++) {
+    private String generateRandomCode(String courseTitle) {
+        StringBuilder code = new StringBuilder();
+        // Append first few characters of course title (uppercase and without spaces)
+        String prefix = courseTitle.toUpperCase().replaceAll("\\s+", "").substring(0, Math.min(courseTitle.length(), 5));
+        code.append(prefix);
+        // Append random characters to complete the code
+        for (int i = prefix.length(); i < CODE_LENGTH; i++) {
             code.append(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length())));
         }
         return code.toString();

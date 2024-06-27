@@ -16,4 +16,5 @@ public interface CourseRepo extends JpaRepository<Course,Long> {
     @Query("SELECT c FROM Course c WHERE LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(c.title) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Course> searchByCourseCodeOrTitle(@Param("searchTerm") String searchTerm);
 
+    Course findByCourseCode(String courseCode);
 }

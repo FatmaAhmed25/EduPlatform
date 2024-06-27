@@ -1,7 +1,6 @@
 package com.edu.eduplatform.utils.quiz.pdf;
 
 import com.edu.eduplatform.models.Answer;
-import com.edu.eduplatform.models.EssayQuestion;
 import com.edu.eduplatform.models.MCQQuestion;
 import com.edu.eduplatform.models.Question;
 import com.edu.eduplatform.models.Quiz;
@@ -27,7 +26,13 @@ public class PdfService {
             Quiz quiz = quizOptional.get();
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             Document document = new Document();
-            PdfWriter.getInstance(document, byteArrayOutputStream);
+            PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream);
+
+            // Path to your logo file
+            String logoPath = "src/main/resources/logo.png";
+            FooterPageEvent event = new FooterPageEvent(logoPath);
+            writer.setPageEvent(event);
+
             document.open();
 
             // Add course title centered at the top

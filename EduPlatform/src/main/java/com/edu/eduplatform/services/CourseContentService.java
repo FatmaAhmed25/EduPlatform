@@ -32,7 +32,7 @@ public class CourseContentService {
         try {
 
             String fileName = folderName + "/" + file.getOriginalFilename();
-            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/courseId/" + courseId + "/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getBytes());
             return fileName;
@@ -47,7 +47,7 @@ public class CourseContentService {
             BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
             Blob blob = storage.get(blobId);
             if (blob != null) {
-                return blob.signUrl(1, TimeUnit.HOURS); // URL valid for 1 hour
+                return blob.signUrl(3, TimeUnit.HOURS); // URL valid for 1 hour
             } else {
                 throw new IOException("File not found in Google Cloud Storage");
             }
