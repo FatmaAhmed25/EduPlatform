@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+$background-color: #1b3d66;
+$text-color: white;
+$container-bg-color: #ffffff;
+$button-bg-color: #5E5DF0;
+$button-hover-bg-color: #222295;
+$font-family-main: 'Montserrat', sans-serif;
+$font-family-alt: 'DM Sans', sans-serif;
+$box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+$card-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$font-size-small: 12px;
+// Color Variables
+$body-color: #E4E9F7;
+$sidebar-color: #FFF;
+$primary-color: #695CFE;
+$primary-color-light: #F6F5FF;
+$toggle-color: #DDD;
+$text-color: #707070;
+$primary-color-hover:#6154ec;
+$background-color:#fff;
+
+// Dark Mode Variables
+$dark-body-color: #18191a;
+$dark-sidebar-color: #242526;
+$dark-primary-color: #3a3b3c;
+$dark-primary-color-light: #3a3b3c;
+$dark-toggle-color: #fff;
+$dark-text-color: #ccc;
+
+// Transitions
+$tran-03: all 0.2s ease;
+$tran-04: all 0.3s ease;
+$tran-05: all 0.3s ease;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
+    
+}
+body{
+    background-color: $body-color;
+}

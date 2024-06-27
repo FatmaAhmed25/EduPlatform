@@ -1,0 +1,65 @@
+<div class="container">
+    <header>
+      <a href="#">Back to Configure Learning Path</a>
+      <h1>Question Bank</h1>
+      <a href="#">Continue to Configure Learning Path</a>
+    </header>
+    <section>
+        <h5>Assessment : Assessment - Inbound Marketing</h5>
+        <h5>Course : Skill Assessment - Digital Marketing</h5>
+    </section>
+  
+</div>
+
+<div class="container">
+
+    <section>
+      <div class="form-group">
+        <label for="input-type">Input Type</label>
+        <select id="input-type" [(ngModel)]="inputType">
+          <option value="text">Text</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+  
+      <div *ngIf="inputType === 'text'">
+        <label for="text-input">Enter your Content here</label>
+        <textarea name="text" id="text-input" [(ngModel)]="textInput" cols="40" rows="5 "></textarea>
+
+      </div>
+  
+      <div *ngIf="inputType === 'pdf'">
+        <label for="pdf-upload">Upload PDF</label>
+        <input type="file" id="pdf-upload" (change)="onFileSelected($event)">
+      </div>
+  
+      <button (click)="generateQuestions()">Generate Questions</button>
+    </section>
+  
+    <div *ngFor="let question of questions; let i = index" class="question-card">
+      <div class="question-header" (click)="toggleQuestion(i)">
+        <h4>Question {{ i + 1 }}: {{ question.title }}</h4>
+        <span>{{ question.expanded ? '-' : '+' }}</span>
+      </div>
+      <div *ngIf="question.expanded" class="question-body">
+        <p>{{ question.content }}</p>
+        <label for="question-type-{{ i }}">Type of Question</label>
+        <select id="question-type-{{ i }}">
+          <option value="mcq">MCQ</option>
+          <option value="short-answer">Short Answer</option>
+          <!-- Add more types as needed -->
+        </select>
+        <label for="number-of-questions-{{ i }}">Number of Questions</label>
+        <select id="number-of-questions-{{ i }}">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <!-- Add more numbers as needed -->
+        </select>
+        <button>Save</button>
+      </div>
+    </div>
+  
+    <button class="add-new-question" (click)="addNewQuestion()">Add New Question</button>
+  </div>
+  

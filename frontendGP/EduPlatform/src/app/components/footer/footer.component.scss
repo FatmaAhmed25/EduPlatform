@@ -1,0 +1,32 @@
+@import '../../../styles.scss';
+
+html, body {
+  height: 100%; /* Ensure html and body take up the full height of the viewport */
+  margin: 0;
+  padding: 0;
+}
+
+.body-content {
+  min-height: 100%;
+  position: relative;
+  padding-bottom: 14px; /* Adjust this value to ensure content doesn't overlap with the footer */
+  margin-bottom: 100px;
+}
+
+.footer {
+  background-color: $body-color;
+  color: $text-color;
+  width: 100%;
+  position: absolute;
+  bottom: 8px;
+  font-size: 12px;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 10px;
+  background-color: $body-color;
+  width: 100%;
+  position: relative;
+  clear: both; /* Ensures it clears floats */
+}
