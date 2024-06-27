@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="main-content">
+      <div class="courses">
+        <h2>My Courses</h2>
+        <div class="course-list">
+          <div class="course-card" *ngFor="let course of myCourses">
+            <img [src]="'../../assets/images/' + course.image" alt="Course Image" class="course-image">
+            <h3>{{ course.title }}</h3>
+            <div class="progress-bar-container">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="progress"></div>
+              <span class="progress-text">{{ progress }}%</span>
+            </div>
+            <!-- <button (click)="increaseProgress()">Increase Progress</button> -->
+            <button type="button" class="btn">Go to Course</button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
