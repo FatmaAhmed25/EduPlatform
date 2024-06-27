@@ -1,145 +1,203 @@
+/* Variables for consistent theme and spacing */
+$background-color: #f8f9fa;
+$text-color: #343a40;
+$header-bg-color: #ffffff;
+$border-radius: 8px;
+$spacing-unit: 1rem;
+$font-family: 'Roboto', sans-serif;
 @import '../../../../styles.scss';
 
+
+/* Mixins for reusable styles */
+@mixin box-shadow($color) {
+  box-shadow: 0 2px 4px rgba($color, 0.1), 0 4px 8px rgba($color, 0.1);
+}
+
+@mixin transition($properties...) {
+  @each $property in $properties {
+    transition: $property 0.3s ease;
+  }
+}
+
+/* Container for page content */
 .container {
   max-width: 70%;
+  margin-left: 300px;
   margin-top: 30px;
-  margin-left: 280px;
   padding: 30px;
+  background: #fff;
+  border-radius: $border-radius;
+  @include box-shadow(#000);
+}
+
+/* Header styles */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: $spacing-unit;
+  border-radius: $border-radius;
+  @include box-shadow(#000);
 
-  @media (max-width: 1200px) {
-    max-width: 80%;
-    margin-left: 200px;
+  h1 {
+    color: #333;
+    font-size: 1.5rem;
   }
 
-  @media (max-width: 992px) {
-    max-width: 90%;
-    margin-left: 100px;
+  a {
+    font-size: 12px;
+    text-decoration: none;
+    color: $primary-color;
+    @include transition(color);
+
+    &:hover {
+      color: darken($primary-color, 10%);
+    }
+  }
+}
+
+/* Section styles */
+section {
+  margin: $spacing-unit 0;
+
+  h5 {
+    color: $secondary-color;
+    margin-bottom: 0.5 * $spacing-unit;
+  }
+}
+
+/* Form group styles */
+.form-group {
+  margin-bottom: $spacing-unit;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5 * $spacing-unit;
   }
 
-  header {
+  select,
+  textarea,
+  input[type="file"] {
+    width: 100%;
+    padding: $spacing-unit / 2;
+    border: 1px solid lighten(#3a91ef, 40%);
+    border-color: #33333328;
+    border-radius: $border-radius;
+    @include transition(border-color);
+
+    &:focus {
+      border-color: #33333379;
+      outline: none;
+    }
+  }
+}
+
+/* Button styles */
+button {
+  background-color: $primary-color;
+  color: #fff;
+  border: none;
+  padding: $spacing-unit / 2 $spacing-unit;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-size: 1rem;
+  @include transition(background-color);
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+
+  &.add-new-question {
+    display: block;
+    width: 100%;
+    margin-top: $spacing-unit;
+  }
+}
+
+/* Question card styles */
+.question-card {
+  margin-bottom: $spacing-unit;
+  border: 1px solid lighten($primary-color, 40%);
+  border-radius: $border-radius;
+  overflow: hidden;
+  @include box-shadow(#000);
+
+  .question-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: $spacing-unit;
+    background-color: #ffffff4a;
+    color: #333;
+    cursor: pointer;
 
-    a {
-        font-size: 12px;
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    h1 {
+    h4 {
       margin: 0;
-      font-size: 24px;
-      color: #333;
+      // font-size: 1.25rem;
+    }
+
+    span {
+      font-size: 1.5rem;
     }
   }
 
-  section {
-    margin-bottom: 10px;
+  .question-body {
+    padding: $spacing-unit;
+    background-color: $background-color;
 
-    h5 {
-    
-      margin: 10px 0;
-      color: $text-color;
+    p {
+      margin-bottom: $spacing-unit;
     }
 
-    .form-group {
+    .answer-option {
       display: flex;
-      flex-direction: column;
-      margin-bottom: 15px;
-
-      label {
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      select, textarea, input[type="file"] {
-        padding: 10px;
-        border: 1px solid #ced4da;
-        border-radius: 4px;
-        font-size: 16px;
-      }
-
-      textarea {
-        resize: vertical;
-        height: 600px;
-      }
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 16px;
-      cursor: pointer;
-
-      &:hover {
-        background-color: #0056b3;
-      }
-    }
-  }
-
-  .question-card {
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: white;
-
-    .question-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      cursor: pointer;
+      margin-bottom: 0.5 * $spacing-unit;
 
-      h4 {
-        margin: 0;
+      input[type="radio"] {
+        margin-right: 0.5 * $spacing-unit;
+      }
+
+      label {
+        font-size: 1rem;
+        color: $text-color;
       }
     }
 
-    .question-body {
-      padding: 10px 0;
+    .question-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: $spacing-unit;
 
       label {
         font-weight: bold;
-        margin-top: 10px;
+        margin-right: 0.5 * $spacing-unit;
       }
 
-      select {
-        padding: 5px;
-        margin-top: 5px;
-        margin-bottom: 10px;
+      input[type="number"] {
+        width: 50px;
+        padding: 0.5 * $spacing-unit;
+        border: 1px solid lighten(#3a91ef, 40%);
+        border-radius: $border-radius;
+        @include transition(border-color);
+
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
       }
 
       button {
-        background-color: #28a745;
+        background-color: $secondary-color;
+        @include transition(background-color);
+
         &:hover {
-          background-color: #218838;
+          background-color: darken($secondary-color, 10%);
         }
       }
-    }
-  }
-
-  .add-new-question {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-
-    &:hover {
-      background-color: #5a6268;
     }
   }
 }
