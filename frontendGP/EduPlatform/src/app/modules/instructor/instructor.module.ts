@@ -15,7 +15,7 @@ import { AiGenerateQuizComponent } from './ai-generate-quiz/ai-generate-quiz.com
   ],
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
   ],
   exports: [
     CreateQuizComponent,
