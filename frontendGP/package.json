@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@angular/cli": "^16.2.9",
-    "boxicons": "^2.1.4",
-    "primeng": "^17.18.1"
-  }
-}
