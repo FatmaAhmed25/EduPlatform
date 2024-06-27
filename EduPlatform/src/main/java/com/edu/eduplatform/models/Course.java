@@ -59,6 +59,10 @@ public class Course {
     private Set<Student> students = new HashSet<>();
 
     @JsonManagedReference
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Assignment> assignments = new HashSet<>();
+
+    @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Announcement> announcements = new HashSet<>();

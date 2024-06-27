@@ -18,6 +18,10 @@ public class Instructor extends User {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Course> courses;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Assignment> assignments = new HashSet<>();
+
     @ManyToMany(mappedBy = "taInstructors", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Course> taCourses = new HashSet<>();
 

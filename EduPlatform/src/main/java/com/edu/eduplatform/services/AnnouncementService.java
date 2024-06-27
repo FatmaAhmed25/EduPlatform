@@ -27,21 +27,21 @@ public class AnnouncementService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
-    CourseContentService courseContentService;
+    private CourseContentService courseContentService;
     @Autowired
-    CourseRepo courseRepo;
+    private CourseRepo courseRepo;
     @Autowired
-    InstructorRepo instructorRepo;
+    private InstructorRepo instructorRepo;
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
     @Autowired
-    AnnouncementRepo announcementRepo;
+    private AnnouncementRepo announcementRepo;
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
     @Autowired
-    UserRepo userRepo;
+    private UserRepo userRepo;
     @Autowired
-    CommentRepo commentRepo;
+    private CommentRepo commentRepo;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -52,23 +52,27 @@ public class AnnouncementService {
 
 
     @Transactional
-    public void uploadMaterialAndNotifyStudents(Long instructorId, Long courseId,String folderName,MultipartFile file, AnnouncementDTO announcementDto) throws  IOException {
+    public Announcement  uploadMaterialAndNotifyStudents(Long instructorId, Long courseId,String folderName,MultipartFile file, AnnouncementDTO announcementDto) throws  IOException {
         // Upload the file
-        String fileName =courseContentService.uploadFile(courseId.toString(), folderName, file);
+        String fileName = courseContentService.uploadFile(courseId.toString(), folderName, file);
         announcementDto.setFileName(fileName);
         // Create the announcement
-        createAnnouncement(courseId, instructorId, announcementDto);
+        return createAnnouncement(courseId, instructorId, announcementDto);
     }
 
     @Transactional
-    public Announcement createAnnouncement(Long courseId, Long instructorId, AnnouncementDTO announcementDto ) {
+    public Announcement createAnnouncement(Long courseId, Long instructorId, AnnouncementDTO announcementDto) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
         Instructor instructor = instructorRepo.findById(instructorId)
                 .orElseThrow(() -> new RuntimeException("Instructor not found"));
 
-        if (!course.getCreatedBy().equals(instructor)) {
+        // Check if the instructorId is the course creator or a TA
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId ||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID() == instructorId);
+
+        if (!isCourseCreatorOrTA) {
             throw new RuntimeException("Instructor not authorized to create announcement for this course");
         }
 
@@ -79,8 +83,9 @@ public class AnnouncementService {
 
         Set<Student> students = course.getStudents();
         for (Student student : students) {
-            notifyStudent(student, "New announcement : "+announcementDto.getTitle()+"->>"+announcementDto.getContent());
+            notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
         }
+
         return announcementRepo.save(announcement);
     }
 
