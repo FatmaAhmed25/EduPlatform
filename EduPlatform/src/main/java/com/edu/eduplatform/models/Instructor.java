@@ -25,6 +25,10 @@ public class Instructor extends User {
     @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Announcement> announcements = new HashSet<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Assignment> assignments = new HashSet<>();
+
     @Override
     public String toString() {
         return "HII";

@@ -1,10 +1,8 @@
 package com.edu.eduplatform.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -24,6 +22,10 @@ public class Student extends User {
     @ToString.Exclude
     @JsonBackReference
     private Set<Course> courses = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<AssignmentSubmission> submissions = new HashSet<>();
 
     @EqualsAndHashCode.Include
     @Override

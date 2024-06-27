@@ -32,7 +32,7 @@ public class CourseContentService {
         try {
 
             String fileName = folderName + "/" + file.getOriginalFilename();
-            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/courseId/" + courseId + "/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getBytes());
             return fileName;
