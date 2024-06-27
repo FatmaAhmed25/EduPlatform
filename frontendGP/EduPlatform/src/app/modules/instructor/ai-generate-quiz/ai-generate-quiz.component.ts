@@ -6,6 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./ai-generate-quiz.component.scss']
 })
 export class AiGenerateQuizComponent {
+deleteQuestion(_t40: number) {
+throw new Error('Method not implemented.');
+}
   inputType: string = 'text';
   textInput: string = '';
   questions: any[] = [

@@ -41,20 +41,18 @@
       <div *ngIf="question.expanded" class="question-body">
         <p>{{ question.content }}</p>
         <div *ngFor="let answer of question.answers; let j = index" class="answer-option">
-          <input type="radio" name="question-{{i}}" [checked]="answer.isCorrect">
+          <input type="radio" name="question-{{i}}" [checked]="answer.isCorrect" [disabled]="true">
           <label>{{ answer.text }}</label>
         </div>
         <div class="question-actions">
           <label for="question-grade-{{ i }}">Grade:</label>
           <input type="number" id="question-grade-{{ i }}" [(ngModel)]="question.grade" min="0" max="100">
-          
-          <button>Edit</button>
-          <button>Delete</button>
+          <i class="fas fa-trash-alt delete-icon" (click)="deleteQuestion(i)"></i>
         </div>
-        <button (click)="saveQuestion(i)">Save</button>
+        
       </div>
     </div>
   
-    <button class="add-new-question" (click)="addNewQuestion()">Generate Quiz</button>
+    <button class="add-new-question" (click)="addNewQuestion()">Save </button>
   </div>
   
