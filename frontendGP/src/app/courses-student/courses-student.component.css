@@ -1,0 +1,192 @@
+/* coursesStudent.component.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    display:flex;
+  }
+  .container {
+    display: flex;
+    width: 100%;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background-color: #1b3d66;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+  }
+  
+  .sidebar-logo {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar-nav ul li {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-nav ul li a {
+    color: white;
+    text-decoration: none;
+  }
+  .h2Title{
+    font-size:30px;
+  }
+  .sidebar-support {
+    position: absolute;
+    bottom: 20px;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header-profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .courses h2 {
+    margin-bottom: 10px;
+  }
+  
+  .course-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .course-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    height: 250px;
+
+  }
+  .progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 15px;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    background-color: linear-gradient(to right, 
+      hsl(0, 100%, 50%),
+      hsl(30, 100%, 50%),
+      hsl(60, 100%, 50%),
+      hsl(90, 100%, 50%),
+      hsl(120, 100%, 50%),
+      hsl(150, 100%, 50%),
+      hsl(180, 100%, 50%),
+      hsl(210, 100%, 50%),
+      hsl(240, 100%, 50%),
+      hsl(270, 100%, 50%),
+      hsl(300, 100%, 50%),
+      hsl(330, 100%, 50%),
+      hsl(360, 100%, 50%)
+    );
+    transition: width 0.3s ease-out, background-color 0.3s ease-out;
+    position: relative;
+  }
+  .progress-bar-striped {
+    animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+    from { background-position: 1rem 0; }
+    to { background-position: 0 0; }
+}
+  h3{
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    /* margin-top: 30px; */
+    height: 30px;
+    font-size: 1rem;
+    /* margin-right: 690px; */
+    /* padding-right: 80px; */
+    /* right: 40px; */
+    left: 40px;
+    width: 120px;
+    position: relative;
+  }
+  p{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+  }
+  .progress-bar span {
+    position: absolute;
+    top: 3.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+  
+  /* Optional: Adjust the text color based on background */
+  .progress-bar.light span {
+    color: black;
+  }
+  .course-image {
+    width: 200px; /* Set a fixed width */
+    height: 120px; /* Maintain aspect ratio */
+    border-radius: 15px 15px 0px 0px;/* Optionally, you can add more styles like border-radius, box-shadow, etc. */
+  }
+  .btn{
+    background: #5E5DF0;
+    border-radius: 8px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 200px;
+    word-break: break-word;
+    border: 0;
+    margin-top: 10px;
+    height: 32px;
+}
+.btn:hover{
+  background-color:#222295;
+}
+.logo-image{
+  width: 170px;
+  height: 34px;
+}
