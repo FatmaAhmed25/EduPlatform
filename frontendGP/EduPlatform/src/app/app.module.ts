@@ -25,7 +25,8 @@ import { StudentModule } from './modules/student/student.module';
     AppRoutingModule,
     CoreModule,
     InstructorModule,
-    StudentModule
+    StudentModule,
+    LoginComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

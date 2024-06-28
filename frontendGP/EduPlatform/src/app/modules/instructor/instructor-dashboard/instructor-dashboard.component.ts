@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./instructor-dashboard.component.scss']
 })
 export class InstructorDashboardComponent {
+  token: string | null = '';
 
+  ngOnInit() {
+    this.token = localStorage.getItem('authToken');
+  }
 }
