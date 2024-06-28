@@ -11,5 +11,11 @@ import java.util.List;
         List<Announcement> findByCourse_CourseId(Long courseId);
 
         List<Announcement> findByCourseOrderByCreatedAtDesc(Course course);
+
+        List<Announcement >findByCourse(Course course);
+
+        List<Announcement> findAnnouncementsByFileNameStartingWithAndCourse_CourseId(String fileName, Long courseId);
+
+
     }
 
