@@ -11,6 +11,8 @@ import { LoginComponent } from './components/login/login.component';
 import { CoreModule } from './core/core.module';
 import { InstructorModule } from './modules/instructor/instructor.module';
 import { StudentModule } from './modules/student/student.module';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { StudentModule } from './modules/student/student.module';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    HttpClientModule,
     AppRoutingModule,
     CoreModule,
     InstructorModule,

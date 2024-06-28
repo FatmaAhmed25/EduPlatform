@@ -19,6 +19,8 @@ import { AiGenerateQuizComponent } from './ai-generate-quiz/ai-generate-quiz.com
   ],
   exports: [
     CreateQuizComponent,
-  AiGenerateQuizComponent]
+  AiGenerateQuizComponent,
+  InstructorDashboardComponent
+]
 })
 export class InstructorModule { }
