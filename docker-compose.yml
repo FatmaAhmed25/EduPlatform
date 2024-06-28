@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    build:
+      context: ./mysql-dockerization
+      dockerfile: Dockerfile
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+  backend:
+    build:
+      context: ./EduPlatform
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_URL: ${MYSQL_URL}
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      FIREBASE_BUCKET_NAME: ${FIREBASE_BUCKET_NAME}
+      GOOGLE_APPLICATION_CREDENTIALS: serviceAccountKey.json
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
+    driver: local

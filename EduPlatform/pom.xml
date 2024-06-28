@@ -8,6 +8,9 @@
         <version>3.3.0</version>
         <relativePath/>
     </parent>
+    <packaging>
+        jar
+    </packaging>
     <groupId>com.edu</groupId>
     <artifactId>EduPlatform</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -144,5 +147,8 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>
+            backend
+        </finalName>
     </build>
 </project>
