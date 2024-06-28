@@ -4,10 +4,8 @@ import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
 import com.edu.eduplatform.models.*;
-import com.edu.eduplatform.repos.AssignmentRepo;
-import com.edu.eduplatform.repos.AssignmentSubmissionRepo;
+import com.edu.eduplatform.repos.*;
 
-import com.edu.eduplatform.repos.StudentRepo;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,16 +49,50 @@ public class AssignmentService {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private CourseRepo courseRepo;
+    @Autowired
+    private InstructorRepo instructorRepo;
+
+
 
     @Transactional
     public Assignment createAssignment(Long instructorId, Long courseId, MultipartFile file, AnnouncementDTO announcementDto, LocalDateTime dueDate, boolean allowLateSubmissions) throws IOException {
-        String folderName = "assignments/instructor/" + instructorId;
-        Announcement announcement = announcementService.uploadMaterialAndNotifyStudents(instructorId, courseId, folderName, file, announcementDto);
 
-        // Use ModelMapper to map Announcement to Assignment
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        // Upload the file
+        String fileName = courseContentService.uploadFile(courseId.toString(), MaterialType.ASSIGNMENTS.getFolder(), file);
+        announcementDto.setFileName(fileName);
+
+        // Check if the instructorId is the course creator or a TA
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId ||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID() == instructorId);
+
+        if (!isCourseCreatorOrTA) {
+            throw new RuntimeException("Instructor not authorized to create announcement for this course");
+        }
+
+        Announcement announcement = modelMapper.map(announcementDto, Announcement.class);
+        announcement.setCreatedAt(LocalDateTime.now());
+        announcement.setCourse(course);
+        announcement.setInstructor(instructor);
+
+        String notificationMessage = "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent();
+        announcement.setNotificationMessage(notificationMessage);
         Assignment assignment = modelMapper.map(announcement, Assignment.class);
         assignment.setDueDate(dueDate);
         assignment.setAllowLateSubmissions(allowLateSubmissions);
+
+
+        Set<Student> students = course.getStudents();
+//        for (Student student : students) {
+//            notificationService.announcementService.notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
+//        }
 
         return assignmentRepo.save(assignment);
     }
@@ -74,11 +106,21 @@ public class AssignmentService {
         Student student = studentRepo.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
+        // Check for existing submission
+        AssignmentSubmission existingSubmission = assignmentSubmissionRepo.findByAssignmentAndStudent(assignment, student);
+        if (existingSubmission != null) {
+            // Delete the old file from Firebase
+            courseContentService.deleteFile(assignment.getCourse().getCourseId().toString(), existingSubmission.getFileName());
 
-        String folderName = "assignments/" + "submissions/student" + studentId;
+            // Delete the old submission from the repository
+            assignmentSubmissionRepo.delete(existingSubmission);
+        }
 
+        // Upload new file
+        String folderName = "assignments/submissions/student" + studentId;
         String fileName = courseContentService.uploadFile(assignment.getCourse().getCourseId().toString(), folderName, file);
 
+        // Create new submission
         AssignmentSubmission submission = new AssignmentSubmission();
         submission.setAssignment(assignment);
         submission.setStudent(student);
@@ -92,8 +134,10 @@ public class AssignmentService {
 
         submission.setLate(isLate);
 
+        // Save new submission
         assignmentSubmissionRepo.save(submission);
     }
+
 
     public List<AssignmentDTO> getAssignmentsForStudent(Long studentId) {
         Set<Course> enrolledCourses = studentService.getStudentById(studentId).getCourses();

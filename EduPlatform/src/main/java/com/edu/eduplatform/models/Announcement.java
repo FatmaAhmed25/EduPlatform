@@ -30,6 +30,9 @@ public class Announcement {
     @Column(name = "FileName")
     private String fileName; // Optional
 
+    @Column(name = "notficationMessage")
+    private String notificationMessage;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "CourseID", nullable = false)
@@ -39,6 +42,8 @@ public class Announcement {
     @ManyToOne
     @JoinColumn(name = "InstructorID", nullable = false)
     private Instructor instructor;
+
+
 
     @JsonManagedReference
     @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL , fetch = FetchType.EAGER)

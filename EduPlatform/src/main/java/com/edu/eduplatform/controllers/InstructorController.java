@@ -67,7 +67,7 @@ public class InstructorController {
 
     @GetMapping("/{courseId}/announcements")
     @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
     public ResponseEntity<?> getAnnouncements(@PathVariable Long courseId) {
         List<Announcement> announcements = instructorService.getAnnouncementsByCourse(courseId);
         return ResponseEntity.ok(announcements);

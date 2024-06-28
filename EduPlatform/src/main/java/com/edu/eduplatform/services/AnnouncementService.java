@@ -1,16 +1,15 @@
 package com.edu.eduplatform.services;
 
-import com.edu.eduplatform.controllers.CommentWebSocketController;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
+import com.edu.eduplatform.dtos.AssignmentResponseDTO;
 import com.edu.eduplatform.dtos.CreateCommentDTO;
+import com.edu.eduplatform.dtos.getAnnouncementDTO;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.*;
 import jakarta.transaction.Transactional;
-import org.antlr.v4.runtime.misc.LogManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,8 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class AnnouncementService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+
     @Autowired
     private CourseContentService courseContentService;
     @Autowired
@@ -43,23 +41,79 @@ public class AnnouncementService {
     private UserRepo userRepo;
     @Autowired
     private CommentRepo commentRepo;
+
+    @Autowired
+    private NotificationService notificationService;
+
 //    @Autowired
 //    private SimpMessagingTemplate messagingTemplate;
 
 
-    public void notifyStudent(Student student, String message) {
-        rabbitTemplate.convertAndSend("notificationQueue", "Notify " + student.getUsername() + ": " + message);
+    public Object getAnnouncementById(Long announcementId) {
+        Announcement announcement = announcementRepo.findById(announcementId)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        // Check if the announcement is an instance of Assignment
+        if (announcement instanceof Assignment) {
+            return mapToAssignmentDTO((Assignment) announcement);
+        } else {
+            return mapToAnnouncementDTO(announcement);
+        }
     }
+
+    private getAnnouncementDTO mapToAnnouncementDTO(Announcement announcement) {
+        return modelMapper.map(announcement, getAnnouncementDTO.class);
+    }
+
+    private AssignmentResponseDTO mapToAssignmentDTO(Assignment assignment) {
+        return modelMapper.map(assignment, AssignmentResponseDTO.class);
+    }
+
+
+
+
+    public List<Announcement> getLectureAnnouncements(Long courseId) {
+        return getAnnouncementsByFileNamePattern(courseId, "lectures/");
+    }
+
+
+    public List<Announcement> getLabAnnouncements(Long courseId) {
+        return getAnnouncementsByFileNamePattern(courseId, "labs/");
+    }
+    public List<AssignmentResponseDTO> getAssignmentAnnouncements(Long courseId) {
+        List<Announcement> announcements = announcementRepo.findAnnouncementsByFileNameStartingWithAndCourse_CourseId("assignments/", courseId);
+        return announcements.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private AssignmentResponseDTO convertToDto(Announcement announcement) {
+        return modelMapper.map(announcement, AssignmentResponseDTO.class);
+    }
+
+    private List<Announcement> getAnnouncementsByFileNamePattern(Long courseId, String fileNamePattern) {
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        return announcementRepo.findByCourse(course).stream()
+                .filter(announcement -> announcement.getFileName() != null && announcement.getFileName().startsWith(fileNamePattern))
+                .sorted(Comparator.comparing(Announcement::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+
 
 
     @Transactional
-    public Announcement  uploadMaterialAndNotifyStudents(Long instructorId, Long courseId,String folderName,MultipartFile file, AnnouncementDTO announcementDto) throws  IOException {
-        // Upload the file
-        String fileName = courseContentService.uploadFile(courseId.toString(), folderName, file);
+    public Announcement uploadMaterialAndNotifyStudents(Long instructorId, Long courseId, MaterialType folderName, MultipartFile file, AnnouncementDTO announcementDto) throws IOException {
+        // Upload the file using the folder name from the enum
+        String fileName = courseContentService.uploadFile(courseId.toString(), folderName.getFolder(), file);
         announcementDto.setFileName(fileName);
+
         // Create the announcement
         return createAnnouncement(courseId, instructorId, announcementDto);
     }
+
 
     @Transactional
     public Announcement createAnnouncement(Long courseId, Long instructorId, AnnouncementDTO announcementDto) {
@@ -82,9 +136,12 @@ public class AnnouncementService {
         announcement.setCourse(course);
         announcement.setInstructor(instructor);
 
+        String notificationMessage = "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent();
+        announcement.setNotificationMessage(notificationMessage);
+
         Set<Student> students = course.getStudents();
 //        for (Student student : students) {
-//            notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
+//            notificationService.notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
 //        }
 
         return announcementRepo.save(announcement);
@@ -92,15 +149,13 @@ public class AnnouncementService {
 
 
 
-    public List<Announcement> getAnnouncementsForStudent(Long studentId) {
+    public List<Announcement> getNotiicationsForStudent(Long studentId) {
         Set<Course> enrolledCourses = studentService.getStudentById(studentId).getCourses();
 
         List<Announcement> announcements = new ArrayList<>();
 
         for (Course course : enrolledCourses) {
-            List<Announcement> courseAnnouncements = announcementRepo.findByCourseOrderByCreatedAtDesc(course).stream()
-                    .filter(announcement -> !(announcement instanceof Assignment))
-                    .collect(Collectors.toList());
+            List<Announcement> courseAnnouncements = announcementRepo.findByCourseOrderByCreatedAtDesc(course);
             announcements.addAll(courseAnnouncements);
         }
 
@@ -109,6 +164,7 @@ public class AnnouncementService {
 
         return announcements;
     }
+
 
 
     public Comment addComment(CreateCommentDTO createCommentDTO) {

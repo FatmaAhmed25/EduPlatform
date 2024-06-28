@@ -32,7 +32,7 @@ public class CourseContentService {
         try {
 
             String fileName = folderName + "/" + file.getOriginalFilename();
-            BlobId blobId = BlobId.of(bucketName, "courses/courseId/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/courseId-" + courseId + "/" + fileName);
             BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
             storage.create(blobInfo, file.getBytes());
             return fileName;
@@ -44,7 +44,7 @@ public class CourseContentService {
 
     public URL getFileUrl(String courseId, String fileName) throws IOException {
         try {
-            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/courseId-" + courseId + "/" + fileName);
             Blob blob = storage.get(blobId);
             if (blob != null) {
                 return blob.signUrl(3, TimeUnit.HOURS); // URL valid for 1 hour
@@ -59,7 +59,7 @@ public class CourseContentService {
 
     public boolean deleteFile(String courseId, String fileName) throws IOException {
         try {
-            BlobId blobId = BlobId.of(bucketName, "courses/" + courseId + "/" + fileName);
+            BlobId blobId = BlobId.of(bucketName, "courses/courseId-" + courseId + "/" + fileName);
             return storage.delete(blobId);
         } catch (StorageException e) {
             // Log or handle the exception appropriately
@@ -68,7 +68,7 @@ public class CourseContentService {
     }
     public List<String> listFiles(String courseId, String folderName) {
         List<String> fileList = new ArrayList<>();
-        String prefix = "courses/" + courseId + "/" + folderName + "/";
+        String prefix = "courses/courseId-" + courseId + "/" + folderName + "/";
         storage.list(bucketName, Storage.BlobListOption.prefix(prefix)).iterateAll()
                 .forEach(blob -> fileList.add(blob.getName()));
         return fileList;
