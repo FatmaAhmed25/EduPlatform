@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 import com.edu.eduplatform.dtos.AnnouncementDTO;
+import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
 import com.edu.eduplatform.models.Assignment;
 import com.edu.eduplatform.models.AssignmentSubmission;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -33,25 +35,35 @@ public class AssignmentController {
             @RequestParam MultipartFile file,
             @RequestParam LocalDateTime dueDate,
             @RequestParam String title,
-            @RequestParam String content) throws IOException {
-        AnnouncementDTO announcementDto=new AnnouncementDTO(title,content);
+            @RequestParam String content,
+            @RequestParam boolean allowLateSubmissions) throws IOException {
+        AnnouncementDTO announcementDto = new AnnouncementDTO(title, content);
 
-        Assignment assignment = assignmentService.createAssignment(instructorId, courseId, file, announcementDto, dueDate);
+        Assignment assignment = assignmentService.createAssignment(instructorId, courseId, file, announcementDto, dueDate, allowLateSubmissions);
         return ResponseEntity.status(HttpStatus.CREATED).body(assignment);
     }
 
-    @PostMapping(value="/submit",consumes = {"multipart/form-data"})
+    @PostMapping(value="/submit", consumes = {"multipart/form-data"})
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     public ResponseEntity<?> submitAssignment(
             @RequestParam Long studentId,
             @RequestParam Long assignmentId,
             @RequestParam MultipartFile file) throws IOException {
-
-        assignmentService.submitAssignment(studentId, assignmentId, file);
-        return ResponseEntity.ok("Assignment submitted successfully");
+        try {
+            assignmentService.submitAssignment(studentId, assignmentId, file);
+            return ResponseEntity.ok("Assignment submitted successfully");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
     }
 
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @GetMapping("/{studentId}/assignments")
+    public List<AssignmentDTO> getAssignmentsForStudent(@PathVariable Long studentId) {
+        return assignmentService.getAssignmentsForStudent(studentId);
+    }
 
     @GetMapping("/submissions/{assignmentId}")
     @SecurityRequirement(name="BearerAuth")

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AnnouncementService {
@@ -42,8 +43,8 @@ public class AnnouncementService {
     private UserRepo userRepo;
     @Autowired
     private CommentRepo commentRepo;
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+//    @Autowired
+//    private SimpMessagingTemplate messagingTemplate;
 
 
     public void notifyStudent(Student student, String message) {
@@ -82,12 +83,13 @@ public class AnnouncementService {
         announcement.setInstructor(instructor);
 
         Set<Student> students = course.getStudents();
-        for (Student student : students) {
-            notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
-        }
+//        for (Student student : students) {
+//            notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
+//        }
 
         return announcementRepo.save(announcement);
     }
+
 
 
     public List<Announcement> getAnnouncementsForStudent(Long studentId) {
@@ -96,7 +98,9 @@ public class AnnouncementService {
         List<Announcement> announcements = new ArrayList<>();
 
         for (Course course : enrolledCourses) {
-            List<Announcement> courseAnnouncements = announcementRepo.findByCourseOrderByCreatedAtDesc(course);
+            List<Announcement> courseAnnouncements = announcementRepo.findByCourseOrderByCreatedAtDesc(course).stream()
+                    .filter(announcement -> !(announcement instanceof Assignment))
+                    .collect(Collectors.toList());
             announcements.addAll(courseAnnouncements);
         }
 
@@ -105,6 +109,7 @@ public class AnnouncementService {
 
         return announcements;
     }
+
 
     public Comment addComment(CreateCommentDTO createCommentDTO) {
         // Find the Announcement by announcementId
