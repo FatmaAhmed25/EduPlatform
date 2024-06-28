@@ -1,7 +1,6 @@
 package com.edu.eduplatform.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -12,6 +11,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "Announcements")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "Dtype")
 public class Announcement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,12 +33,10 @@ public class Announcement {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "CourseID", nullable = false)
-    @JsonIgnore
     private Course course;
 
     @JsonBackReference
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "InstructorID", nullable = false)
     private Instructor instructor;
 

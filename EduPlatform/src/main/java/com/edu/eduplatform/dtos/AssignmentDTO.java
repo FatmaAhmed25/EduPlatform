@@ -18,4 +18,10 @@ public class AssignmentDTO {
     }
 
 
+    public AssignmentDTO(String title, String content, LocalDateTime dueDate, String fileName) {
+        this.title = title;
+        this.description = content;
+        this.dueDate=dueDate;
+        this.fileName=fileName;
+    }
 }

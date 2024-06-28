@@ -28,4 +28,7 @@ public class AssignmentSubmission {
     private Student student;
 
 
+    @Column(name = "IsLate", nullable = false)
+    private boolean isLate;
+
 }
