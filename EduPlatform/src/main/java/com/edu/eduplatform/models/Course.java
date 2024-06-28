@@ -31,6 +31,7 @@ public class Course {
     private String description;
 
     @Column(name = "Password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @ManyToOne
@@ -60,6 +61,7 @@ public class Course {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Assignment> assignments = new HashSet<>();
 
     @JsonManagedReference

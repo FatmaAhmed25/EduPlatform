@@ -1,15 +1,13 @@
 package com.edu.eduplatform.services;
 
-import com.edu.eduplatform.dtos.AnnouncementDTO;
-import com.edu.eduplatform.dtos.AssignmentResponseDTO;
-import com.edu.eduplatform.dtos.CreateCommentDTO;
-import com.edu.eduplatform.dtos.getAnnouncementDTO;
+import com.edu.eduplatform.dtos.*;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.*;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,8 +43,8 @@ public class AnnouncementService {
     @Autowired
     private NotificationService notificationService;
 
-//    @Autowired
-//    private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     public Object getAnnouncementById(Long announcementId) {
@@ -139,12 +137,12 @@ public class AnnouncementService {
         String notificationMessage = "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent();
         announcement.setNotificationMessage(notificationMessage);
 
-        Set<Student> students = course.getStudents();
-//        for (Student student : students) {
-//            notificationService.notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
-//        }
+        Announcement saveAnnouncement = announcementRepo.save(announcement);
 
-        return announcementRepo.save(announcement);
+        NotificationDTO notificationDTO = new NotificationDTO(saveAnnouncement.getId(),notificationMessage);
+        messagingTemplate.convertAndSend("/topic/course/" + courseId, notificationDTO);
+
+        return saveAnnouncement;
     }
 
 

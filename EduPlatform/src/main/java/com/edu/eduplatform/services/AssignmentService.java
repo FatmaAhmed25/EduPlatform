@@ -3,6 +3,7 @@ package com.edu.eduplatform.services;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
+import com.edu.eduplatform.dtos.NotificationDTO;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.*;
 
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,7 +56,8 @@ public class AssignmentService {
     @Autowired
     private InstructorRepo instructorRepo;
 
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Transactional
     public Assignment createAssignment(Long instructorId, Long courseId, MultipartFile file, AnnouncementDTO announcementDto, LocalDateTime dueDate, boolean allowLateSubmissions) throws IOException {
@@ -88,13 +91,14 @@ public class AssignmentService {
         assignment.setDueDate(dueDate);
         assignment.setAllowLateSubmissions(allowLateSubmissions);
 
+        Assignment savedAssignment = assignmentRepo.save(assignment);
 
-        Set<Student> students = course.getStudents();
-//        for (Student student : students) {
-//            notificationService.announcementService.notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
-//        }
 
-        return assignmentRepo.save(assignment);
+        NotificationDTO notificationDTO = new NotificationDTO(savedAssignment.getId(),notificationMessage);
+        messagingTemplate.convertAndSend("/topic/course/" + courseId, notificationDTO);
+
+
+        return savedAssignment;
     }
 
 

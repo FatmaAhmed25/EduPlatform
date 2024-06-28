@@ -127,14 +127,11 @@ public class AnnouncementController {
     }
 
 
-    @PostMapping("/{courseId}/create-announcement")
+    @PostMapping("/{courseId}/{instructorId}/create-announcement")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    public ResponseEntity<?> createAnnouncement(@PathVariable Long courseId,
+    public ResponseEntity<?> createAnnouncement(@PathVariable Long courseId,@PathVariable Long instructorId,
                                                 @RequestBody AnnouncementDTO announcementDto) {
-        Course course = courseService.getCourseById(courseId);
-
-        Long instructorId = course.getCreatedBy().getUserID();
         Announcement announcement = announcementService.createAnnouncement(courseId, instructorId, announcementDto);
         return ResponseEntity.ok(announcement);
     }
