@@ -3,20 +3,18 @@ package com.edu.eduplatform.services;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
+import com.edu.eduplatform.dtos.NotificationDTO;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.*;
-
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,9 +24,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class AssignmentService {
-
-    @Autowired
-    private AnnouncementService announcementService;
 
     @Autowired
     private AssignmentRepo assignmentRepo;
@@ -51,8 +46,12 @@ public class AssignmentService {
 
     @Autowired
     private CourseRepo courseRepo;
+
     @Autowired
     private InstructorRepo instructorRepo;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
 
@@ -88,13 +87,12 @@ public class AssignmentService {
         assignment.setDueDate(dueDate);
         assignment.setAllowLateSubmissions(allowLateSubmissions);
 
+        Assignment savedAssignment = assignmentRepo.save(assignment);
 
-        Set<Student> students = course.getStudents();
-//        for (Student student : students) {
-//            notificationService.announcementService.notifyStudent(student, "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent());
-//        }
+        NotificationDTO notificationDTO = new NotificationDTO(savedAssignment.getId(),notificationMessage);
+        messagingTemplate.convertAndSend("/topic/course/" + courseId, notificationDTO);
 
-        return assignmentRepo.save(assignment);
+        return savedAssignment;
     }
 
 

@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Set;
 
 public interface CourseRepo extends JpaRepository<Course,Long> {
     boolean existsByCourseCode(String courseCode);

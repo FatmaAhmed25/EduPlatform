@@ -2,12 +2,9 @@ package com.edu.eduplatform.services;
 
 
 import com.edu.eduplatform.dtos.UserDTO;
-import com.edu.eduplatform.models.Admin;
 import com.edu.eduplatform.models.Instructor;
 import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.models.User;
-import com.edu.eduplatform.repos.InstructorRepo;
-import com.edu.eduplatform.repos.StudentRepo;
 import com.edu.eduplatform.repos.UserRepo;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.text.DecimalFormat;
 

@@ -1,10 +1,9 @@
 package com.edu.eduplatform.aspects;
 
-import com.edu.eduplatform.annotations.ValidateInstructor;
+
 import com.edu.eduplatform.services.CourseService;
 import com.edu.eduplatform.services.InstructorService;
 import com.edu.eduplatform.services.StudentService;
-import com.google.api.pathtemplate.ValidationException;
 import jakarta.persistence.EntityNotFoundException;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

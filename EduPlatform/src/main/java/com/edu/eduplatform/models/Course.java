@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,6 +30,7 @@ public class Course {
     private String description;
 
     @Column(name = "Password", nullable = false)
+    @JsonIgnore
     private String password;
 
     @ManyToOne
@@ -60,6 +60,7 @@ public class Course {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Assignment> assignments = new HashSet<>();
 
     @JsonManagedReference

@@ -7,8 +7,6 @@ import com.edu.eduplatform.repos.StudentRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.Set;
 
 @Service

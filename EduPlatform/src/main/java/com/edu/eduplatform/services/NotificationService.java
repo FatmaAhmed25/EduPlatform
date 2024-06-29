@@ -7,7 +7,6 @@ import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.repos.AnnouncementRepo;
 import com.edu.eduplatform.repos.StudentRepo;
 import org.modelmapper.ModelMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class NotificationService {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    private StudentRepo studentRepository;
 
     @Autowired
     private AnnouncementRepo announcementRepository;
@@ -31,11 +26,6 @@ public class NotificationService {
     private ModelMapper modelMapper;
     @Autowired
     private StudentService studentService;
-
-
-    public void notifyStudent(Student student, String message) {
-        rabbitTemplate.convertAndSend("notificationQueue", "Notify " + student.getUsername() + ": " + message);
-    }
 
 
     public List<NotificationDTO> getNotificationsForStudents(Long studentId) {

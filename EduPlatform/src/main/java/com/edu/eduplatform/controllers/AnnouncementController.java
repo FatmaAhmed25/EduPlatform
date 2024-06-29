@@ -6,7 +6,6 @@ import com.edu.eduplatform.dtos.AssignmentResponseDTO;
 import com.edu.eduplatform.dtos.CreateCommentDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.models.Comment;
-import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.models.MaterialType;
 import com.edu.eduplatform.services.AnnouncementService;
 import com.edu.eduplatform.services.CourseService;
@@ -127,14 +126,11 @@ public class AnnouncementController {
     }
 
 
-    @PostMapping("/{courseId}/create-announcement")
+    @PostMapping("/{courseId}/{instructorId}/create-announcement")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    public ResponseEntity<?> createAnnouncement(@PathVariable Long courseId,
+    public ResponseEntity<?> createAnnouncement(@PathVariable Long courseId,@PathVariable Long instructorId,
                                                 @RequestBody AnnouncementDTO announcementDto) {
-        Course course = courseService.getCourseById(courseId);
-
-        Long instructorId = course.getCreatedBy().getUserID();
         Announcement announcement = announcementService.createAnnouncement(courseId, instructorId, announcementDto);
         return ResponseEntity.ok(announcement);
     }
