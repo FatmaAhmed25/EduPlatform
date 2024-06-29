@@ -23,8 +23,14 @@ export class LoginComponent {
       response => {
         // Save the token in local storage
         localStorage.setItem('authToken', response.token);
-        // Navigate to a different page upon successful login
-        this.router.navigate(['/dashboard']);
+        localStorage.setItem('userID', response.userID);
+        
+        // Check the user role and navigate accordingly
+        if (response.userType === 'ROLE_STUDENT') {
+          this.router.navigate(['/student-courses']);
+        } else if (response.userType === 'ROLE_INSTRUCTOR') {
+          this.router.navigate(['/instructor-dashboard']);
+        }
       },
       error => {
         console.error('Login failed', error);
