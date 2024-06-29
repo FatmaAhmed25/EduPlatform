@@ -34,6 +34,8 @@ public class CourseController {
 
 
     @GetMapping("/search")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT','ROLE_ADMIN')")
     public List<Course> searchCourses(@RequestParam String searchTerm) {
         return courseService.searchCourses(searchTerm);
     }
@@ -41,11 +43,15 @@ public class CourseController {
 
 
     @GetMapping("/search/by-code")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT','ROLE_ADMIN')")
     public List<Course> findByCourseCode(@RequestParam String courseCode) {
         return courseService.findByCourseCode(courseCode);
     }
 
     @GetMapping("/search/by-title")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT','ROLE_ADMIN')")
     public List<Course> findByTitle(@RequestParam String title) {
         return courseService.findByTitle(title);
     }

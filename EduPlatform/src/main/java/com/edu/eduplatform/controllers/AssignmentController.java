@@ -4,7 +4,6 @@ import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
 import com.edu.eduplatform.models.Assignment;
-import com.edu.eduplatform.models.AssignmentSubmission;
 import com.edu.eduplatform.services.AssignmentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;

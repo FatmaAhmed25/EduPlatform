@@ -1,5 +1,6 @@
 package com.edu.eduplatform.config;
 
+
 import com.edu.eduplatform.security.JwtHandshakeInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

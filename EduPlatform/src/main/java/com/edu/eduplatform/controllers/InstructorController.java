@@ -3,7 +3,6 @@ package com.edu.eduplatform.controllers;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
-import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseService;
 import com.edu.eduplatform.services.InstructorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
