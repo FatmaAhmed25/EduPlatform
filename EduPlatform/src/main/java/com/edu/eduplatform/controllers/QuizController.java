@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +32,26 @@ public class QuizController {
 
     @Autowired
     private PdfService pdfService;
+
+
+
+    @GetMapping("/generate-submission-pdf/{studentId}/{quizId}")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR') or hasAuthority('ROLE_STUDENT')")
+    @SecurityRequirement(name="BearerAuth")
+    public ResponseEntity<?> generateStudentSubmissionPdf(@PathVariable Long studentId, @PathVariable Long quizId) {
+        try {
+            byte[] pdfBytes = pdfService.generateStudentSubmissionPdf(studentId, quizId);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDispositionFormData("attachment", "student_submission.pdf");
+
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to generate student submission PDF: " + e.getMessage());
+        }
+    }
 
     @SecurityRequirement(name="BearerAuth")
     @Operation(summary = "Generate PDF of a quiz")
