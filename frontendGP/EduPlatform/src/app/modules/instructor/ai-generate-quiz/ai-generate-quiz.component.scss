@@ -191,18 +191,109 @@ button {
         }
       }
     
-      .delete-icon {
-        color: #d32f2f;
-        cursor: pointer;
-        transition: color 0.3s;
-    
-        &:hover {
-          color: #a52828; /* Darker shade for hover effect */
-        }
-      }
+      
     }
     
   }}    
 .delete-icon {
+  color: #d32f2f;
   cursor: pointer;
+  transition: color 0.3s;
+
+  &:hover {
+    color: #a52828; /* Darker shade for hover effect */
+  }
+}
+.file-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-upload-container input[type="file"] {
+  flex-grow: 1;
+}
+
+.upload-instruction {
+  margin-left: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  color: $primary-color;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the icon */
+  left: 50%;
+  margin-left: -100px; /* Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 15px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.selected-files-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.selected-file-item {
+  display: flex;
+  justify-content: space-between;
+  // align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.selected-file-item:last-child {
+  border-bottom: none;
+}
+
+.selected-file-item i.fas.fa-file {
+  color: $primary-color; /* Icon color */
+  margin-right: 15px;
+}
+
+.remove-file-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.generated-questions-title {
+  // font-size: 1.8em; /* Makes the font size slightly larger */
+  font-weight: bold; /* Makes the text bold */
+  //text-align: center; /* Centers the text */
+  margin-top: 20px; /* Adds space above the title */
+  margin-bottom: 20px; /* Adds space below the title */
+  text-transform: uppercase; /* Converts text to uppercase */
+  border-bottom: 2px solid $primary-color; /* Adds a bottom border */
+  padding-bottom: 10px; /* Adds space between text and border */
+  font-family: 'Arial', sans-serif; /* Sets a clean, readable font */
 }
