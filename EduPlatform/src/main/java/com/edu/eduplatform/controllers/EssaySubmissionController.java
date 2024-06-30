@@ -2,6 +2,7 @@ package com.edu.eduplatform.controllers;
 
 
 import com.edu.eduplatform.dtos.EssaySubmissionDTO;
+import com.edu.eduplatform.dtos.QuestionAnswerDTO;
 import com.edu.eduplatform.dtos.StudentAnswerDTO;
 import com.edu.eduplatform.services.EssaySubmissionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,11 +22,21 @@ public class EssaySubmissionController {
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
-    @PostMapping("/saveSubmission")
+    @PostMapping("/submit/essay-quiz")
     public ResponseEntity<Void> saveQuizSubmission(@RequestBody EssaySubmissionDTO essaySubmissionDTO)
     {
         essaySubmissionService.saveQuizSubmission(essaySubmissionDTO);
         return ResponseEntity.ok().build();
+    }
+
+
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/getQuestionAnswersByQuizAndStudent")
+    public ResponseEntity<List<QuestionAnswerDTO>> getQuestionAnswersByQuizIdAndStudentId(
+            @RequestParam Long quizId, @RequestParam Long studentId) {
+        List<QuestionAnswerDTO> questionAnswers = essaySubmissionService.getQuestionAnswersByQuizIdAndStudentId(quizId, studentId);
+        return ResponseEntity.ok(questionAnswers);
     }
 
 
@@ -40,7 +51,7 @@ public class EssaySubmissionController {
     @SecurityRequirement(name = "BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/setOverAllGrade")
-    public ResponseEntity<?> setOverAllGrade(@RequestParam Long quizId, @RequestParam Long studentId, @RequestParam String grade) {
+    public ResponseEntity<?> setOverAllGrade(@RequestParam Long quizId, @RequestParam Long studentId, @RequestParam double grade) {
         essaySubmissionService.setOverAllGrade(quizId, studentId, grade);
         return ResponseEntity.ok("Overall grade set successfully.");
 
@@ -56,7 +67,7 @@ public class EssaySubmissionController {
     }
 
     @PutMapping("/updateAnswerGrade")
-    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam String grade) {
+    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam int grade) {
         essaySubmissionService.updateAnswerGrade(answerId, grade);
         return ResponseEntity.ok("Grade updated successfully.");
     }

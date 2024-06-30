@@ -1,11 +1,9 @@
 package com.edu.eduplatform.dtos;
 
-
 import lombok.Data;
 
 @Data
-public class StudentAnswerDTO {
+public class StudentMCQAnswerDTO {
     private Long questionId;
-    private String answer;
-
+    private Long answerId;
 }

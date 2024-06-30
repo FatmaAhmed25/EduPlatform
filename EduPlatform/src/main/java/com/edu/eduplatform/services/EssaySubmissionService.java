@@ -2,6 +2,7 @@ package com.edu.eduplatform.services;
 
 
 import com.edu.eduplatform.dtos.EssaySubmissionDTO;
+import com.edu.eduplatform.dtos.QuestionAnswerDTO;
 import com.edu.eduplatform.dtos.StudentAnswerDTO;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.*;
@@ -31,6 +32,8 @@ public class EssaySubmissionService
     @Autowired
     private StudentAnswerRepo studentAnswerRepo;
 
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -50,23 +53,27 @@ public class EssaySubmissionService
         essaySubmission.setStudent(student);
         essaySubmission.setSubmittedAt(LocalDateTime.now()); // Set submission timestamp
 
-        List<StudentAnswer> studentAnswers = new ArrayList<>();
+        List<StudentEssayAnswer> studentEssayAnswers = new ArrayList<>();
         for (StudentAnswerDTO studentAnswerDTO : essaySubmissionDTO.getAnswers()) {
-            StudentAnswer studentAnswer = createStudentAnswer(studentAnswerDTO, essaySubmission);
-            studentAnswers.add(studentAnswer);
+            StudentEssayAnswer studentEssayAnswer = createStudentAnswer(studentAnswerDTO, essaySubmission);
+            studentEssayAnswers.add(studentEssayAnswer);
         }
-        essaySubmission.setAnswers(studentAnswers);
+        essaySubmission.setAnswers(studentEssayAnswers);
 
         // Save quiz submission
         essaySubmissionRepository.save(essaySubmission);
         return ResponseEntity.ok("Quiz submission saved successfully");
     }
 
-    private StudentAnswer createStudentAnswer(StudentAnswerDTO studentAnswerDTO, EssaySubmission essaySubmission) {
-        StudentAnswer studentAnswer = new StudentAnswer();
-        studentAnswer.setAnswer(studentAnswerDTO.getAnswer());
-        studentAnswer.setEssaySubmission(essaySubmission);
-        return studentAnswer;
+    private StudentEssayAnswer createStudentAnswer(StudentAnswerDTO studentAnswerDTO, EssaySubmission essaySubmission) {
+        Question question = questionRepository.findById(studentAnswerDTO.getQuestionId())
+                .orElseThrow(() -> new IllegalArgumentException("Question not found"));
+
+        StudentEssayAnswer studentEssayAnswer = new StudentEssayAnswer();
+        studentEssayAnswer.setAnswer(studentAnswerDTO.getAnswer());
+        studentEssayAnswer.setQuestion(question);
+        studentEssayAnswer.setEssaySubmission(essaySubmission);
+        return studentEssayAnswer;
     }
 
 
@@ -80,7 +87,7 @@ public class EssaySubmissionService
         return List.of();
     }
 
-    public void setOverAllGrade(Long quizId, Long studentId,String grade)
+    public void setOverAllGrade(Long quizId, Long studentId,double grade)
     {
         EssaySubmission essaySubmission = essaySubmissionRepository.findByQuizQuizIdAndStudentUserID(quizId, studentId);
         if (essaySubmission != null) {
@@ -88,6 +95,25 @@ public class EssaySubmissionService
            essaySubmissionRepository.save(essaySubmission);
         }
 
+    }
+
+
+    public List<QuestionAnswerDTO> getQuestionAnswersByQuizIdAndStudentId(Long quizId, Long studentId) {
+        EssaySubmission essaySubmission = essaySubmissionRepository.findByQuizQuizIdAndStudentUserID(quizId, studentId);
+        if (essaySubmission == null) {
+            throw new IllegalArgumentException("Submission not found for the given quiz and student.");
+        }
+
+        List<StudentEssayAnswer> studentEssayAnswers = studentAnswerRepo.findByEssaySubmissionId(essaySubmission.getId());
+
+        return studentEssayAnswers.stream().map(answer -> {
+            Question question = answer.getQuestion();
+            QuestionAnswerDTO dto = new QuestionAnswerDTO();
+            dto.setQuestionId(question.getQuestionId());
+            dto.setQuestionText(question.getText());
+            dto.setUserAnswer(answer.getAnswer());
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     public List<Long> getStudentAnswerIdsByQuizAndStudent(Long quizId, Long studentId) {
@@ -100,10 +126,10 @@ public class EssaySubmissionService
         return List.of();
     }
 
-    public void updateAnswerGrade(Long answerId, String grade) {
-        StudentAnswer studentAnswer = studentAnswerRepo.findById(answerId)
+    public void updateAnswerGrade(Long answerId, int grade) {
+        StudentEssayAnswer studentEssayAnswer = studentAnswerRepo.findById(answerId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid answer ID: " + answerId));
-        studentAnswer.setGrade(grade);
-        studentAnswerRepo.save(studentAnswer);
+        studentEssayAnswer.setGrade(grade);
+        studentAnswerRepo.save(studentEssayAnswer);
     }
 }

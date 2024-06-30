@@ -13,6 +13,7 @@ public class Answer {
 
     private String text;
 
+    @JsonIgnore
     private boolean isCorrect;
 
     @ManyToOne(fetch = FetchType.LAZY)
