@@ -1,0 +1,13 @@
+<div *ngIf="announcement" class="announcement-card">
+    <h2>{{ announcement.title }}</h2>
+    <p>{{ announcement.content }}</p>
+    <p><strong>Created At:</strong> {{ announcement.createdAt }}</p>
+    <p *ngIf="announcement.fileName"><strong>File:</strong> {{ announcement.fileName }}</p>
+    <div *ngIf="announcement.comments.length > 0">
+      <h3>Comments</h3>
+      <ul>
+        <li *ngFor="let comment of announcement.comments">{{ comment }}</li>
+      </ul>
+    </div>
+  </div>
+  

@@ -1,0 +1,39 @@
+/* course-details.component.css */
+.container {
+  display: flex;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  overflow-x: hidden;
+}
+
+.navbar {
+  background-color: #f8faf8;
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.header {
+  padding: 20px;
+  background-color: #5E5DF0;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+mat-tab-group {
+  width: 100%;
+}
+
+.announcements, .lectures, .labs, .assignments {
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+}

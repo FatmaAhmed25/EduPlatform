@@ -5,13 +5,16 @@ import { CreateQuizComponent } from './modules/instructor/create-quiz/create-qui
 import { StudentCoursesComponent } from './modules/student/student-courses/student-courses.component';
 import { LoginComponent } from './modules/login/login.component';
 import { InstructorDashboardComponent } from './modules/instructor/instructor-dashboard/instructor-dashboard.component';
+import { CourseDetailsComponent } from 'src/app/modules/student/course-details/course-details.component';
+
 const routes: Routes = [
   { path: '', component: CreateQuizComponent},
   { path: 'ai-generate-quiz', component: AiGenerateQuizComponent },
   { path: 'create-quiz', component: CreateQuizComponent},
   { path: 'student-courses', component: StudentCoursesComponent },
   { path: 'login', component:LoginComponent},
-  { path: 'instructor-dashboard', component:InstructorDashboardComponent}
+  { path: 'instructor-dashboard', component:InstructorDashboardComponent},
+  { path: 'course-details', component: CourseDetailsComponent },
 
 ];
 

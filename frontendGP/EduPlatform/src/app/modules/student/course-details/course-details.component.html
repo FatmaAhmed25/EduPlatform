@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="main-content">
+    <div class="header">
+      <h1>Course Title</h1>
+      <p>Instructor: John Doe</p>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab label="Announcements">
+        <div class="announcements">
+          <app-announcement [announcementId]="4"></app-announcement>
+        </div>
+      </mat-tab>
+      <mat-tab label="Lectures">
+        <div class="lectures">
+          <!-- Lectures content goes here -->
+        </div>
+      </mat-tab>
+      <mat-tab label="Labs">
+        <div class="labs">
+          <!-- Labs content goes here -->
+        </div>
+      </mat-tab>
+      <mat-tab label="Assignments">
+        <div class="assignments">
+          <!-- Assignments content goes here -->
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

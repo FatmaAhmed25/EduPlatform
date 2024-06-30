@@ -1,0 +1,29 @@
+/* styles.css */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css'; /* or any other theme */
+
+/* Override styles for mat-tab-label */
+.mat-tab-group, .mat-tab-nav-bar {
+  --mat-tab-header-default-background: white;
+  --mat-tab-header-selected-tab-ink-bar-color: rgb(112, 100, 254);
+  --mat-tab-header-default-tab-color: black;
+  --mat-tab-header-selected-tab-color: black;
+}
+
+.mat-tab-label {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  color: var(--mat-tab-header-default-tab-color);
+  transition: box-shadow 0.3s ease;
+}
+
+.mat-tab-label:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mat-tab-label-active {
+  color: var(--mat-tab-header-selected-tab-color);
+}
+
+.mat-tab-label-active .mat-tab-label-content {
+  border-bottom: 2px solid var(--mat-tab-header-selected-tab-ink-bar-color);
+}
