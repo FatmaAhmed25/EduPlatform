@@ -9,8 +9,9 @@ export class AiGenerateQuizComponent {
 deleteQuestion(_t40: number) {
 throw new Error('Method not implemented.');
 }
-  inputType: string = 'text';
+  inputType: string = 'pdf';
   textInput: string = '';
+  selectedFiles: File[] = [];
   questions: any[] = [
     {
       title: 'Sample Question 1',
@@ -37,8 +38,18 @@ throw new Error('Method not implemented.');
   ];
   file: File | null = null;
 
-  onFileSelected(event: any) {
-    this.file = event.target.files[0];
+  onFilesSelected(event: any) {
+    //this.file = event.target.files[0];
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const newFiles = Array.from(input.files);
+      this.selectedFiles = this.selectedFiles.concat(newFiles);
+      // Remove duplicates if necessary
+      this.selectedFiles = Array.from(new Set(this.selectedFiles));
+    }
+  }
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
   }
 
   generateQuestions() {
