@@ -22,7 +22,6 @@ public class PdfService {
     @Autowired
     private QuizRepository quizRepository;
 
-
     @Autowired
     private StudentRepo studentRepository;
 

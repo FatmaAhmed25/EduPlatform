@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 import com.edu.eduplatform.dtos.QuizDTO;
+import com.edu.eduplatform.dtos.QuizForStudentDTO;
 import com.edu.eduplatform.models.Answer;
 import com.edu.eduplatform.models.Question;
 import com.edu.eduplatform.models.Quiz;
@@ -112,11 +113,30 @@ public class QuizController {
         return quizService.getAllQuizzes();
     }
 
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR') or hasAuthority('ROLE_STUDENT')")
-    @SecurityRequirement(name="BearerAuth")
-    @GetMapping("/{quizId}")
-    public Quiz getQuiz(@PathVariable Long quizId) {
-        return quizService.getQuizById(quizId);
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @SecurityRequirement(name = "BearerAuth")
+    @GetMapping("/{quizId}/instructor")
+    public ResponseEntity<Quiz> getQuizForInstructor(@PathVariable Long quizId) {
+        try {
+            Quiz quiz = quizService.getQuizByIdForInstructor(quizId);
+            return ResponseEntity.ok(quiz);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @SecurityRequirement(name = "BearerAuth")
+    @GetMapping("/{quizId}/student")
+    public ResponseEntity<QuizForStudentDTO> getQuizForStudent(@PathVariable Long quizId) {
+        try {
+            QuizForStudentDTO quizDTO = quizService.getQuizForStudentById(quizId);
+            return ResponseEntity.ok(quizDTO);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(null);
+        }
     }
 
 
@@ -126,4 +146,5 @@ public class QuizController {
     public List<Quiz> getQuizzesByCourseId(@PathVariable Long courseId) {
         return quizService.getQuizzesByCourseId(courseId);
     }
+
 }
