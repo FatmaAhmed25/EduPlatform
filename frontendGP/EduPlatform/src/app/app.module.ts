@@ -21,6 +21,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AnnouncementComponent } from 'src/app/modules/student/announcement/announcement.component';
 import { SpinnerComponent } from './utils/spinner/spinner.component';
 import { SharedModule } from './shared/shared.module';
+import { FileViewerDialogComponent } from 'src/app/file-viewer-dialog/file-viewer-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { SafeUrlPipe } from 'src/app/file-viewer-dialog/safe-url.pipe';
+// import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
 
 @NgModule({
   declarations: [
@@ -31,8 +35,11 @@ import { SharedModule } from './shared/shared.module';
     LoginComponent,
     CourseDetailsComponent,
     CourseDetailsComponent,
-    AnnouncementComponent,
-SpinnerComponent,   
+SpinnerComponent,
+FileViewerDialogComponent,  
+SafeUrlPipe,
+AnnouncementComponent
+
 
   ],
   imports: [
@@ -44,11 +51,13 @@ SpinnerComponent,
     CoreModule,
     InstructorModule,
     StudentModule,
-    BrowserAnimationsModule
-,
+    BrowserAnimationsModule,
+    MatDialogModule,
     SharedModule
   ],
-  providers: [EnrolledCoursesService,AuthService],
+  providers: [EnrolledCoursesService,AuthService,
+    // WebSocketService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

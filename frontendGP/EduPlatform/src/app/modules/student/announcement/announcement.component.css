@@ -1,8 +1,88 @@
 .announcement-card {
-    border: 1px solid #ccc;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.announcement-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.announcement-author-icon {
+  background-color: #3f51b5;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.announcement-author-name {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.announcement-date {
+  color: #757575;
+}
+
+.announcement-file {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.file-thumbnail {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.announcement-file-link {
+  cursor: pointer;
+  color: #3f51b5;
+  text-decoration: underline;
+}
+
+.comments-section {
+  margin-top: 16px;
+}
+
+.comments-section input[type="text"] {
+  width: calc(100% - 72px); /* Adjust according to button width */
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+}
+
+.comments-section button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.comments-section ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.comments-section li {
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}

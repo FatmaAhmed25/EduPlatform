@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'student-courses', component: StudentCoursesComponent },
   { path: 'login', component:LoginComponent},
   { path: 'instructor-dashboard', component:InstructorDashboardComponent},
-  { path: 'course-details', component: CourseDetailsComponent },
+  { path: 'course-details/:id', component: CourseDetailsComponent }
 
 ];
 

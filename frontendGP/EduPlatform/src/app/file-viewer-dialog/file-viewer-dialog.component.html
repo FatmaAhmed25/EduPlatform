@@ -1,0 +1,7 @@
+<div mat-dialog-content>
+    <iframe class="file-viewer-iframe" [src]="fileUrl | safeUrl"></iframe>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="downloadFile()">Open</button>
+  </div>
+  

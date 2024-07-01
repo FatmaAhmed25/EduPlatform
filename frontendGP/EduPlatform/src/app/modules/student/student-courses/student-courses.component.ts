@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/models/course.model';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-courses',
@@ -19,7 +20,7 @@ export class StudentCoursesComponent implements OnInit {
     'assets/images/courses/course6.jpg',
     'assets/images/courses/course7.png'
   ];
-  constructor(private enrolledCoursesService: EnrolledCoursesService) {}
+  constructor(private enrolledCoursesService: EnrolledCoursesService,private router: Router) {}
 
   ngOnInit(): void {
     const studentId = localStorage.getItem('userID'); // Ensure the studentId is stored in local storage
@@ -37,6 +38,9 @@ export class StudentCoursesComponent implements OnInit {
     } else {
       console.error('Student ID not found in local storage');
     }
+  }
+  goToCourse(courseId: number): void {
+    this.router.navigate(['/course-details', courseId]);
   }
   getRandomImage(): string {
     const randomIndex = Math.floor(Math.random() * this.images.length);
