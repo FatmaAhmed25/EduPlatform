@@ -7,6 +7,9 @@ import * as SockJS from 'sockjs-client';
 })
 export class WebSocketService {
   private stompClient: Client | null = null;
+  private isConnected = false;
+
+  constructor() {}
 
   connect(token: string, callback: () => void): void {
     const socket = new SockJS('http://localhost:8080/ws');
@@ -15,6 +18,7 @@ export class WebSocketService {
       connectHeaders: { Authorization: `Bearer ${token}` },
       onConnect: frame => {
         console.log('Connected: ' + frame);
+        this.isConnected = true;
         callback();
       },
       debug: str => {
@@ -25,24 +29,27 @@ export class WebSocketService {
     this.stompClient.activate();
   }
 
-  subscribe(topic: string, callback: (message: any) => void): StompSubscription | null {
+  send(destination: string, body: any): void {
+    if (this.isConnected && this.stompClient) {
+      this.stompClient.publish({ destination, body: JSON.stringify(body) });
+    } else {
+      console.error('WebSocket is not connected.');
+    }
+  }
+
+  subscribeToComments(topic: string, callback: (message: any) => void): StompSubscription | null {
     if (this.stompClient) {
       return this.stompClient.subscribe(topic, message => {
-        callback(message.body);
+        callback(JSON.parse(message.body)); // Parse message body assuming it's JSON
       });
     }
     return null;
   }
 
-  send(destination: string, body: any): void {
-    if (this.stompClient) {
-      this.stompClient.publish({ destination, body: JSON.stringify(body) });
-    }
-  }
-
   disconnect(): void {
     if (this.stompClient) {
       this.stompClient.deactivate();
+      this.isConnected = false;
     }
   }
 }

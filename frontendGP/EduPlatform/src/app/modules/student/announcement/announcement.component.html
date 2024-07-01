@@ -1,10 +1,21 @@
 <div *ngFor="let announcement of announcements" class="announcement-card">
   <h2>{{ announcement.title }}</h2>
   <p>{{ announcement.content }}</p>
+
+  <!-- Display file link if fileName exists -->
   <div *ngIf="announcement.fileName" class="announcement-file">
     <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(announcement)">
     <a (click)="openFileLink(announcement)" class="announcement-file-link">
       {{ announcement.fileName }}
     </a>
   </div>
+
+  <!-- Input for sending comments -->
+  <input type="text" [id]="'content-' + announcement.id" placeholder="Write a comment..." [(ngModel)]="newComment[announcement.id]">
+  <button (click)="sendComment(announcement.id)">Send</button>
+
+  <!-- List of comments -->
+  <ul [id]="'comments-' + announcement.id">
+    <li *ngFor="let comment of announcement.comments">{{ comment.content }}</li>
+  </ul>
 </div>
