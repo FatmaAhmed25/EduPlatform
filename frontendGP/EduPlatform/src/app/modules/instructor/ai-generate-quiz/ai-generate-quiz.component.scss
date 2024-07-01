@@ -297,3 +297,17 @@ button {
   padding-bottom: 10px; /* Adds space between text and border */
   font-family: 'Arial', sans-serif; /* Sets a clean, readable font */
 }
+
+.loading-container {
+  color: $primary-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1000;
+}

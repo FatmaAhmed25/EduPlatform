@@ -15,16 +15,17 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
 import { AuthService } from './services/authService/auth.service';
+import { SpinnerComponent } from './utils/spinner/spinner.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    
     AppComponent,
     NavbarComponent,
     FooterComponent,
     SidebarComponent,
     LoginComponent,
-    
+    SpinnerComponent,   
 
   ],
   imports: [
@@ -34,7 +35,8 @@ import { AuthService } from './services/authService/auth.service';
     AppRoutingModule,
     CoreModule,
     InstructorModule,
-    StudentModule
+    StudentModule,
+    SharedModule
   ],
   providers: [EnrolledCoursesService,AuthService],
   bootstrap: [AppComponent]

@@ -34,10 +34,11 @@
     <div class="form-group" *ngIf="inputType === 'pdf'">
       <label for="pdf-upload">Upload PDF</label>
       <div class="file-upload-container">
-        <input type="file" id="pdf-upload" multiple (change)="onFilesSelected($event)">
-        <span class="upload-instruction">You can upload multiple files</span>
+        <input type="file" id="pdf-upload" accept=".pdf,application/pdf" multiple (change)="onFilesSelected($event)">
+
+        <span class="upload-instruction">You can upload multiple PDF files</span>
         <i class="fas fa-info-circle tooltip">
-          <span class="tooltiptext">Hold Ctrl (or Command) to select multiple files</span>
+          <span class="tooltiptext">Hold Ctrl (or Command) to select multiple files.Only PDF files are allowed. </span>
         </i>
       </div>
     </div>
@@ -50,6 +51,10 @@
           <i class="fas fa-trash-alt removeFile delete-icon" (click)="removeFile(i)"></i>
         </li>
       </ul>
+    </div>
+
+    <div *ngIf="loading" class="loading-container">
+      <mat-spinner></mat-spinner>
     </div>
 
     <button (click)="generateQuestions()">Generate Questions</button>
