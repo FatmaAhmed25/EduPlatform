@@ -24,7 +24,7 @@ import { SharedModule } from './shared/shared.module';
 import { FileViewerDialogComponent } from 'src/app/file-viewer-dialog/file-viewer-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SafeUrlPipe } from 'src/app/file-viewer-dialog/safe-url.pipe';
-// import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
+import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
 
 @NgModule({
   declarations: [
@@ -56,7 +56,7 @@ AnnouncementComponent
     SharedModule
   ],
   providers: [EnrolledCoursesService,AuthService,
-    // WebSocketService
+    WebSocketService
   ],
   bootstrap: [AppComponent]
 })
