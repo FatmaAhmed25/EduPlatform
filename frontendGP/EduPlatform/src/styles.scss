@@ -49,3 +49,5 @@ $tran-05: all 0.3s ease;
 body{
     background-color: $body-color;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
