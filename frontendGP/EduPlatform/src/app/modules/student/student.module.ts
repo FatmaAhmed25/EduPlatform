@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { StudentDashboardComponent } from './student-dashboard/student-dashboard.component';
 import { QuizComponent } from './quiz/quiz.component';
 import { StudentCoursesComponent } from './student-courses/student-courses.component';
-// import { AnnouncementComponent } from 'src/app/modules/student/announcement/announcement.component';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -12,10 +11,11 @@ import { StudentCoursesComponent } from './student-courses/student-courses.compo
     StudentDashboardComponent,
     QuizComponent,
     StudentCoursesComponent,
-    // AnnouncementComponent
+    
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    MatProgressSpinnerModule,
   ],
   exports: [StudentDashboardComponent,
     StudentCoursesComponent]

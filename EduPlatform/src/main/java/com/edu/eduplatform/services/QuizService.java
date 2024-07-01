@@ -97,4 +97,6 @@ public class QuizService {
     public List<String> getQuestionsByQuizId(Long quizId) {
         return questionRepository.findTextByQuizQuizId(quizId);
     }
+
+
 }

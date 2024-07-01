@@ -6,17 +6,21 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="StudentAnswer")
-public class StudentAnswer {
+public class StudentEssayAnswer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "question_id")
+    private Question question;
+
 
     private String answer;
 
-    private String grade;
+
+    private int grade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "essay_submission_id", nullable = false)

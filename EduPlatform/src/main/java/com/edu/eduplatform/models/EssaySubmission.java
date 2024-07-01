@@ -26,13 +26,13 @@ public class EssaySubmission
     private Quiz quiz;
 
     @OneToMany(mappedBy = "essaySubmission", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<StudentAnswer> answers;
+    private List<StudentEssayAnswer> answers;
 
     @Column(name = "submitted_at", nullable = false)
     private LocalDateTime submittedAt;
 
     @Column(name = "overallGrade")
-    private String overallGrade;
+    private double overallGrade;
 
 
 

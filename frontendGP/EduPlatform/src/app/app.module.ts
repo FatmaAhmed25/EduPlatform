@@ -19,10 +19,11 @@ import { CourseDetailsComponent } from 'src/app/modules/student/course-details/c
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AnnouncementComponent } from 'src/app/modules/student/announcement/announcement.component';
+import { SpinnerComponent } from './utils/spinner/spinner.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    
     AppComponent,
     NavbarComponent,
     FooterComponent,
@@ -30,8 +31,8 @@ import { AnnouncementComponent } from 'src/app/modules/student/announcement/anno
     LoginComponent,
     CourseDetailsComponent,
     CourseDetailsComponent,
-    AnnouncementComponent
-
+    AnnouncementComponent,
+SpinnerComponent,   
 
   ],
   imports: [
@@ -44,7 +45,8 @@ import { AnnouncementComponent } from 'src/app/modules/student/announcement/anno
     InstructorModule,
     StudentModule,
     BrowserAnimationsModule
-
+,
+    SharedModule
   ],
   providers: [EnrolledCoursesService,AuthService],
   bootstrap: [AppComponent]
