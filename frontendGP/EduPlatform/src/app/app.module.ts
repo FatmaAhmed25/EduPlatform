@@ -26,6 +26,7 @@ import { SafeUrlPipe } from 'src/app/file-viewer-dialog/safe-url.pipe';
 import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { RouterModule } from '@angular/router';
     SpinnerComponent,
     FileViewerDialogComponent,  
     SafeUrlPipe,
-    AnnouncementComponent
+    AnnouncementComponent,
+    HomepageComponent
 
   ],
   imports: [

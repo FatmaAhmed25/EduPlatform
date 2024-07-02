@@ -1,0 +1,68 @@
+
+<nav class="navbar">
+     <div class="logo">
+            <img src="../../assets/images/logowhite.png" alt="">
+    </div>
+    <!-- <h1 class="logo2">GradesUp</h1> -->
+    <ul class="nav-links">
+       
+      
+        <li class=""><a class="ctn" href="">Home</a></li>
+        <li><a href="/login">Login</a></li>
+
+       
+    </ul>
+
+    <img  class="menu-button" src="assets/images/menu-button.png" alt="">
+</nav>
+<header>
+    <div class="header-content">
+       <h2> Explore GradesUp</h2> 
+       <div class="line"></div>
+       <a href="#features" class="ctn">Learn more</a>
+
+    </div>
+</header>
+<script>
+    const menuBtn = document.querySelector('.menu-button');
+    const navLinks = document.querySelector('.nav-links');
+    menuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('mobile-menu');
+    });
+
+    // Smooth scroll to features section
+    document.querySelector('.ctn').addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const featuresSection = document.getElementById('features');
+        featuresSection.scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
+
+<main>
+    <div class="title">
+        <h1>Our Features</h1>
+        <div class="line1"></div>
+    </div>
+
+    <section id="features" class="features">
+        <div class="feature-box" style="background-image: url('assets/images/aiquiz.jpeg');">
+            <h3>Quiz Generation by AI</h3>
+        </div>
+        <div class="feature-box" style="background-image: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+            <h3>Auto Grading for Quizzes</h3>
+        </div>
+        <div class="feature-box" style="background-image: url('assets/images/proctoring.jpeg');">
+            <h3>Online Proctoring for Exams</h3>
+        </div>
+        <div class="feature-box" style="background-image: url('assets/images/lms.avif');">
+            <h3>Course Management</h3>
+        </div>
+    </section>
+    
+    
+    
+</main>
+
+
+

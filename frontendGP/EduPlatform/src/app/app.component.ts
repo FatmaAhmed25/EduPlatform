@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Router, NavigationEnd } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +7,15 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'EduPlatform';
+  showSidebar: boolean = true;
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.showSidebar = !(event.url === '/' || event.url === '/login'|| event.url === '/#features');
+      }
+    });
+  }
 }
