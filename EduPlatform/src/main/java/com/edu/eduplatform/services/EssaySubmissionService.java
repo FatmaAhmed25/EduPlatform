@@ -51,7 +51,7 @@ public class EssaySubmissionService
         EssaySubmission essaySubmission = new EssaySubmission();
         essaySubmission.setQuiz(quiz);
         essaySubmission.setStudent(student);
-        essaySubmission.setSubmittedAt(LocalDateTime.now()); // Set submission timestamp
+        essaySubmission.setSubmissionTime(LocalDateTime.now()); // Set submission timestamp
 
         List<StudentEssayAnswer> studentEssayAnswers = new ArrayList<>();
         for (StudentAnswerDTO studentAnswerDTO : essaySubmissionDTO.getAnswers()) {
@@ -91,7 +91,7 @@ public class EssaySubmissionService
     {
         EssaySubmission essaySubmission = essaySubmissionRepository.findByQuizQuizIdAndStudentUserID(quizId, studentId);
         if (essaySubmission != null) {
-           essaySubmission.setOverallGrade(grade);
+           essaySubmission.setTotalGrade(grade);
            essaySubmissionRepository.save(essaySubmission);
         }
 

@@ -10,8 +10,8 @@ from reportlab.pdfgen import canvas
 app = Flask(__name__)
 
 # Log in to huggingface and grant authorization to huggingchat
-EMAIL = ""
-PASSWD = ""
+EMAIL = "fatmaahmed2901@gmail.com"
+PASSWD = "/2)BvnK/r,x6P5~"
 cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
 sign = Login(EMAIL, PASSWD)
 cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
@@ -105,98 +105,22 @@ def parse_essay_from_response(response_text):
 
         lines = e_block.split('\n')
         question_text = ""
-        answer_text = ""
+
 
         for line in lines:
             line = line.strip()
             if line.startswith("question:"):
                 question_text = line.split("question:")[1].strip()
-            elif line.startswith("answer:"):
-                answer_text = line.split("answer:")[1].strip()
 
-        if question_text and answer_text:
+        if question_text:
             essay = {
                 "text": question_text,
                 "points": 1,  # Assuming each essay question is worth 1 point
-                "answer": answer_text ,#msh bn3mel save lel answer fel db
                 "questionType": "ESSAY"
             }
             essays.append(essay)
 
     return essays
-
-# Function to authenticate user
-def authenticate_user(email, password):
-    url = "http://localhost:8080/auth/authenticate-users"
-    body = {
-        "email": email,
-        "password": password
-    }
-    try:
-        response = requests.post(url, json=body)
-        response.raise_for_status()
-        return response.json()["token"]
-    except requests.exceptions.RequestException as e:
-        print(f"Authentication error: {str(e)}")
-        return None
-
-def generate_pdf(title, items, is_quiz=True):
-    pdf_filename = f"{title}.pdf"
-    c = canvas.Canvas(pdf_filename, pagesize=letter)
-    c.setLineWidth(.3)
-    c.setFont('Helvetica', 12)
-
-    # Title
-    c.drawString(100, 780, title)
-    c.line(100, 770, 500, 770)
-
-    # Function to wrap text
-    def draw_wrapped_text(c, text, x, y, max_width, line_spacing=15):
-        lines = []
-        while text:
-            if c.stringWidth(text) <= max_width:
-                lines.append(text)
-                break
-            else:
-                # Find the maximum number of characters that fit within the width
-                for i in range(len(text)):
-                    if c.stringWidth(text[:i]) > max_width:
-                        # Split text at the last space before max_width
-                        split_at = text[:i].rfind(' ')
-                        if split_at == -1:
-                            split_at = i
-                        lines.append(text[:split_at])
-                        text = text[split_at:].strip()
-                        break
-        for line in lines:
-            c.drawString(x, y, line)
-            y -= line_spacing  # Move y down for the next line
-
-    # Questions or Essays
-    y_position = 750
-    max_width = 400  # Maximum width for wrapped text
-    for idx, item in enumerate(items, start=1):
-        draw_wrapped_text(c, f"{idx}. {item['text']}", 100, y_position, max_width)
-        y_position -= 35  # Space before answers
-
-        if is_quiz:
-            for answer in item['answers']:
-                draw_wrapped_text(c, f"{'✓' if answer['correct'] else ' '} {answer['text']}", 120, y_position, max_width)
-                y_position -= 40
-        else:
-            draw_wrapped_text(c, f"Answer: {item['answer']}", 120, y_position, max_width)
-            y_position -= 98  # More space for essay answers
-
-        y_position -= 60  # Space between questions
-
-        # Check if there's enough space for the next question
-        if y_position <= 30:
-            c.showPage()  # Start a new page
-            y_position = 750  # Reset y_position for the new page
-
-    c.save()
-    return pdf_filename
-
 
 # Flask route for handling POST requests to /mcq endpoint
 @app.route('/mcq', methods=['POST'])
@@ -238,7 +162,7 @@ def generate_quiz():
     questions = parse_quiz_from_response(response_text)
     print(response_text)
     if not quiz_title:
-        quiz_title = "Quiz Title"
+        quiz_title = "MCQ QUIZ"
 
     quiz_payload = {
         "title": quiz_title,
@@ -261,17 +185,21 @@ def essay():
 
     # Extract form parameters
     courseId = request.form.get('courseId')  # Default to 1 if not provided
-    essay_title = request.form.get('essay_title')  # Default title if not provided
+    essay_title = request.form.get('quiz_title')  # Default title if not provided
     startTime = request.form.get('startTime')
     endTime = request.form.get('endTime')
+    numOfQuestions = request.form.get('numOfQuestions')
+
+    if not numOfQuestions:
+        return jsonify({'error': 'Please provide the number of questions'}), 400
 
 
-    prompt = """
+
+    prompt = f"""
     Using strictly the following format 
     DO NOT NUMBER THE QUESTIONS
     question: (fill question text here)
-    answer: (fill answer text here)
-    Generate exactly 5 essay questions from the following text. Each answer should be fully specified.
+    Generate exactly {numOfQuestions} essay questions from the following text.
     """
 
     pdf_files = request.files.getlist('pdf_files')
@@ -300,21 +228,8 @@ def essay():
 
     # Ensure essay_title is not None
     if not essay_title:
-        essay_title = "Essay Title"
+        essay_title = "Essay Quiz"
 
-    # Generate PDF file with essay title and questions
-    pdf_filename = generate_pdf(essay_title, essays, is_quiz=False)
-
-    # Authenticate user and get token (not changed from your original code)
-    token = authenticate_user("youssefalsaeed@gmail.com", "123")
-    if not token:
-        return jsonify({'error': 'Failed to authenticate user'}), 401
-
-    # Prepare headers with Bearer token (not changed from your original code)
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
 
     # Prepare payload for /essays API endpoint
     essay_payload = {
@@ -327,17 +242,70 @@ def essay():
 
     }
 
-    # Print essay payload for debugging
     print("Essay Payload:")
     print(essay_payload)
 
-    # Send POST request to create the essay with authentication token
-    try:
-        response = requests.post("http://localhost:8080/quizzes", json=essay_payload, headers=headers)
-        response.raise_for_status()
-        return send_file(pdf_filename, as_attachment=True), 200
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': f'Error creating essay: {str(e)}'}), 500
+    return essay_payload,  200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5005, debug=True)
+
+
+
+# def generate_pdf(title, items, is_quiz=True):
+#     pdf_filename = f"{title}.pdf"
+#     c = canvas.Canvas(pdf_filename, pagesize=letter)
+#     c.setLineWidth(.3)
+#     c.setFont('Helvetica', 12)
+#
+#     # Title
+#     c.drawString(100, 780, title)
+#     c.line(100, 770, 500, 770)
+#
+#     # Function to wrap text
+#     def draw_wrapped_text(c, text, x, y, max_width, line_spacing=15):
+#         lines = []
+#         while text:
+#             if c.stringWidth(text) <= max_width:
+#                 lines.append(text)
+#                 break
+#             else:
+#                 # Find the maximum number of characters that fit within the width
+#                 for i in range(len(text)):
+#                     if c.stringWidth(text[:i]) > max_width:
+#                         # Split text at the last space before max_width
+#                         split_at = text[:i].rfind(' ')
+#                         if split_at == -1:
+#                             split_at = i
+#                         lines.append(text[:split_at])
+#                         text = text[split_at:].strip()
+#                         break
+#         for line in lines:
+#             c.drawString(x, y, line)
+#             y -= line_spacing  # Move y down for the next line
+#
+#     # Questions or Essays
+#     y_position = 750
+#     max_width = 400  # Maximum width for wrapped text
+#     for idx, item in enumerate(items, start=1):
+#         draw_wrapped_text(c, f"{idx}. {item['text']}", 100, y_position, max_width)
+#         y_position -= 35  # Space before answers
+#
+#         if is_quiz:
+#             for answer in item['answers']:
+#                 draw_wrapped_text(c, f"{'✓' if answer['correct'] else ' '} {answer['text']}", 120, y_position, max_width)
+#                 y_position -= 40
+#         else:
+#             draw_wrapped_text(c, f"Answer: {item['answer']}", 120, y_position, max_width)
+#             y_position -= 98  # More space for essay answers
+#
+#         y_position -= 60  # Space between questions
+#
+#         # Check if there's enough space for the next question
+#         if y_position <= 30:
+#             c.showPage()  # Start a new page
+#             y_position = 750  # Reset y_position for the new page
+#
+#     c.save()
+#     return pdf_filename

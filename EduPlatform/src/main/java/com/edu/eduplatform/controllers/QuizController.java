@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
-import com.edu.eduplatform.dtos.GenerateMcqQuizDTO;
+
+import com.edu.eduplatform.dtos.GenerateQuizDTO;
 import com.edu.eduplatform.dtos.QuizDTO;
 import com.edu.eduplatform.dtos.QuizForStudentDTO;
 import com.edu.eduplatform.models.Answer;
@@ -159,15 +160,24 @@ public class QuizController {
                                           @RequestParam String endTime,
                                           @RequestParam int numOfQuestions,
                                           @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
-        GenerateMcqQuizDTO requestDTO = new GenerateMcqQuizDTO();
-        requestDTO.setCourseId(courseId);
-        requestDTO.setQuizTitle(quizTitle);
-        requestDTO.setStartTime(startTime);
-        requestDTO.setEndTime(endTime);
-        requestDTO.setNumOfQuestions(numOfQuestions);
-        requestDTO.setPdfFiles(pdfFiles);
-
+        GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
         Quiz createdQuiz = quizService.generateAndCreateMcqQuiz(requestDTO);
+        return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @SecurityRequirement(name="BearerAuth")
+    @PostMapping(value = "/generateEssay" , consumes = {"multipart/form-data"})
+    @ValidateInstructorBelongsToCourse
+    public ResponseEntity<?> generateEssayQuiz(@RequestParam @ValidateInstructor Long instructorId,
+                                          @RequestParam @ValidateCourse Long courseId,
+                                          @RequestParam String quizTitle,
+                                          @RequestParam String startTime,
+                                          @RequestParam String endTime,
+                                          @RequestParam int numOfQuestions,
+                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
+        GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
+        Quiz createdQuiz = quizService.generateEssayQuiz(requestDTO);
         return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
     }
 

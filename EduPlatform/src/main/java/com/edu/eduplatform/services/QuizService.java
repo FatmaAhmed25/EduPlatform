@@ -61,6 +61,7 @@ public class QuizService {
 
             if (questionDTO.getQuestionType().equals(QuestionType.MCQ)) {
                 question = new MCQQuestion();
+                question.setQuestionType(QuestionType.MCQ);
                 for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
                     Answer answer = new Answer();
                     answer.setText(answerDTO.getText());
@@ -70,6 +71,7 @@ public class QuizService {
                 }
             } else if (questionDTO.getQuestionType().equals(QuestionType.ESSAY)) {
                 question = new EssayQuestion();
+                question.setQuestionType(QuestionType.ESSAY);
             } else {
                 throw new RuntimeException("Invalid question type");
             }
@@ -123,9 +125,9 @@ public class QuizService {
         return modelMapper.map(quiz, QuizForStudentDTO.class);
     }
 
-    public Quiz generateAndCreateMcqQuiz(GenerateMcqQuizDTO requestDTO) {
-        String flaskUrl = flaskBaseUrl + "/mcq";
-
+    public Quiz generateQuiz(GenerateQuizDTO requestDTO,String url)
+    {
+        String flaskUrl = flaskBaseUrl + url;
         // Prepare headers and request body
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -166,4 +168,18 @@ public class QuizService {
         // Convert QuizDTO to Quiz entity and save the quiz
         return createQuiz(quizDTO);
     }
+
+    public Quiz generateAndCreateMcqQuiz(GenerateQuizDTO requestDTO)
+    {
+       return generateQuiz(requestDTO,"/mcq");
+
+    }
+
+    public Quiz generateEssayQuiz(GenerateQuizDTO requestDTO)
+    {
+        return generateQuiz(requestDTO,"/essay");
+
+    }
+
+
 }
