@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Course } from 'src/app/models/course.model';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
 import { Router } from '@angular/router';
-
+import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service';
 @Component({
   selector: 'app-student-courses',
   templateUrl: './student-courses.component.html',
   styleUrls: ['./student-courses.component.css']
 })
 export class StudentCoursesComponent implements OnInit {
+  isSidebarOpen = false;
   progress: number = 0;
   myCourses: Course[] = []; // Use the Course interface
   images: string[] = [
@@ -20,7 +21,7 @@ export class StudentCoursesComponent implements OnInit {
     'assets/images/courses/course6.jpg',
     'assets/images/courses/course7.png'
   ];
-  constructor(private enrolledCoursesService: EnrolledCoursesService,private router: Router) {}
+  constructor(private enrolledCoursesService: EnrolledCoursesService,private router: Router,private sidebarService: SidebarService) {}
 
   ngOnInit(): void {
     const studentId = localStorage.getItem('userID'); // Ensure the studentId is stored in local storage
@@ -38,6 +39,9 @@ export class StudentCoursesComponent implements OnInit {
     } else {
       console.error('Student ID not found in local storage');
     }
+    this.sidebarService.isOpen$.subscribe(isOpen => {
+      this.isSidebarOpen = isOpen;
+    });
   }
   goToCourse(courseId: number): void {
     this.router.navigate(['/course-details', courseId]);

@@ -6,9 +6,10 @@ import { StudentCoursesComponent } from './modules/student/student-courses/stude
 import { LoginComponent } from './modules/login/login.component';
 import { InstructorDashboardComponent } from './modules/instructor/instructor-dashboard/instructor-dashboard.component';
 import { CourseDetailsComponent } from 'src/app/modules/student/course-details/course-details.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 const routes: Routes = [
-  { path: '', component: CreateQuizComponent},
+  { path: '', component: HomepageComponent},
   { path: 'ai-generate-quiz', component: AiGenerateQuizComponent },
   { path: 'create-quiz', component: CreateQuizComponent},
   { path: 'student-courses', component: StudentCoursesComponent },

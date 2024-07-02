@@ -3,8 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CommonModule } from '@angular/common';
-import { NavbarComponent } from './components/navbar/navbar.component';
+// import { CommonModule } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { LoginComponent } from './modules/login/login.component';
@@ -25,21 +24,23 @@ import { FileViewerDialogComponent } from 'src/app/file-viewer-dialog/file-viewe
 import { MatDialogModule } from '@angular/material/dialog';
 import { SafeUrlPipe } from 'src/app/file-viewer-dialog/safe-url.pipe';
 import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { HomepageComponent } from './homepage/homepage.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     FooterComponent,
     SidebarComponent,
     LoginComponent,
     CourseDetailsComponent,
     CourseDetailsComponent,
-SpinnerComponent,
-FileViewerDialogComponent,  
-SafeUrlPipe,
-AnnouncementComponent
-
+    SpinnerComponent,
+    FileViewerDialogComponent,  
+    SafeUrlPipe,
+    AnnouncementComponent,
+    HomepageComponent
 
   ],
   imports: [
@@ -53,7 +54,9 @@ AnnouncementComponent
     StudentModule,
     BrowserAnimationsModule,
     MatDialogModule,
-    SharedModule
+    SharedModule,
+    MatIconModule,
+    RouterModule
   ],
   providers: [EnrolledCoursesService,AuthService,
     WebSocketService

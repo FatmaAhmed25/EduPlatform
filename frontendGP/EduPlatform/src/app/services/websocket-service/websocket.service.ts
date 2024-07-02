@@ -45,6 +45,15 @@ export class WebSocketService {
     }
     return null;
   }
+  subscribeToNotificationsForCourse(courseId: number, callback: (message: any) => void): StompSubscription | null {
+    if (this.stompClient) {
+      const topic = `/topic/course/${courseId}`;
+      return this.stompClient.subscribe(topic, message => {
+        callback(JSON.parse(message.body)); // Parse message body assuming it's JSON
+      });
+    }
+    return null;
+  }
 
   disconnect(): void {
     if (this.stompClient) {

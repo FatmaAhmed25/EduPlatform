@@ -1,12 +1,12 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-
+import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  constructor(private renderer: Renderer2) {}
+  constructor(private renderer: Renderer2, private sidebarService: SidebarService) {}
 
   ngOnInit(): void {
     const body = document.body;
@@ -19,12 +19,14 @@ export class SidebarComponent implements OnInit {
     if (toggle) {
       toggle.addEventListener("click", () => {
         sidebar.classList.toggle("close");
+        body.classList.toggle("sidebar-open");
       });
     }
-
+    
     if (searchBtn) {
       searchBtn.addEventListener("click", () => {
         sidebar.classList.remove("close");
+        body.classList.add("sidebar-open");
       });
     }
 
@@ -39,5 +41,8 @@ export class SidebarComponent implements OnInit {
         }
       });
     }
+  }
+  toggleSidebar() {
+    this.sidebarService.toggleSidebar();
   }
 }

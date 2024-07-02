@@ -1,7 +1,7 @@
 .container {
   display: flex;
-  width: calc(100% - 280px); /* Adjust width to leave space for the sidebar */
-  margin-left: 280px; /* Adjust margin as needed */
+  /* width: calc(100% - 280px); Adjust width to leave space for the sidebar */
+  margin-left: 110px; /* Adjust margin as needed */
   overflow-x: hidden; /* Prevent horizontal scrollbar */
 }
 
