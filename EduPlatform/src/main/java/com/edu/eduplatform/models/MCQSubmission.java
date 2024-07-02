@@ -1,5 +1,6 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,10 +18,12 @@ public class MCQSubmission {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
+    @JsonIgnore
     private Student student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_id")
+    @JsonIgnore
     private Quiz quiz;
 
     private LocalDateTime submissionTime;
@@ -28,5 +31,6 @@ public class MCQSubmission {
     private double totalScore;
 
     @OneToMany(mappedBy = "mcqSubmission", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<StudentMCQAnswer> answers = new ArrayList<>();
 }

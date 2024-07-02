@@ -13,11 +13,11 @@ import java.util.List;
 
 @Data
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+//@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+//@ToString(onlyExplicitlyIncluded = true)
 public class Quiz {
     @Id
-    @EqualsAndHashCode.Include
+//    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long quizId;
     private String title;

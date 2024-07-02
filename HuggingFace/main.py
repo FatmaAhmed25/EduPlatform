@@ -7,18 +7,26 @@ import fitz  # PyMuPDF
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-
 app = Flask(__name__)
 
 # Log in to huggingface and grant authorization to huggingchat
-EMAIL = "fatmaahmed2901@gmail.com"
-PASSWD = "/2)BvnK/r,x6P5~"
+EMAIL = ""
+PASSWD = ""
 cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
 sign = Login(EMAIL, PASSWD)
 cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
 
 # Create your ChatBot
 chatbot = hugchat.ChatBot(cookies=cookies.get_dict())  # or cookie_path="usercookies/<email>.json"
+
+models = chatbot.get_available_llm_models()
+
+for model in models:
+    print(model.name)
+
+chatbot.switch_llm(1)
+
+chatbot.new_conversation(switch_to = True)
 
 # Function to delete all conversations
 def delete_all_chats():
@@ -190,19 +198,22 @@ def generate_pdf(title, items, is_quiz=True):
     return pdf_filename
 
 
-# Flask route for handling POST requests to /chat endpoint
-@app.route('/chat', methods=['POST'])
-def chat():
+# Flask route for handling POST requests to /mcq endpoint
+@app.route('/mcq', methods=['POST'])
+def generate_quiz():
     if 'pdf_files' not in request.files:
         return jsonify({'error': 'Please provide one or more files in pdf_files'}), 400
 
     # Extract form parameters
-    courseId = request.form.get('courseId')  # Default to 1 if not provided
-    quiz_title = request.form.get('quiz_title')  # Default title if not provided
+    courseId = request.form.get('courseId')
+    quiz_title = request.form.get('quiz_title')
     startTime = request.form.get('startTime')
     endTime = request.form.get('endTime')
+    numOfQuestions = request.form.get('numOfQuestions')
+    if not numOfQuestions:
+        return jsonify({'error': 'Please provide the number of questions'}), 400
 
-    prompt = """
+    prompt = f"""
     Using strictly the following format 
     DO NOT NUMBER THE QUESTIONS
     question: (fill question text here)
@@ -211,72 +222,36 @@ def chat():
     answer3: (fill answer text here)
     answer4: (fill answer text here)
     correct answer: (type answer1 or answer2 or answer3 or answer4)
-    Generate exactly 10 multiple choice questions (MCQs) from the following text. Each answer should be fully specified, Ensure the correct answer is explicitly stated and there are actual answers for each question.
+    Generate exactly {numOfQuestions} multiple choice questions (MCQs) from the following text. Each answer should be fully specified, Ensure the correct answer is explicitly stated and there are actual answers for each question.
     """
 
     pdf_files = request.files.getlist('pdf_files')
-
-    # Extract text from all uploaded PDFs
-    pdf_texts = []
-    for pdf_file in pdf_files:
-        pdf_bytes = pdf_file.read()
-        pdf_texts.append(extract_text_from_pdf(pdf_bytes))
-
+    pdf_texts = [extract_text_from_pdf(pdf_file.read()) for pdf_file in pdf_files]
     combined_pdf_text = "\n\n".join(pdf_texts)
 
-    # Combine prompt and PDF text for the chatbot context
     full_prompt = f"{prompt}\n\nContext from PDF:\n{combined_pdf_text}"
-
     # Get the chat response
     message_result = chatbot.chat(full_prompt)
     response_text = message_result.wait_until_done()
 
-    # Print the model response for debugging
-    print("Model Response:")
-    print(response_text)
-
     # Parse the response into quiz format
     questions = parse_quiz_from_response(response_text)
-
-    # Ensure quiz_title is not None
+    print(response_text)
     if not quiz_title:
         quiz_title = "Quiz Title"
 
-    # Generate PDF file with quiz title and questions
-    pdf_filename = generate_pdf(quiz_title, questions, is_quiz=True)
-
-    # Authenticate user and get token (not changed from your original code)
-    token = authenticate_user("youssefalsaeed@gmail.com", "123")
-    if not token:
-        return jsonify({'error': 'Failed to authenticate user'}), 401
-
-    # Prepare headers with Bearer token (not changed from your original code)
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json"
-    }
-
-    # Prepare payload for /quizzes API endpoint (not changed from your original code)
     quiz_payload = {
         "title": quiz_title,
         "startTime": startTime,
         "endTime": endTime,
-        "totalGrade": len(questions),  # Total points assuming 1 point per question
+        "totalGrade": len(questions),
         "courseId": courseId,
         "questions": questions
     }
 
-    # Print quiz payload for debugging
-    print("Quiz Payload:")
     print(quiz_payload)
 
-    # Send POST request to create the quiz with authentication token
-    try:
-        response = requests.post("http://localhost:8080/quizzes", json=quiz_payload, headers=headers)
-        response.raise_for_status()
-        return send_file(pdf_filename, as_attachment=True), 200
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': f'Error creating quiz: {str(e)}'}), 500
+    return quiz_payload, 200
 
 # Flask route for handling POST requests to /essay endpoint
 @app.route('/essay', methods=['POST'])
@@ -365,4 +340,4 @@ def essay():
         return jsonify({'error': f'Error creating essay: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
