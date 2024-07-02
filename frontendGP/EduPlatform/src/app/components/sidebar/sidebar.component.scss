@@ -29,24 +29,58 @@ body {
     color: #fff;
 }
 .sidebar {
-}
-// Sidebar
-.sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
-    width: 250px;
+    width: 250px; /* Initial width of sidebar */
     padding: 10px 14px;
     background: $sidebar-color;
     transition: $tran-05;
     z-index: 100;  
     border-radius: 8px;
-}
+  
+    &.close {
+      width: 88px; /* Collapsed width */
+    }
+  }
+  
+  .container {
+    margin-left: 250px; /* Adjust margin to accommodate expanded sidebar */
+    transition: margin-left $tran-05; /* Smooth transition for margin */
+  }
+  
+  .home {
+    position: absolute;
+    top: 0;
+    left: 250px; /* Adjust left position to accommodate expanded sidebar */
+    height: 100vh;
+    width: calc(100% - 250px); /* Adjust width to fill remaining space */
+    background-color: $body-color;
+    transition: $tran-05;
+  }
+  
+  .sidebar.close ~ .home {
+    left: 88px; /* Adjust left position for collapsed sidebar */
+    width: calc(100% - 88px); /* Adjust width for collapsed sidebar */
+  }
+  
+// .sidebar {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     height: 100%;
+//     width: 250px;
+//     padding: 10px 14px;
+//     background: $sidebar-color;
+//     transition: $tran-05;
+//     z-index: 100;  
+//     border-radius: 8px;
+// }
 
-.sidebar.close {
-    width: 88px;
-}
+// .sidebar.close {
+//     width: 88px;
+// }
 
 // Reusable code
 .sidebar li {

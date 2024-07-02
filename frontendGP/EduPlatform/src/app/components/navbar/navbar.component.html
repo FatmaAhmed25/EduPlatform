@@ -1,1 +1,26 @@
-<p>navbar works!</p>
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-icon" (click)="toggleNotificationPanel()">
+      <img src="../../../assets/images/notification-bell.png" alt="notification bell" class="bell" height="30px">
+      <!-- Display notification count badge if there are notifications -->
+      <span *ngIf="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span>
+    </div>
+    <div class="navbar-user">
+      <img src="../../../assets/images/profile.png" alt="User Image" class="user-image">
+    </div>
+  </div>
+  <!-- Notification panel section -->
+  <div *ngIf="showNotificationPanel" class="notification-panel">
+    <ul *ngIf="notifications.length > 0; else noNotifications">
+      <li *ngFor="let notification of notifications">
+        {{ notification.notificationMessage }}
+      </li>
+    </ul>
+    <ng-template #noNotifications>
+      <div class="no-notifications">
+        <img src="../../../assets/images/no-noti.png" alt="No notifications icon" class="no-noti-icon">
+        <p>No recent updates!</p>
+      </div>
+    </ng-template>
+  </div>
+</nav>

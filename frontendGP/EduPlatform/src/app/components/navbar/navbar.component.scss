@@ -1,0 +1,107 @@
+.navbar {
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end; /* Align items to the right */
+  align-items: center;
+  border-radius: 15px;
+  width: 130px; /* Adjust width to full width of the page */
+  float: right;
+  height: 45px;
+  
+  .navbar-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-icon {
+    margin-right: 20px;
+    cursor: pointer;
+
+    .bell {
+      margin-top: 5px;
+      width: 31px; /* Adjust size for your image */
+      height: 31px;
+      transition: transform 0.3s ease-in-out; /* Add smooth transition */
+    }
+
+    .notification-badge {
+      background-color: #2273f1;
+      color: white;
+      border-radius: 50%; /* Make it a circle */
+      padding: 1px 7px;
+      font-size: 0.75rem;
+      position: absolute;
+      top: 14px;
+      right: 85px;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      text-align: center; /* Ensure number is centered */
+    }
+    
+
+    &:hover {
+      .bell {
+        transform: scale(1.1); 
+      }
+    }
+  }
+
+  .navbar-user {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .user-image {
+      border-radius: 50%;
+      width: 27px;
+      height: 27px;
+      margin-right: 15px;
+    }
+  }
+
+  .notification-panel {
+    position: absolute;
+    top: 68px;
+    right: 77px;
+    width: 250px;
+    background-color: #fff;
+    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    padding: 10px;
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    transition: all 0.3s ease;
+    
+    .no-notifications {
+      text-align: center;
+      padding: 20px;
+      
+      .no-noti-icon {
+        width: 50px; /* Adjust size as needed */
+        height: 50px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .notification-panel.open {
+    display: block; /* Show panel when open */
+  }
+
+  .notification-panel ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .notification-panel li {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+}
