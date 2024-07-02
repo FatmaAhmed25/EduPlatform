@@ -19,6 +19,7 @@ import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.utils.IUtils.ICourseCodeGenerator;
 import com.edu.eduplatform.utils.IUtils.ICoursePasswordGenerator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -204,4 +205,22 @@ public class CourseService {
 
         return ResponseEntity.ok("Student enrolled successfully.");
     }
+    public boolean isInstructorOfCourse(Long instructorId, Long courseId) {
+        Course course = getCourseById(courseId);
+        if(course.getCreatedBy().getUserID() == (instructorId))
+            return true;
+        for(Instructor i : course.getTaInstructors())
+        {
+            if(instructorId == i.getUserID())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public Set<Instructor> getCourseTAs(Long courseId){
+        Course course = getCourseById(courseId);
+        return course.getTaInstructors();
+    }
+
 }

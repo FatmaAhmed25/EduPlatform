@@ -59,4 +59,5 @@ public class InstructorService {
     public List<Announcement> getAnnouncementsByCourse(Long courseId) {
         return announcementRepository.findByCourse_CourseId(courseId);
     }
+
 }

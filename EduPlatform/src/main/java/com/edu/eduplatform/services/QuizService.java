@@ -3,11 +3,13 @@ package com.edu.eduplatform.services;
 import com.edu.eduplatform.dtos.AnswerDTO;
 import com.edu.eduplatform.dtos.QuestionDTO;
 import com.edu.eduplatform.dtos.QuizDTO;
+import com.edu.eduplatform.dtos.QuizForStudentDTO;
 import com.edu.eduplatform.models.*;
 import com.edu.eduplatform.repos.AnswerRepository;
 import com.edu.eduplatform.repos.CourseRepo;
 import com.edu.eduplatform.repos.QuestionRepository;
 import com.edu.eduplatform.repos.QuizRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.List;
 @Service
 public class QuizService {
 
+    @Autowired
+    private ModelMapper modelMapper;
     @Autowired
     private QuizRepository quizRepository;
 
@@ -96,6 +100,13 @@ public class QuizService {
 
     public List<String> getQuestionsByQuizId(Long quizId) {
         return questionRepository.findTextByQuizQuizId(quizId);
+    }
+    public Quiz getQuizByIdForInstructor(Long quizId) {
+        return quizRepository.findByQuizIdWithQuestions(quizId);
+    }
+    public QuizForStudentDTO getQuizForStudentById(Long quizId) {
+        Quiz quiz = quizRepository.findByQuizIdWithQuestions(quizId);
+        return modelMapper.map(quiz, QuizForStudentDTO.class);
     }
 
 

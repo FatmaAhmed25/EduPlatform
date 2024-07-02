@@ -1,6 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 
+import com.edu.eduplatform.annotations.*;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentResponseDTO;
 import com.edu.eduplatform.dtos.CreateCommentDTO;
@@ -10,6 +11,7 @@ import com.edu.eduplatform.models.MaterialType;
 import com.edu.eduplatform.services.AnnouncementService;
 import com.edu.eduplatform.services.CourseService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,24 +38,49 @@ public class AnnouncementController {
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAnyAuthority('ROLE_STUDENT')")
-    @GetMapping("/get-announcement/{announcementId}")
-    public ResponseEntity<Object> getAnnouncementById(@PathVariable Long announcementId) {
-        Object announcementObject = announcementService.getAnnouncementById(announcementId);
+    @GetMapping("/get-announcement/{studentId}/{announcementId}")
+    public ResponseEntity<Object> getAnnouncementById(@PathVariable @ValidateStudent Long StudentId, @PathVariable Long announcementId) {
+        try {
+            Object announcementObject = announcementService.getAnnouncementById(announcementId);
 
-        if (announcementObject != null) {
-            return ResponseEntity.ok(announcementObject);
-        } else {
-            return ResponseEntity.notFound().build();
+
+            if (announcementObject != null) {
+                return ResponseEntity.ok(announcementObject);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        }
+        catch(EntityNotFoundException ex)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 
     @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
-    @GetMapping("/{courseId}/lectures")
-    public ResponseEntity<List<Announcement>> getLectureAnnouncements(@PathVariable Long courseId) {
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/{instructorId}/{courseId}/lectures/instructor")
+    @ValidateInstructorBelongsToCourse
+    public ResponseEntity<List<Announcement>> getLectureAnnouncementsForInstructor(@PathVariable @ValidateInstructor Long instructorId, @PathVariable @ValidateCourse Long courseId) {
         try {
             List<Announcement> announcements = announcementService.getLectureAnnouncements(courseId);
             return ResponseEntity.ok(announcements);
+        } catch(EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority( 'ROLE_STUDENT')")
+    @GetMapping("/{studentId}/{courseId}/lectures/student")
+    @ValidateStudentEnrollmentInCourse
+    public ResponseEntity<List<Announcement>> getLectureAnnouncementsForStudent(@PathVariable @ValidateStudent Long studentId,@PathVariable @ValidateCourse Long courseId) {
+        try {
+            List<Announcement> announcements = announcementService.getLectureAnnouncements(courseId);
+            return ResponseEntity.ok(announcements);
+        } catch(EntityNotFoundException ex)
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

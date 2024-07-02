@@ -43,6 +43,30 @@ public class EntityValidationAspect {
 
     @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(instructorId,..)")
     public void validateInstructor(Long instructorId) {
-        instructorService.getInstructorById(instructorId);
+        try{
+            instructorService.getInstructorById(instructorId);
+        }
+        catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException("Instructor not found with id: " + instructorId);
+        }
     }
+
+    @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(instructorId, courseId, ..)")
+    public void validateInstructorBelongsToCourse(Long instructorId, Long courseId) throws Exception {
+        boolean isValid = courseService.isInstructorOfCourse(instructorId, courseId);
+        if (!isValid) {
+            throw new EntityNotFoundException("Instructor does not have permission to modify this course.");
+        }
+
+    }
+    @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(studentId, courseId, ..)")
+    public void validateStudentBelongsToCourse(Long studentId, Long courseId) throws Exception {
+        boolean isValid = studentService.isStudentEnrolledInCourse(studentId, courseId);
+        if (!isValid) {
+            throw new EntityNotFoundException("Student does not have permission to access this course.");
+        }
+
+    }
+
 }
+
