@@ -72,7 +72,7 @@ public class MCQSubmissionService {
         int totalGrade = quiz.getTotalGrade();
         double studentGrade = (double) totalPointsEarned / totalPossiblePoints * totalGrade;
 
-        quizSubmission.setTotalScore(studentGrade);
+        quizSubmission.setTotalGrade(studentGrade);
 
         return quizSubmissionRepository.save(quizSubmission);
     }

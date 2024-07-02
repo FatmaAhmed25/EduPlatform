@@ -70,13 +70,13 @@ public class PdfService {
                 MCQSubmission mcqSubmission = mcqSubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
                        // .orElseThrow(() -> new IllegalArgumentException("MCQ Submission not found"));
                 submissionTimeLabel = "Submission Time: " + mcqSubmission.getSubmissionTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                gradeLabel = "Grade: " + mcqSubmission.getTotalScore() + " out of " + quiz.getTotalGrade();
+                gradeLabel = "Grade: " + mcqSubmission.getTotalGrade() + " out of " + quiz.getTotalGrade();
             } else {
                 // Essay Quiz
                 EssaySubmission essaySubmission = essaySubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
                        // .orElseThrow(() -> new IllegalArgumentException("Essay Submission not found"));
-                submissionTimeLabel = "Submission Time: " + essaySubmission.getSubmittedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                gradeLabel = "Grade: " + essaySubmission.getOverallGrade() + " out of " + quiz.getTotalGrade();
+                submissionTimeLabel = "Submission Time: " + essaySubmission.getSubmissionTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                gradeLabel = "Grade: " + essaySubmission.getTotalGrade()+ " out of " + quiz.getTotalGrade();
             }
 
             studentInfo.add(new Chunk(submissionTimeLabel, FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK)));

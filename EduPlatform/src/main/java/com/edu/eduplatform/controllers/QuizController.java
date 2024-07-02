@@ -1,5 +1,7 @@
 package com.edu.eduplatform.controllers;
 
+
+import com.edu.eduplatform.dtos.GenerateQuizDTO;
 import com.edu.eduplatform.dtos.QuizDTO;
 import com.edu.eduplatform.dtos.QuizForStudentDTO;
 import com.edu.eduplatform.models.Answer;
@@ -20,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.edu.eduplatform.annotations.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -33,8 +37,6 @@ public class QuizController {
 
     @Autowired
     private PdfService pdfService;
-
-
 
     @GetMapping("/generate-submission-pdf/{studentId}/{quizId}")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR') or hasAuthority('ROLE_STUDENT')")
@@ -145,6 +147,38 @@ public class QuizController {
     @GetMapping("/course/{courseId}")
     public List<Quiz> getQuizzesByCourseId(@PathVariable Long courseId) {
         return quizService.getQuizzesByCourseId(courseId);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @SecurityRequirement(name="BearerAuth")
+    @PostMapping(value = "/generateMcq" , consumes = {"multipart/form-data"})
+    @ValidateInstructorBelongsToCourse
+    public ResponseEntity<?> generateQuiz(@RequestParam @ValidateInstructor Long instructorId,
+                                          @RequestParam @ValidateCourse Long courseId,
+                                          @RequestParam String quizTitle,
+                                          @RequestParam String startTime,
+                                          @RequestParam String endTime,
+                                          @RequestParam int numOfQuestions,
+                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
+        GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
+        Quiz createdQuiz = quizService.generateAndCreateMcqQuiz(requestDTO);
+        return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @SecurityRequirement(name="BearerAuth")
+    @PostMapping(value = "/generateEssay" , consumes = {"multipart/form-data"})
+    @ValidateInstructorBelongsToCourse
+    public ResponseEntity<?> generateEssayQuiz(@RequestParam @ValidateInstructor Long instructorId,
+                                          @RequestParam @ValidateCourse Long courseId,
+                                          @RequestParam String quizTitle,
+                                          @RequestParam String startTime,
+                                          @RequestParam String endTime,
+                                          @RequestParam int numOfQuestions,
+                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
+        GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
+        Quiz createdQuiz = quizService.generateEssayQuiz(requestDTO);
+        return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
     }
 
 }
