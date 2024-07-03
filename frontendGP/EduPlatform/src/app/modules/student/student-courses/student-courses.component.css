@@ -11,7 +11,7 @@
 }
 
 .courses h2 {
-  margin-bottom: 10px;
+  margin-bottom: 35px;
 }
 
 .course-list {
@@ -129,6 +129,7 @@ p {
   border: 0;
   margin-top: auto; /* Push button to the bottom */
   height: 32px;
+  transition: all 0.3s ease;
 }
 
 .btn:hover {

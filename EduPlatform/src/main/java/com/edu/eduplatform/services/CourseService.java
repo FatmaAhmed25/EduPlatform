@@ -116,7 +116,7 @@ public class CourseService {
     }
 
     // @Transactional
-    public ResponseEntity<?> enrollStudentInCourse(long courseId, long studentId, String coursePassword) {
+    public ResponseEntity<Object> enrollStudentInCourse(long courseId, long studentId, String coursePassword) {
         Course course = getCourseById(courseId);
         Student student = studentService.getStudentById(studentId);
 
@@ -125,11 +125,12 @@ public class CourseService {
         System.out.println("Fetched Student: " + student);
         // Check if the student is already enrolled in the course
         if (course.getStudents().contains(student)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Only status code
         }
 
+        // Check if the course password is correct
         if (!course.getPassword().equals(coursePassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Only status code
         }
 
         student.getCourses().add(course);
@@ -138,7 +139,7 @@ public class CourseService {
         studentRepo.save(student);
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Student enrolled successfully.");
+        return ResponseEntity.ok().build();
     }
 
     public List<Course> searchCourses(String searchTerm) {
@@ -180,7 +181,7 @@ public class CourseService {
         return courseRepository.save(course);
     }
 
-    public ResponseEntity<?> enrollStudentInCourseByCode(String courseCode, Long studentId, String coursePassword) {
+    public ResponseEntity<Object> enrollStudentInCourseByCode(String courseCode, Long studentId, String coursePassword) {
         Course course = courseRepository.findByCourseCode(courseCode);
         if (course == null) {
             throw new EntityNotFoundException("Course not found with code: " + courseCode);
@@ -190,11 +191,11 @@ public class CourseService {
 
         // Check if the student is already enrolled in the course
         if (course.getStudents().contains(student)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Student is already enrolled in the course.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         if (!course.getPassword().equals(coursePassword)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid course password.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         student.getCourses().add(course);
@@ -203,7 +204,7 @@ public class CourseService {
         studentRepo.save(student);
         courseRepository.save(course);
 
-        return ResponseEntity.ok("Student enrolled successfully.");
+        return ResponseEntity.ok().build();
     }
     public boolean isInstructorOfCourse(Long instructorId, Long courseId) {
         Course course = getCourseById(courseId);

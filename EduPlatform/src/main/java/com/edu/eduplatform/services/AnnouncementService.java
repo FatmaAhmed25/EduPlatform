@@ -131,7 +131,7 @@ public class AnnouncementService {
         announcement.setCourse(course);
         announcement.setInstructor(instructor);
 
-        String notificationMessage = "New announcement: " + announcementDto.getTitle() + " ->> " + announcementDto.getContent();
+        String notificationMessage = announcement.getInstructor().getUsername()+" "+announcement.getCourse().getTitle()+" "+announcementDto.getTitle() + " " + announcementDto.getContent();
         announcement.setNotificationMessage(notificationMessage);
 
         Announcement saveAnnouncement = announcementRepo.save(announcement);

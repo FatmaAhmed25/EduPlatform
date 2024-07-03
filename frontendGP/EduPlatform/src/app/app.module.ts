@@ -11,7 +11,7 @@ import { CoreModule } from './core/core.module';
 import { InstructorModule } from './modules/instructor/instructor.module';
 import { StudentModule } from './modules/student/student.module';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
 import { AuthService } from './services/authService/auth.service';
 import { CourseDetailsComponent } from 'src/app/modules/student/course-details/course-details.component';
@@ -31,7 +31,10 @@ import { LectureService } from 'src/app/services/lectureService/lecture.service'
 import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
 import { LabService } from 'src/app/services/Lab/lab.service';
 import { LabComponent } from 'src/app/modules/student/lab/lab.component';
-
+import { SearchService } from './services/search/search.service';
+import { AuthInterceptor } from './iterceptors/auth.interceptor';
+import { ToastrModule } from 'ngx-toastr';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,10 +63,16 @@ import { LabComponent } from 'src/app/modules/student/lab/lab.component';
     MatDialogModule,
     SharedModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right', // Position of the toast
+      timeOut: 3000, // Duration in milliseconds
+      preventDuplicates: true, // Prevent duplicate toasts
+    }),
+    MatSnackBarModule,
   ],
-  providers: [EnrolledCoursesService,AuthService,
-    WebSocketService,LectureService,LabService
+  providers: [EnrolledCoursesService,AuthService,  WebSocketService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    SearchService,WebSocketService,LectureService,LabService
   ],
   bootstrap: [AppComponent]
 })
