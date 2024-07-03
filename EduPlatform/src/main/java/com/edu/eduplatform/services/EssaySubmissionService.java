@@ -33,6 +33,9 @@ public class EssaySubmissionService
     private StudentAnswerRepo studentAnswerRepo;
 
     @Autowired
+    private CheatingReportRepo cheatingReportRepo;
+
+    @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
@@ -52,6 +55,8 @@ public class EssaySubmissionService
         essaySubmission.setQuiz(quiz);
         essaySubmission.setStudent(student);
         essaySubmission.setSubmissionTime(LocalDateTime.now()); // Set submission timestamp
+        essaySubmission.setCheatingStatus(essaySubmissionDTO.getCheatingStatus());
+
 
         List<StudentEssayAnswer> studentEssayAnswers = new ArrayList<>();
         for (StudentAnswerDTO studentAnswerDTO : essaySubmissionDTO.getAnswers()) {
@@ -60,8 +65,13 @@ public class EssaySubmissionService
         }
         essaySubmission.setAnswers(studentEssayAnswers);
 
-        // Save quiz submission
-        essaySubmissionRepository.save(essaySubmission);
+        EssaySubmission savedSubmission = essaySubmissionRepository.save(essaySubmission);
+
+        CheatingReport cheatingReport = new CheatingReport();
+        cheatingReport.setQuizSubmission(savedSubmission);
+        cheatingReport.setFolderName();
+        cheatingReportRepo.save(cheatingReport);
+
         return ResponseEntity.ok("Quiz submission saved successfully");
     }
 

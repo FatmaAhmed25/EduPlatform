@@ -136,7 +136,7 @@ public class CourseController {
         }
     }
     @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
     @GetMapping("/{courseId}/get-content")
     public ResponseEntity<URL> getContentUrl(
             @PathVariable String courseId,
