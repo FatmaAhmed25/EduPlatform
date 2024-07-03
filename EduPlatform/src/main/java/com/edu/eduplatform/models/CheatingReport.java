@@ -15,7 +15,6 @@ public class CheatingReport {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_submission_id", nullable = true)
     @JsonIgnore
-
     private QuizSubmission quizSubmission;
 
     @Column(nullable = true)
