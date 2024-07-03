@@ -27,6 +27,8 @@ import { WebSocketService } from 'src/app/services/websocket-service/websocket.s
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { HomepageComponent } from './homepage/homepage.component';
+import { LectureService } from 'src/app/services/lectureService/lecture.service';
+import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +42,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent
+    HomepageComponent,LectureComponent
 
   ],
   imports: [
@@ -59,7 +61,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     RouterModule
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService
+    WebSocketService,LectureService,
   ],
   bootstrap: [AppComponent]
 })

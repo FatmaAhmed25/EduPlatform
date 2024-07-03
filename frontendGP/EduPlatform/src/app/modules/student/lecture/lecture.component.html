@@ -1,0 +1,11 @@
+<div *ngFor="let lecture of lectures" class="lecture-card">
+  <div class="lecture-header" (click)="toggleLectureContent(lecture)">
+    <h2>{{ lecture.title }}</h2>
+  </div>
+  <div *ngIf="selectedLectureId === lecture.id" class="lecture-content">
+    <iframe *ngIf="fileUrl" [src]="fileUrl" width="100%" height="500px"></iframe>
+    <div class="button-container" *ngIf="fileUrl">
+      <button (click)="openInNewTab(lecture)">Open</button>
+    </div>
+  </div>
+</div>

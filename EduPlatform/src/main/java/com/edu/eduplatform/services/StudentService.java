@@ -1,9 +1,12 @@
 package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.annotations.ValidateStudent;
+import com.edu.eduplatform.dtos.UserDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.models.Student;
+import com.edu.eduplatform.models.User;
 import com.edu.eduplatform.repos.StudentRepo;
+import com.edu.eduplatform.repos.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,6 @@ public class StudentService {
 
     @Autowired
     private StudentRepo studentRepo;
-
     @ValidateStudent
     public Student getStudentById(long studentId) {
         return studentRepo.findById(studentId)
@@ -44,5 +46,16 @@ public class StudentService {
         }
         return true;
     }
+    public UserDTO getUserDetails(long userId) {
+        User user = studentRepo.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found " + userId));
 
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(user.getUsername());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setBio(user.getBio());
+
+        return userDTO;
+    }
 }

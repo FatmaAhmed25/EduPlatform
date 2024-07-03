@@ -10,8 +10,8 @@
 img {
     width: 162px;
     height: 32px;
-    // margin-left: 100px;
-    // margin-bottom: 30px;
+    /* // margin-left: 100px;
+    // margin-bottom: 30px; */
 }
 
 .logo2{
@@ -162,11 +162,11 @@ ul{
 
 
 
-// section{
+/* // section{
 //     width:80%;
 //     margin:80px auto;
 
-// }
+// } */
 .title{
 
     text-align: center;
@@ -180,7 +180,7 @@ ul{
     display: flex;
     justify-content: space-around;
     padding: 20px;
-    // background-color: #EAF7F7;
+    /* // background-color: #EAF7F7; */
 }
 
 .feature-box {
@@ -218,7 +218,6 @@ ul{
 }
 
 
-//* Responsive Styles */
 @media (max-width: 1168px) {
     .features {
         flex-direction: column;

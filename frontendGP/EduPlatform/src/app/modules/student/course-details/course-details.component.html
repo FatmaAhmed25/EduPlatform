@@ -8,12 +8,12 @@
     <mat-tab-group>
       <mat-tab label="Announcements">
         <div class="announcements">
-          <app-announcement [courseId]="7"></app-announcement>
+          <app-announcement></app-announcement>
         </div>
       </mat-tab>
       <mat-tab label="Lectures">
         <div class="lectures">
-          <!-- Lectures content goes here -->
+          <app-lecture [courseId]="courseId" [studentId]="studentId"></app-lecture>
         </div>
       </mat-tab>
       <mat-tab label="Labs">

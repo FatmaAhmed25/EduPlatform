@@ -1,8 +1,8 @@
+<!-- In announcement.component.html -->
 <div *ngFor="let announcement of announcements" class="announcement-card">
   <h2>{{ announcement.title }}</h2>
   <p>{{ announcement.content }}</p>
 
-  <!-- Display file link if fileName exists -->
   <div *ngIf="announcement.fileName" class="announcement-file">
     <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(announcement)">
     <a (click)="openFileLink(announcement)" class="announcement-file-link">
@@ -10,19 +10,32 @@
     </a>
   </div>
 
-  <ul [id]="'comments-' + announcement.id" class="comments-list">
-    <li *ngFor="let comment of announcement.comments" class="comment-item">
-      <div class="comment-author">
-        <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
-      </div>
-      <p class="comment-content">{{ comment.content }}</p>
-    </li>
-  </ul>
+  <button (click)="toggleComments(announcement.id)" class="view-comments-btn">
+    {{ announcement.showComments ? 'Hide Comments' : 'View Comments' }}
+  </button>
 
+  <div *ngIf="announcement.showComments" class="comments-section">
+    <ul [id]="'comments-' + announcement.id" class="comments-list">
+      <li *ngFor="let comment of announcement.comments" class="comment-item">
+        <div class="comment-avatar">
+          <img src="assets/images/avatar1.png" alt="User Avatar">
+        </div>
+        <div class="comment-content">
+          <div class="comment-header">
+            <span class="comment-user">
+              <!-- Call the getUsername method to get the username -->
+              {{ getUsername(comment.userid) | async }}
+            </span>
+            <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+          </div>
+          <p>{{ comment.content }}</p>
+        </div>
+      </li>
+    </ul>
 
-  <!-- Input for sending comments -->
-  <div class="comment-input-section">
-    <input type="text" [id]="'content-' + announcement.id" placeholder="Add a class comment..." [(ngModel)]="newComment[announcement.id]" class="comment-input">
-    <button (click)="sendComment(announcement.id)" class="comment-send-btn">Send</button>
+    <div class="comment-input-section">
+      <input type="text" [id]="'content-' + announcement.id" placeholder="Add a class comment..." [(ngModel)]="newComment[announcement.id]" class="comment-input">
+      <button (click)="sendComment(announcement.id)" class="comment-send-btn">Send</button>
+    </div>
   </div>
 </div>
