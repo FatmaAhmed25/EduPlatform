@@ -11,7 +11,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class LectureComponent implements OnInit {
   @Input() courseId: number | undefined;
-  @Input() studentId: number | undefined;
+  @Input() studentId: string | undefined;
   lectures: any[] = [];
   selectedLectureId: number | null = null;
   fileUrl: SafeResourceUrl | null = null;

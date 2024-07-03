@@ -11,7 +11,6 @@ export class AnnouncementService {
   private baseUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) { }
-
   getAnnouncementsByCourseId(courseId: number): Observable<any> {
     const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -20,7 +19,7 @@ export class AnnouncementService {
 
   getFileLink(courseId: number, fileName: string): Observable<any> {
     const token = localStorage.getItem('authToken');
-    const headers = new HttpHeaders().set('Authorization', `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5b3Vzc2VmLmVzc21hdC55ZUBnbWFpbC5jb20iLCJpYXQiOjE3MTk5Njg3OTUsImV4cCI6MTcxOTk3NTk5NX0.W9712wbl0yqKvHSyPPAlfhs2L5_eZMuncTE6D0o3zYk`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const encodedFileName = encodeURIComponent(fileName); // Encode the file name
     return this.http.get(`${this.coursesBaseUrl}/${courseId}/get-content?fileName=${encodedFileName}`, { headers, responseType: 'text' });
   }

@@ -1,3 +1,4 @@
+// In lab.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -5,17 +6,18 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class LectureService {
+export class LabService {
   private baseUrl = 'http://localhost:8080/announcment';
   private coursesBaseUrl = 'http://localhost:8080/courses';
 
   constructor(private http: HttpClient) {}
 
-  getLectures(studentId: string, courseId: number): Observable<any> {
+  getLabs(courseId: number): Observable<any> {
     const token = localStorage.getItem('authToken');
-    const headers = new HttpHeaders().set('Authorization',  `Bearer ${token}`);
-    return this.http.get<any>(`${this.baseUrl}/${studentId}/${courseId}/lectures/student`, { headers,  });
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`${this.baseUrl}/${courseId}/labs`, { headers });
   }
+
   getFileLink(courseId: number, fileName: string): Observable<string> {
     const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

@@ -29,6 +29,8 @@ import { RouterModule } from '@angular/router';
 import { HomepageComponent } from './homepage/homepage.component';
 import { LectureService } from 'src/app/services/lectureService/lecture.service';
 import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
+import { LabService } from 'src/app/services/Lab/lab.service';
+import { LabComponent } from 'src/app/modules/student/lab/lab.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,7 @@ import { LectureComponent } from 'src/app/modules/student/lecture/lecture.compon
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent,LectureComponent
+    HomepageComponent,LectureComponent,LabComponent
 
   ],
   imports: [
@@ -61,7 +63,7 @@ import { LectureComponent } from 'src/app/modules/student/lecture/lecture.compon
     RouterModule
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService,LectureService,
+    WebSocketService,LectureService,LabService
   ],
   bootstrap: [AppComponent]
 })

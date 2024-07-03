@@ -1,0 +1,13 @@
+<!-- In lab.component.html -->
+<div *ngFor="let lab of labs" class="lab-card">
+    <div class="lab-header" (click)="toggleLabContent(lab)">
+      <h2>{{ lab.title }}</h2>
+    </div>
+    <div *ngIf="selectedLabId === lab.id" class="lab-content">
+      <iframe *ngIf="fileUrl" [src]="fileUrl" width="100%" height="500px"></iframe>
+      <div class="button-container" *ngIf="fileUrl">
+        <button (click)="openInNewTab(lab)">Open</button>
+      </div>
+    </div>
+  </div>
+  
