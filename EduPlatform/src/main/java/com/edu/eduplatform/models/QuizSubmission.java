@@ -28,7 +28,7 @@ public class QuizSubmission
     private Quiz quiz;
 
     @Column(name = "submissionTime", nullable = false)
-    private LocalDateTime submissionTime;
+    private LocalDateTime submissionTime=LocalDateTime.now();
 
     @Column(name = "totalGrade")
     private double totalGrade;
