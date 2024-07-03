@@ -15,6 +15,5 @@ public class MCQSubmission extends QuizSubmission
 {
 
     @OneToMany(mappedBy = "mcqSubmission", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<StudentMCQAnswer> answers = new ArrayList<>();
 }

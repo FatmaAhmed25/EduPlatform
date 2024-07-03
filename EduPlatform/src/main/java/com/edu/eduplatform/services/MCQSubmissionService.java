@@ -28,6 +28,9 @@ public class MCQSubmissionService {
     @Autowired
     private MCQSubmissionRepo quizSubmissionRepository;
 
+    @Autowired
+    private CheatingReportRepo cheatingReportRepo;
+
     public MCQSubmission submitQuiz( MCQSubmissionDTO mcqQuizSubmissionDTO) {
         Student student = studentRepository.findById(mcqQuizSubmissionDTO.getStudentId())
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -39,6 +42,7 @@ public class MCQSubmissionService {
         quizSubmission.setStudent(student);
         quizSubmission.setQuiz(quiz);
         quizSubmission.setSubmissionTime(LocalDateTime.now());
+        quizSubmission.setCheatingStatus(mcqQuizSubmissionDTO.getCheatingStatus());
 
         int totalPossiblePoints = 0;
         int totalPointsEarned = 0;
@@ -71,10 +75,17 @@ public class MCQSubmissionService {
         // for calculating the student's grade
         int totalGrade = quiz.getTotalGrade();
         double studentGrade = (double) totalPointsEarned / totalPossiblePoints * totalGrade;
-
         quizSubmission.setTotalGrade(studentGrade);
 
-        return quizSubmissionRepository.save(quizSubmission);
+        MCQSubmission savedSubmission = quizSubmissionRepository.save(quizSubmission);
+
+        CheatingReport cheatingReport = new CheatingReport();
+        cheatingReport.setQuizSubmission(savedSubmission);
+        cheatingReport.setFolderName();
+        cheatingReportRepo.save(cheatingReport);
+        savedSubmission.setCheatingReport(cheatingReport);
+        quizSubmissionRepository.save(quizSubmission);
+        return savedSubmission;
     }
     public MCQSubmission getQuizSubmission(Long submissionId) {
         return quizSubmissionRepository.findById(submissionId)

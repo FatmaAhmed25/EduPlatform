@@ -4,6 +4,7 @@ package com.edu.eduplatform.controllers;
 import com.edu.eduplatform.dtos.EssaySubmissionDTO;
 import com.edu.eduplatform.dtos.QuestionAnswerDTO;
 import com.edu.eduplatform.dtos.StudentAnswerDTO;
+import com.edu.eduplatform.services.AutoGradeService;
 import com.edu.eduplatform.services.EssaySubmissionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class EssaySubmissionController {
 
     @Autowired
     private EssaySubmissionService essaySubmissionService;
+
+    @Autowired
+    private AutoGradeService autoGradeService;
 
 
     @SecurityRequirement(name="BearerAuth")
@@ -35,7 +39,7 @@ public class EssaySubmissionController {
     @GetMapping("/getQuestionAnswersByQuizAndStudent")
     public ResponseEntity<List<QuestionAnswerDTO>> getQuestionAnswersByQuizIdAndStudentId(
             @RequestParam Long quizId, @RequestParam Long studentId) {
-        List<QuestionAnswerDTO> questionAnswers = essaySubmissionService.getQuestionAnswersByQuizIdAndStudentId(quizId, studentId);
+        List<QuestionAnswerDTO> questionAnswers =autoGradeService.getQuestionAnswersByQuizIdAndStudentId(quizId, studentId);
         return ResponseEntity.ok(questionAnswers);
     }
 
@@ -52,7 +56,7 @@ public class EssaySubmissionController {
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/setOverAllGrade")
     public ResponseEntity<?> setOverAllGrade(@RequestParam Long quizId, @RequestParam Long studentId, @RequestParam double grade) {
-        essaySubmissionService.setOverAllGrade(quizId, studentId, grade);
+        autoGradeService.setOverAllGrade(quizId, studentId, grade);
         return ResponseEntity.ok("Overall grade set successfully.");
 
     }
@@ -62,13 +66,13 @@ public class EssaySubmissionController {
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @GetMapping("/getAnswerIds")
     public ResponseEntity<List<Long>> getStudentAnswerIds(@RequestParam Long quizId, @RequestParam Long studentId) {
-        List<Long> answerIds = essaySubmissionService.getStudentAnswerIdsByQuizAndStudent(quizId, studentId);
+        List<Long> answerIds = autoGradeService.getStudentAnswerIdsByQuizAndStudent(quizId, studentId);
         return ResponseEntity.ok(answerIds);
     }
 
     @PutMapping("/updateAnswerGrade")
-    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam int grade) {
-        essaySubmissionService.updateAnswerGrade(answerId, grade);
+    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam double grade) {
+        autoGradeService.updateAnswerGrade(answerId, grade);
         return ResponseEntity.ok("Grade updated successfully.");
     }
 

@@ -1,20 +1,26 @@
 package com.edu.eduplatform.utils.quiz.pdf;
 
 import com.edu.eduplatform.models.*;
-import com.edu.eduplatform.repos.EssaySubmissionRepo;
-import com.edu.eduplatform.repos.MCQSubmissionRepo;
-import com.edu.eduplatform.repos.QuizRepository;
-import com.edu.eduplatform.repos.StudentRepo;
+import com.edu.eduplatform.repos.*;
+import com.google.cloud.storage.Blob;
+
+import com.google.cloud.storage.Bucket;
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.format.DateTimeFormatter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PdfService {
@@ -30,6 +36,112 @@ public class PdfService {
 
     @Autowired
     private EssaySubmissionRepo essaySubmissionRepo;
+
+    @Autowired
+    private CheatingReportRepo cheatingReportRepo;
+
+    @Value("${bucket.name}")
+    private String bucketName;
+
+    private BaseColor lightBlue = new BaseColor(94, 135, 247);
+
+    private Storage storage;
+
+    public PdfService() throws IOException {
+        this.storage = StorageOptions.getDefaultInstance().getService();
+    }
+
+    public byte[] generateCheatingReportPdf(Long cheatingReportId) throws IOException, DocumentException {
+        Optional<CheatingReport> cheatingReportOptional = cheatingReportRepo.findById(cheatingReportId);
+
+        if (cheatingReportOptional.isPresent()) {
+            CheatingReport cheatingReport = cheatingReportOptional.get();
+            QuizSubmission quizSubmission = cheatingReport.getQuizSubmission();
+            Student student = quizSubmission.getStudent();
+            Quiz quiz = quizSubmission.getQuiz();
+
+            String folderName = cheatingReport.getFolderName();
+            List<String> imageUrls = fetchImageUrlsFromFirebase(folderName);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            Document document = new Document();
+            PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream);
+
+            String logoPath = "src/main/resources/logo.png";
+            FooterPageEvent event = new FooterPageEvent(logoPath);
+            writer.setPageEvent(event);
+
+            document.open();
+
+            // Add quiz title, student name, course name, and cheating status
+            PdfPTable headerTable = new PdfPTable(1);
+            headerTable.setWidths(new int[]{100});
+            headerTable.setSpacingAfter(20f);
+            headerTable.setHorizontalAlignment(Element.ALIGN_CENTER);
+            headerTable.setWidthPercentage(100);
+
+            headerTable.addCell(getStyledCell("Quiz Title: " + quiz.getTitle(), FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16), lightBlue));
+            headerTable.addCell(getStyledCell("Student Name: " + student.getUsername(), FontFactory.getFont(FontFactory.HELVETICA, 12), BaseColor.WHITE));
+            headerTable.addCell(getStyledCell("Course Name: " + quiz.getCourse().getTitle(), FontFactory.getFont(FontFactory.HELVETICA, 12), BaseColor.WHITE));
+            headerTable.addCell(getStyledCell("Cheating Status: " + quizSubmission.getCheatingStatus(), FontFactory.getFont(FontFactory.HELVETICA, 12), BaseColor.WHITE));
+            document.add(headerTable);
+
+            // Add images with timestamps in a table
+            PdfPTable imageTable = new PdfPTable(2);
+            imageTable.setWidths(new int[]{50, 50});
+            imageTable.setWidthPercentage(100);
+            imageTable.setSpacingBefore(10f);
+            imageTable.setSpacingAfter(10f);
+
+            for (String imageUrl : imageUrls) {
+                Image image = Image.getInstance(downloadImageFromFirebase(imageUrl));
+                image.scaleToFit(200, 200); // resize images to 200x200
+
+                PdfPCell imageCell = new PdfPCell(image);
+                imageCell.setBorderColor(lightBlue);
+                imageCell.setPaddingBottom(15f); // Add space between cells
+
+                String timestamp = extractTimestampFromImageName(imageUrl);
+                PdfPCell timestampCell = new PdfPCell(new Paragraph("Timestamp: " + timestamp, FontFactory.getFont(FontFactory.HELVETICA, 12)));
+                timestampCell.setBorderColor(lightBlue);
+                timestampCell.setPaddingBottom(15f); // Add space between cells
+
+                imageTable.addCell(imageCell);
+                imageTable.addCell(timestampCell);
+            }
+            document.add(imageTable);
+
+            document.close();
+            return byteArrayOutputStream.toByteArray();
+        } else {
+            throw new IllegalArgumentException("Cheating Report not found");
+        }
+    }
+
+    private PdfPCell getStyledCell(String text, Font font, BaseColor backgroundColor) {
+        PdfPCell cell = new PdfPCell(new Paragraph(text, font));
+        cell.setBorderColor(lightBlue);
+        cell.setBackgroundColor(backgroundColor);
+        cell.setPaddingBottom(10f); // Add space between cells
+        return cell;
+    }
+    private List<String> fetchImageUrlsFromFirebase(String folderName) {
+        Bucket bucket = storage.get(bucketName);
+        return StreamSupport.stream(bucket.list(Storage.BlobListOption.prefix(folderName)).iterateAll().spliterator(), false)
+                .map(Blob::getName)
+                .collect(Collectors.toList());
+    }
+
+    private byte[] downloadImageFromFirebase(String imageUrl) throws IOException {
+        Blob blob = storage.get(bucketName, imageUrl);
+        return blob.getContent();
+    }
+
+    private String extractTimestampFromImageName(String imageName) {
+        // Example: processedimage_2024-07-03_12-16-52.jpg
+        String[] parts = imageName.split("_");
+        return parts[1] + " " + parts[2].replace(".jpg", "").replace("-", ":");
+    }
 
     public byte[] generateStudentSubmissionPdf(Long studentId, Long quizId) throws IOException, DocumentException {
         Optional<Student> studentOptional = studentRepository.findById(studentId);
@@ -215,7 +327,7 @@ public class PdfService {
 
                 // Check if the question is an MCQQuestion
                 if (question instanceof MCQQuestion) {
-                    com.itextpdf.text.List list = new com.itextpdf.text.List(List.UNORDERED);
+                    com.itextpdf.text.List list = new com.itextpdf.text.List(com.itextpdf.text.List.UNORDERED);
                     int answerIndex = 0;
                     BaseColor darkGreen = new BaseColor(0, 100, 0);  // RGB for dark green
                     for (Answer answer : ((MCQQuestion) question).getAnswers()) {
