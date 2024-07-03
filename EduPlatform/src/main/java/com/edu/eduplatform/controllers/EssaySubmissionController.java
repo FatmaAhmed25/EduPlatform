@@ -71,7 +71,7 @@ public class EssaySubmissionController {
     }
 
     @PutMapping("/updateAnswerGrade")
-    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam int grade) {
+    public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam double grade) {
         autoGradeService.updateAnswerGrade(answerId, grade);
         return ResponseEntity.ok("Grade updated successfully.");
     }

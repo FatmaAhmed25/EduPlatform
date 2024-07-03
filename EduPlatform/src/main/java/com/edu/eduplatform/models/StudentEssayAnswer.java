@@ -21,7 +21,7 @@ public class StudentEssayAnswer {
     private String answer;
 
 
-    private int grade;
+    private double grade;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "essay_submission_id", nullable = false)

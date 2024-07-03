@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 import fitz  # PyMuPDF
 from hugchat import hugchat
 from hugchat.login import Login
+import re
 
 app = Flask(__name__)
 
@@ -41,29 +42,28 @@ def extract_text_from_pdf(pdf_bytes):
         text += page.get_text()
     return text
 
-def extract_overall_grade(chatbot_response):
-    # Extract the overall grade from the chatbot response
-    response_text = chatbot_response.text
-    lines = response_text.splitlines()
-    for line in lines:
-        if line.startswith("Overall Grade:"):
-            overall_grade = line.split(":")[1].strip()
-            if "/" in overall_grade:
-              overall_grade = overall_grade.split("/")[0].strip()
-            return overall_grade
-    return None
+# def extract_overall_grade(chatbot_response):
+#     # Extract the overall grade from the chatbot response
+#     response_text = chatbot_response.text
+#     lines = response_text.splitlines()
+#     for line in lines:
+#         if line.startswith("Overall Grade:"):
+#             overall_grade = line.split(":")[1].strip()
+#             if "/" in overall_grade:
+#               overall_grade = overall_grade.split("/")[0].strip()
+#             return overall_grade
+#     return None
 
 def extract_grades_from_response(chatbot_response):
     response_text = chatbot_response.text
     grades = []
-    lines = response_text.splitlines()
-    for line in lines:
-        if line.startswith("Grade:"):
-            grade = line.split(":")[1].strip()
-            if "/" in grade:
-                grade = grade.split("/")[0]
-            grades.append(grade)
+    # Use regex to find all grades in the format: Grade: <number>
+    pattern = re.compile(r"Grade:\s*(\d+\.\d+)")
+    matches = pattern.findall(response_text)
+    for match in matches:
+        grades.append(match)
     return grades
+
 
 # Route to handle grading requests
 @app.route('/grade_answers', methods=['POST'])
@@ -77,12 +77,11 @@ def grade_answers():
 
     questions = request.form.get('questions').split('\n')
     user_answers = request.form.get('user_answers').split('\n')
-
     print(questions)
     print(user_answers)
     prompt = (
         f"Please grade my answers based on the PDF content, Questions, and User Answers. "
-        f"Grade each question out of 1 point, with a total score out of 5.\n\n"
+        f"Grade each question out of 1 point,with values of range from [0,1] including decimals for partially correct answers\n\n"
         f"PDF Content:\n\n{combined_pdf_text}\n\n"
         f"Quiz Questions:\n\n{questions}\n\n"
         f"User Answers:\n\n{user_answers}\n\n"
@@ -95,24 +94,29 @@ def grade_answers():
             f"Grade: 'your grade for this answer'\n\n"
         )
 
-    prompt += "Overall Grade: 'actual overall grade'"
+
+    # prompt += "Overall Grade: 'actual overall grade'\n"
+
     print(prompt)
     chatbot_response = chatbot.chat(prompt)
     if not chatbot_response:
         return jsonify({'error': 'Failed to interact with chatbot'}), 500
 
     print(chatbot_response)
-    overall_grade = extract_overall_grade(chatbot_response)
-    if not overall_grade:
-        return jsonify({'error': 'Failed to extract overall grade from chatbot response'}), 500
-
 
     grades = extract_grades_from_response(chatbot_response)
     if not grades:
         return jsonify({'error': 'Failed to extract grades from chatbot response'}), 500
 
+    print(grades)
+    # overall_grade = extract_overall_grade(chatbot_response)
+    # if not overall_grade:
+    #     return jsonify({'error': 'Failed to extract overall grade from chatbot response'}), 500
+
+
+
     return jsonify({
-        'overallGrade': overall_grade,
+        # 'overallGrade': float(overall_grade),
         'grades': grades
     }), 200
 

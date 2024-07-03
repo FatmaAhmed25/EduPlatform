@@ -36,7 +36,11 @@ public class AutoGradeService
     private EssaySubmissionRepo essaySubmissionRepository;
 
     @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
     private QuizRepository quizRepository;
+
 
     @Value("${model.flask.url}")
     private String flaskBaseUrl;
@@ -76,10 +80,11 @@ public class AutoGradeService
         }).collect(Collectors.toList());
     }
 
-    public void updateAnswerGrade(Long answerId, int grade) {
+    public void updateAnswerGrade(Long answerId, double grade) {
         StudentEssayAnswer studentEssayAnswer = studentAnswerRepo.findById(answerId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid answer ID: " + answerId));
         studentEssayAnswer.setGrade(grade);
+        System.out.println("here");
         studentAnswerRepo.save(studentEssayAnswer);
     }
 
@@ -98,6 +103,7 @@ public class AutoGradeService
          List<QuestionAnswerDTO> questionAnswers = getQuestionAnswersByQuizIdAndStudentId(quizId, studentId);
          List<String> questions = questionAnswers.stream().map(QuestionAnswerDTO::getQuestionText).collect(Collectors.toList());
          List<String> userAnswers = questionAnswers.stream().map(QuestionAnswerDTO::getUserAnswer).collect(Collectors.toList());
+         List<Long> questionsIds= questionAnswers.stream().map(QuestionAnswerDTO::getQuestionId).collect(Collectors.toList());
 
 
         System.out.println(questions);
@@ -125,7 +131,6 @@ public class AutoGradeService
             }
         }
 
-        // Optional: Include questions and user answers if needed
          body.add("questions", String.join("\n", questions));
          body.add("user_answers", String.join("\n", userAnswers));
 
@@ -145,24 +150,33 @@ public class AutoGradeService
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode responseJson = objectMapper.readTree(responseEntity.getBody());
-            double overallGrade = responseJson.path("overallGrade").asDouble();
+//            double overallGrade = responseJson.path("overallGrade").asDouble();
             JsonNode gradesNode = responseJson.path("grades");
-            // Process grades if needed
-             List<Integer> grades = objectMapper.convertValue(gradesNode, new TypeReference<List<Integer>>() {});
+             List<Double> grades = objectMapper.convertValue(gradesNode, new TypeReference<List<Double>>() {});
 
-            // Example: Print extracted data
-            System.out.println("Overall Grade: " + overallGrade);
+//            System.out.println("Overall Grade: " + overallGrade);
             System.out.println("Grades:");
-             for (int grade : grades) {
+             for (double grade : grades) {
                  System.out.println(grade);
              }
-
-            // Update overall grade and individual answer grades if needed
-             setOverAllGrade(quizId, studentId, overallGrade);
+            System.out.println(questionsIds);
              List<Long> answerIds = getStudentAnswerIdsByQuizAndStudent(quizId, studentId);
-             for (int i = 0; i < grades.size(); i++) {
-                 updateAnswerGrade(answerIds.get(i), grades.get(i));
+             double studentGrade=0;
+             double totalPoints=0;
+             int quizGrade=quizRepository.findById(quizId).get().getTotalGrade();
+             for (int i = 0; i < questionsIds.size(); i++)
+             {
+                 System.out.println("grade"+grades.get(i));
+                 double currentPoints=questionRepository.findById(questionsIds.get(i)).get().getPoints();
+                 double currentGrade=grades.get(i)*currentPoints;
+                 System.out.println("no of points  "+questionRepository.findById(questionsIds.get(i)).get().getPoints());
+                 System.out.println("current"+currentGrade);
+                 updateAnswerGrade(answerIds.get(i),currentGrade);
+                 studentGrade+=currentGrade;
+                 totalPoints+=currentPoints;
              }
+             double actualGrade=studentGrade / totalPoints * quizGrade;
+             setOverAllGrade(quizId, studentId, actualGrade);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse response: " + responseEntity.getBody(), e);
         }
