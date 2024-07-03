@@ -3,51 +3,66 @@
   border-bottom: 1px solid #e0e0e0;
   padding: 10px;
   display: flex;
-  justify-content: flex-end; /* Align items to the right */
+  justify-content: flex-end;
   align-items: center;
   border-radius: 15px;
-  width: 130px; /* Adjust width to full width of the page */
+  width: 220px;
   float: right;
   height: 45px;
-  
+
   .navbar-container {
     display: flex;
     align-items: center;
   }
 
   .navbar-icon {
-    margin-right: 20px;
+    margin-right: 8px;
     cursor: pointer;
 
     .bell {
       margin-top: 5px;
-      width: 31px; /* Adjust size for your image */
-      height: 31px;
-      transition: transform 0.3s ease-in-out; /* Add smooth transition */
+      width: 22px;
+      height: 24px;
+      transition: transform 0.3s ease-in-out;
     }
 
     .notification-badge {
       background-color: #2273f1;
       color: white;
-      border-radius: 50%; /* Make it a circle */
+      border-radius: 50%;
       padding: 1px 7px;
-      font-size: 0.75rem;
+      font-size: 0.66rem;
       position: absolute;
-      top: 14px;
-      right: 85px;
-      width: 22px;
-      height: 22px;
+      top: 20px;
+      right: 196px;
+      width: 12px;
+      height: 16px;
       display: flex;
-      justify-content: center; /* Center horizontally */
-      align-items: center; /* Center vertically */
-      text-align: center; /* Ensure number is centered */
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-family: 'DM Sans';
     }
-    
 
     &:hover {
       .bell {
-        transform: scale(1.1); 
+        transform: scale(1.1);
       }
+    }
+  }
+
+  .navbar-search {
+    margin-left: 10px;
+
+    .search-icon {
+      width: 26px;
+      height: 27px;
+      cursor: pointer;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+      transition: transform 0.3s ease-in-out;
     }
   }
 
@@ -55,19 +70,60 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    position: relative;
+    transform: scale(1.1);
+
+    .student-name {
+      margin-right: 8px;
+      font-size: 1rem;
+      font-family: 'DM Sans';
+    }
 
     .user-image {
       border-radius: 50%;
       width: 27px;
       height: 27px;
-      margin-right: 15px;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 40px;
+      right: 0;
+      width: 150px;
+      background-color: #fff;
+      box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
+      border-radius: 7px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          padding: 10px;
+          border-bottom: 1px solid #e0e0e0;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #f0f0f0;
+          }
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
     }
   }
 
   .notification-panel {
     position: absolute;
-    top: 68px;
-    right: 77px;
+    top: 70px;
+    right: 150px;
     width: 250px;
     background-color: #fff;
     box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
@@ -77,21 +133,21 @@
     max-height: 300px;
     overflow-y: auto;
     transition: all 0.3s ease;
-    
+
     .no-notifications {
       text-align: center;
       padding: 20px;
-      
+
       .no-noti-icon {
-        width: 50px; /* Adjust size as needed */
-        height: 50px;
+        width: 30px;
+        height: 30px;
         margin-bottom: 10px;
       }
     }
   }
 
   .notification-panel.open {
-    display: block; /* Show panel when open */
+    display: block;
   }
 
   .notification-panel ul {
@@ -104,4 +160,89 @@
     padding: 10px;
     border-bottom: 1px solid #e0e0e0;
   }
+}
+
+.search-icon {
+  width: 26px;
+  height: 27px;
+  margin-right: 20px;
+  cursor: pointer;
+  margin-top: 3px;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+  transition: transform 0.3s ease-in-out;
+}
+
+.search-panel {
+  position: absolute;
+  top: 70px;
+  right: 120px;
+  width: 262px;
+  background-color: #fff;
+  box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 7px;
+  padding: 10px;
+  z-index: 1000;
+  display: none;
+  transition: all 0.3s ease;
+
+  &.open {
+    display: block; /* Show when .open is added */
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #e0e0e0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.search-panel input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 7px;
+}
+
+.search-panel button {
+  margin-right: 0.5rem;
+}
+.btn{
+  background: #5E5DF0;
+  border-radius: 11px;
+  box-shadow: #5E5DF0 0 10px 20px -10px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 14px;
+  opacity: 1;
+  outline: 0 solid transparent;
+  padding: 8px 18px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  width: 113px;
+  word-break: break-word;
+  border: 0;
+  margin-top: auto;
+  height: 29px;
+  transition: all 0.3s ease;
+
+}
+.btn:hover {
+  background-color: #222295;
 }

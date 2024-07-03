@@ -1,4 +1,4 @@
-export interface Course {
+export interface Courses {
     courseId: number;
     courseCode: string;
     title: string;
@@ -6,6 +6,5 @@ export interface Course {
     password: string;
     assignments: any[];
     image?: string; // Add this line
-
   }
   

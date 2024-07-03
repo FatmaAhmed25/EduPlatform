@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 // import { CommonModule } from '@angular/common';
@@ -11,7 +10,7 @@ import { CoreModule } from './core/core.module';
 import { InstructorModule } from './modules/instructor/instructor.module';
 import { StudentModule } from './modules/student/student.module';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule ,HTTP_INTERCEPTORS} from '@angular/common/http';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
 import { AuthService } from './services/authService/auth.service';
 import { CourseDetailsComponent } from 'src/app/modules/student/course-details/course-details.component';
@@ -27,6 +26,11 @@ import { WebSocketService } from 'src/app/services/websocket-service/websocket.s
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { HomepageComponent } from './homepage/homepage.component';
+import { SearchService } from './services/search/search.service';
+import { AuthInterceptor } from './iterceptors/auth.interceptor';
+import { ToastrModule } from 'ngx-toastr';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 @NgModule({
   declarations: [
@@ -40,8 +44,7 @@ import { HomepageComponent } from './homepage/homepage.component';
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent
-
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,10 +59,17 @@ import { HomepageComponent } from './homepage/homepage.component';
     MatDialogModule,
     SharedModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right', // Position of the toast
+      timeOut: 3000, // Duration in milliseconds
+      preventDuplicates: true, // Prevent duplicate toasts
+    }),
+    MatSnackBarModule,
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService
+    WebSocketService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    SearchService
   ],
   bootstrap: [AppComponent]
 })

@@ -7,7 +7,7 @@ import { LoginComponent } from './modules/login/login.component';
 import { InstructorDashboardComponent } from './modules/instructor/instructor-dashboard/instructor-dashboard.component';
 import { CourseDetailsComponent } from 'src/app/modules/student/course-details/course-details.component';
 import { HomepageComponent } from './homepage/homepage.component';
-
+import { SearchResultComponent } from './modules/student/search-result/search-result.component';
 const routes: Routes = [
   { path: '', component: HomepageComponent},
   { path: 'ai-generate-quiz', component: AiGenerateQuizComponent },
@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'student-courses', component: StudentCoursesComponent },
   { path: 'login', component:LoginComponent},
   { path: 'instructor-dashboard', component:InstructorDashboardComponent},
-  { path: 'course-details/:id', component: CourseDetailsComponent }
+  { path: 'course-details/:id', component: CourseDetailsComponent },
+  { path: 'searchResult', component: SearchResultComponent },
 
 ];
 

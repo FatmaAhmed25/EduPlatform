@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Course } from 'src/app/models/course.model';
+import { Courses } from 'src/app/models/course.model';
 import { EnrolledCoursesService } from 'src/app/services/student-course/enrolled-courses.service';
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service';
@@ -11,7 +11,7 @@ import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service
 export class StudentCoursesComponent implements OnInit {
   isSidebarOpen = false;
   progress: number = 0;
-  myCourses: Course[] = []; // Use the Course interface
+  myCourses: Courses[] = []; // Use the Course interface
   images: string[] = [
     'assets/images/courses/course1.webp',
     'assets/images/courses/course2.jpg',

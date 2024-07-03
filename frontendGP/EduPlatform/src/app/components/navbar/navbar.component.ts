@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { SearchService } from 'src/app/services/search/search.service';
+import { Router } from '@angular/router';
 interface Notification {
   id: number;
   notificationMessage: string;
@@ -24,10 +25,15 @@ export class NavbarComponent implements OnInit {
   notifications: Notification[] = []; // Array to store notifications
   notificationCount: number = 0; // Notification count property
   showNotificationPanel = false; // Toggle for showing notification panel
-
+  showDropdown = false;
+  showSearchPanel = false;
+  searchQuery: string = '';
+  searchResults: Course[] = [];
   constructor(
     private webSocketService: WebSocketService,
-    private http: HttpClient
+    private searchService: SearchService,
+    private http: HttpClient,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -74,12 +80,50 @@ export class NavbarComponent implements OnInit {
       });
     }
   }
-
   toggleNotificationPanel(): void {
     this.showNotificationPanel = !this.showNotificationPanel;
-    // Reset notification count when opening notifications
     if (this.showNotificationPanel) {
       this.notificationCount = 0;
     }
-  }  
+    this.showDropdown = false;
+    this.showSearchPanel = false;
+  }
+
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+    this.showNotificationPanel = false;
+    this.showSearchPanel = false;
+  }
+
+  toggleSearchPanel(): void {
+    this.showSearchPanel = !this.showSearchPanel;
+    this.showDropdown = false;
+    this.showNotificationPanel = false;
+  }
+  
+  searchCoursesByCode(): void {
+    this.searchService.searchByCode(this.searchQuery).subscribe(
+      () => {
+        this.router.navigate(['/searchResult']);
+      },
+      error => console.error('Error searching courses by code:', error)
+    );
+  }
+
+  searchCoursesByTitle(): void {
+    this.searchService.searchByTitle(this.searchQuery).subscribe(
+      () => {
+        this.router.navigate(['/searchResult']);
+      },
+      error => console.error('Error searching courses by title:', error)
+    );
+  }
+
+  goToProfile() {
+    // Logic to navigate to profile
+  }
+
+  goToSettings() {
+    // Logic to navigate to settings
+  }
 }
