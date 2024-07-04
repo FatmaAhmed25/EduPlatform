@@ -31,6 +31,13 @@ import { LectureService } from 'src/app/services/lectureService/lecture.service'
 import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
 import { LabService } from 'src/app/services/Lab/lab.service';
 import { LabComponent } from 'src/app/modules/student/lab/lab.component';
+import { AssignmentService } from 'src/app/services/assignementService/assignement.service';
+import { AssignmentComponent } from 'src/app/modules/student/assignment/assignment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input'; // Needed for the input element
+import { SubmitDialogComponent } from 'src/app/modules/student/submit-dialog/submit-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Add this import
 
 @NgModule({
   declarations: [
@@ -44,7 +51,7 @@ import { LabComponent } from 'src/app/modules/student/lab/lab.component';
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent,LectureComponent,LabComponent
+    HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent
 
   ],
   imports: [
@@ -60,10 +67,10 @@ import { LabComponent } from 'src/app/modules/student/lab/lab.component';
     MatDialogModule,
     SharedModule,
     MatIconModule,
-    RouterModule
+    RouterModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatProgressSpinnerModule
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService,LectureService,LabService
+    WebSocketService,LectureService,LabService,AssignmentService
   ],
   bootstrap: [AppComponent]
 })

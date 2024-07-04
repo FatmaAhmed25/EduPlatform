@@ -1,5 +1,6 @@
 package com.edu.eduplatform.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Assignment extends Announcement {
     private boolean allowLateSubmissions=true;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<AssignmentSubmission> submissions;
 
 }

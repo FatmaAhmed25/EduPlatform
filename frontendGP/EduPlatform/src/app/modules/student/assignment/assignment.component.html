@@ -1,0 +1,28 @@
+<div *ngFor="let assignment of assignments" class="assignment-card">
+  <div class="assignment-header" (click)="toggleAssignmentContent(assignment)">
+    <h2>{{ assignment.title }}</h2>
+    <div class="assignment-actions">
+      <span class="due-date" [ngClass]="{
+        'due-date-late': isPastDue(assignment.dueDate)
+      }">
+        Due: {{ assignment.dueDate | date:'short' }}
+      </span>
+      <button 
+        class="submit-button"
+        [ngClass]="{
+          'submit-button-late': isPastDue(assignment.dueDate) && !assignment.allowLateSubmissions,
+          'submit-button-allowed-late': isPastDue(assignment.dueDate) && assignment.allowLateSubmissions,
+          'submit-button-normal': !isPastDue(assignment.dueDate)
+        }"
+        [disabled]="isPastDue(assignment.dueDate) && !assignment.allowLateSubmissions"
+        (click)="openSubmitDialog(assignment)">Submit</button>
+    </div>
+  </div>
+  <div *ngIf="selectedAssignmentId === assignment.id" class="assignment-content">
+    <p>{{ assignment.content }}</p>
+    <iframe *ngIf="fileUrl" [src]="fileUrl" width="100%" height="500px"></iframe>
+    <div class="button-container" *ngIf="fileUrl">
+      <button (click)="openInNewTab(assignment)">Open</button>
+    </div>
+  </div>
+</div>

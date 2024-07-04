@@ -7,9 +7,9 @@
     </div>
 
     <mat-tab-group>
-      <mat-tab label="Announcements">
+      <mat-tab label="Stream">
         <div class="announcements">
-          <app-announcement></app-announcement>
+          <app-announcement [courseId]="courseId"></app-announcement>
         </div>
       </mat-tab>
       <mat-tab label="Lectures">
@@ -24,7 +24,7 @@
       </mat-tab>
       <mat-tab label="Assignments">
         <div class="assignments">
-          <!-- Assignments content goes here -->
+          <app-assignment [courseId]="courseId"></app-assignment>
         </div>
       </mat-tab>
     </mat-tab-group>
