@@ -2,10 +2,7 @@ package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.dtos.*;
 import com.edu.eduplatform.models.*;
-import com.edu.eduplatform.repos.AnswerRepository;
-import com.edu.eduplatform.repos.CourseRepo;
-import com.edu.eduplatform.repos.QuestionRepository;
-import com.edu.eduplatform.repos.QuizRepository;
+import com.edu.eduplatform.repos.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,6 +31,9 @@ public class QuizService {
     private CourseRepo courseRepository;
 
     @Autowired
+    private InstructorRepo instructorRepo;
+
+    @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
@@ -44,6 +44,12 @@ public class QuizService {
 
     @Value("${model.flask.url}")
     private String flaskBaseUrl;
+
+    @Autowired
+    private StudentRepo studentRepository;
+
+    @Autowired
+    private QuizSubmissionRepo quizSubmissionRepository;
 
     public Quiz createQuiz(QuizDTO quizDTO) {
         Course course = courseRepository.findById(quizDTO.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found"));
@@ -85,6 +91,66 @@ public class QuizService {
         return quiz;
     }
 
+    public Quiz updateQuiz(Long quizId, Long instructorId, QuizDTO quizDTO) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        Course course = quiz.getCourse();
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        if (!course.getCreatedBy().equals(instructor) && !course.getTaInstructors().contains(instructor)) {
+            throw new RuntimeException("Instructor does not have permission to update this quiz");
+        }
+
+        quiz.setTitle(quizDTO.getTitle());
+        quiz.setStartTime(quizDTO.getStartTime());
+        quiz.setEndTime(quizDTO.getEndTime());
+        quiz.setTotalGrade(quizDTO.getTotalGrade());
+
+        // Clear existing questions and answers
+        for (Question question : quiz.getQuestions()) {
+            if (question instanceof MCQQuestion) {
+                MCQQuestion mcqQuestion = (MCQQuestion) question;
+                answerRepository.deleteAll(mcqQuestion.getAnswers());
+            }
+            questionRepository.delete(question);
+        }
+        quiz.getQuestions().clear();
+
+        // Add new questions and answers
+        for (QuestionDTO questionDTO : quizDTO.getQuestions()) {
+            Question question;
+
+            if (questionDTO.getQuestionType().equals(QuestionType.MCQ)) {
+                question = new MCQQuestion();
+                question.setQuestionType(QuestionType.MCQ);
+                for (AnswerDTO answerDTO : questionDTO.getAnswers()) {
+                    Answer answer = new Answer();
+                    answer.setText(answerDTO.getText());
+                    answer.setCorrect(answerDTO.isCorrect());
+                    ((MCQQuestion) question).getAnswers().add(answer);
+                    answer.setQuestion((MCQQuestion) question);
+                }
+            } else if (questionDTO.getQuestionType().equals(QuestionType.ESSAY)) {
+                question = new EssayQuestion();
+                question.setQuestionType(QuestionType.ESSAY);
+            } else {
+                throw new RuntimeException("Invalid question type");
+            }
+
+            question.setText(questionDTO.getText());
+            question.setPoints(questionDTO.getPoints());
+            question.setQuiz(quiz);
+            quiz.getQuestions().add(question);
+            questionRepository.save(question);
+        }
+
+        return quizRepository.save(quiz);
+    }
+
+
+
     public Question addQuestionToQuiz(Long quizId, Question question) {
         Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new RuntimeException("Quiz not found"));
         question.setQuiz(quiz);
@@ -121,8 +187,23 @@ public class QuizService {
         return quizRepository.findByQuizIdWithQuestions(quizId);
     }
 
-    public QuizForStudentDTO getQuizForStudentById(Long quizId) {
-        Quiz quiz = quizRepository.findByQuizIdWithQuestions(quizId);
+//    public QuizForStudentDTO getQuizForStudentById(Long quizId) {
+//        Quiz quiz = quizRepository.findByQuizIdWithQuestions(quizId);
+//        return modelMapper.map(quiz, QuizForStudentDTO.class);
+//    }
+
+    public QuizForStudentDTO getQuizForStudentById(Long studentId, Long quizId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        boolean alreadySubmitted = quizSubmissionRepository.existsByQuizAndStudent(quiz, student);
+        if (alreadySubmitted) {
+            throw new RuntimeException("Student has already submitted this quiz");
+        }
+
         return modelMapper.map(quiz, QuizForStudentDTO.class);
     }
 

@@ -95,6 +95,96 @@ public class AssignmentService {
         return savedAssignment;
     }
 
+    @Transactional
+    public Assignment updateAssignment(Long courseId, Long instructorId, Long assignmentId,
+                                       String title, String content, LocalDateTime dueDate,
+                                       boolean allowLateSubmissions, MultipartFile file) throws IOException {
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        Assignment assignment = assignmentRepo.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID()==instructorId);
+
+        if (!isCourseCreatorOrTA) {
+            throw new RuntimeException("Instructor not authorized to update assignment for this course");
+        }
+
+        if (title != null) {
+            assignment.setTitle(title);
+        }
+        if (content != null) {
+            assignment.setContent(content);
+        }
+        if (dueDate != null) {
+            assignment.setDueDate(dueDate);
+        }
+        assignment.setAllowLateSubmissions(allowLateSubmissions);
+
+        if (file != null) {
+            // Delete the old file if it exists
+            if (assignment.getFileName() != null) {
+                courseContentService.deleteFile(courseId.toString(), assignment.getFileName());
+            }
+            // Upload the new file
+            String newFileName = courseContentService.uploadFile(courseId.toString(), MaterialType.ASSIGNMENTS.getFolder(), file);
+            assignment.setFileName(newFileName);
+        }
+
+        assignment.setCreatedAt(LocalDateTime.now());
+
+        String notificationMessage = assignment.getInstructor().getUsername() + " " + assignment.getCourse().getTitle() + " " + assignment.getTitle() + " " + assignment.getContent();
+        assignment.setNotificationMessage(notificationMessage);
+
+        Assignment savedAssignment = assignmentRepo.save(assignment);
+
+        NotificationDTO notificationDTO = new NotificationDTO(savedAssignment.getId(), notificationMessage);
+        messagingTemplate.convertAndSend("/topic/course/" + courseId, notificationDTO);
+
+        return savedAssignment;
+    }
+
+
+    @Transactional
+    public void deleteAssignment(Long courseId, Long instructorId, Long assignmentId) {
+        // Retrieve the course and instructor
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        // Retrieve the assignment
+        Assignment assignment = assignmentRepo.findById(assignmentId)
+                .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        // Check authorization
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId ||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID()==instructorId);
+
+        if (!isCourseCreatorOrTA) {
+            throw new RuntimeException("Instructor not authorized to delete assignment for this course");
+        }
+
+        // Delete associated file if it exists
+        if (assignment.getFileName() != null) {
+            try {
+                courseContentService.deleteFile(courseId.toString(), assignment.getFileName());
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete assignment file: " + e.getMessage());
+            }
+        }
+
+        // Delete the assignment entity
+        assignmentRepo.delete(assignment);
+    }
+
+
 
     @Transactional
     public void submitAssignment(Long studentId, Long assignmentId, MultipartFile file) throws IOException {

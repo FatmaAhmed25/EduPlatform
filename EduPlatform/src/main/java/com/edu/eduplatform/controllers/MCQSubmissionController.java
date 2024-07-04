@@ -24,9 +24,8 @@ public class MCQSubmissionController {
     @PostMapping("/submit/mcq-quiz")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @SecurityRequirement(name="BearerAuth")
-    public ResponseEntity<MCQSubmission> submitQuiz(@RequestBody MCQSubmissionDTO quizSubmissionDTO) {
-        MCQSubmission quizSubmission = quizService.submitQuiz(quizSubmissionDTO);
-        return ResponseEntity.ok(quizSubmission);
+    public ResponseEntity<String> submitQuiz(@RequestBody MCQSubmissionDTO quizSubmissionDTO) {
+        return quizService.submitQuiz(quizSubmissionDTO);
     }
 
     @GetMapping("/submissions/{submissionId}")
