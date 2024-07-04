@@ -5,13 +5,17 @@ import { InstructorDashboardComponent } from './instructor-dashboard/instructor-
 import { CreateQuizComponent } from './create-quiz/create-quiz.component';
 import { AiGenerateQuizComponent } from './ai-generate-quiz/ai-generate-quiz.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CreateCourseComponent } from './create-course/create-course.component';
+import { CoursesComponent } from './courses/courses.component';
 
 
 @NgModule({
   declarations: [
     InstructorDashboardComponent,
     CreateQuizComponent,
-    AiGenerateQuizComponent
+    AiGenerateQuizComponent,
+    CreateCourseComponent,
+    CoursesComponent
   ],
   imports: [
     CommonModule,
