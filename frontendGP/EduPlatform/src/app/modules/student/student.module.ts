@@ -6,6 +6,8 @@ import { StudentCoursesComponent } from './student-courses/student-courses.compo
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { AssignmentComponent } from './assignment/assignment.component';
+import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.component';
+// import { QuizComponentComponent } from './quiz-component/quiz-component.component';
 // import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
 // import { LabComponent } from './lab/lab.component';
 @NgModule({
@@ -14,6 +16,8 @@ import { AssignmentComponent } from './assignment/assignment.component';
     QuizComponent,
     StudentCoursesComponent,
     NavbarComponent,
+    // QuizzesComponent,
+    // QuizComponentComponent,
     // SubmitDialogComponent,
     // AssignmentComponent,
     // LabComponent,

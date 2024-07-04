@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
-import { CreateQuizService } from 'src/app/services/quiz-service/create-quiz.service';
+import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
 import { SpinnerComponent } from 'src/app/utils/spinner/spinner.component';
 
 @Component({
