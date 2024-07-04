@@ -57,7 +57,7 @@ public class InstructorController {
                                                @RequestBody UpdateCourseDTO updateCourseDTO) {
         try {
             courseService.updateCourse(courseId, updateCourseDTO);
-            return ResponseEntity.ok("Course details updated successfully.");
+            return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -119,9 +119,12 @@ body.dark {
 }
 
 header .image-text .name {
-    margin-top: 2px;
-    font-size: 18px;
+    margin-top: 4px;
+    font-size: 21px;
     font-weight: 600;
+    color: black;
+    margin-left: 10px;
+
 }
 
 header .image-text .profession {

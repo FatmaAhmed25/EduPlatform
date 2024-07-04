@@ -1,0 +1,54 @@
+<!-- src/app/components/instructor-courses/instructor-courses.component.html -->
+<div class="container">
+    <div class="main-content">
+      <div class="courses">
+        <h2>My Courses</h2>
+        <div class="course-list">
+          <div class="course-card" *ngFor="let course of myCourses">
+            <div class="course-header">
+              <div class="settings-dropdown">
+                <i class="bx bx-dots-horizontal-rounded" (click)="toggleDropdown(course)"></i>
+                <div class="dropdown-menu" *ngIf="course.showDropdown">
+                  <button (click)="openUpdateModal(course.courseId)">Update</button>
+                  <button (click)="deleteCourse(course.courseId)">Delete</button>
+                </div>
+              </div>
+            </div>
+            <img [src]="course.image" alt="Course Image" class="course-image">
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description }}</p>
+            <button type="button" class="btn" (click)="goToCourse(course.courseId)">Go to Course</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<div id="updateCourseModal" class="modal" [ngClass]="{ 'show': isModalOpen }">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <h3>Update Course</h3>
+      <form (submit)="updateCourse()">
+        <div class="form-group">
+          <label for="course-title" class="labelCourse">Course Title</label>
+          <input type="text" id="course-title" [(ngModel)]="selectedCourse.title" name="title" class="input" required>
+        </div>
+        <div class="form-group">
+          <label for="course-description">Course Description</label>
+          <textarea id="course-description" [(ngModel)]="selectedCourse.description" name="description" class="input" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="course-password" class="labelPass">Password</label>
+          <input type="text" id="course-password" [(ngModel)]="selectedCourse.password" name="password" class="input" readonly>
+        </div>
+        <div class="form-group">
+          <label for="course-code" class="labelCourse">Course Code</label>
+          <input type="text" id="course-code" [(ngModel)]="selectedCourse.courseCode" name="courseCode" class="input" readonly>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn2">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

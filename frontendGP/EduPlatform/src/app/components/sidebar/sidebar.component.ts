@@ -1,12 +1,29 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EnrollmentService } from 'src/app/services/enrollment/enrollment.service';
+import { Courses } from 'src/app/models/course.model';
+import { Router, NavigationEnd } from '@angular/router';
+
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  constructor(private renderer: Renderer2, private sidebarService: SidebarService) {}
+  constructor(private sidebarService: SidebarService,private snackBar: MatSnackBar, private enrollmentService: EnrollmentService,private router: Router) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.activeLink = event.urlAfterRedirects;
+      }
+    });
+  }
+  selectedCourse: Courses | null = null;
+  showModal: boolean = false;
+  enrollMethod: string = '';
+  enrollCode: string = '';
+  enrollPassword: string = '';
+  activeLink: string | null = null;
 
   ngOnInit(): void {
     const body = document.body;
@@ -44,5 +61,62 @@ export class SidebarComponent implements OnInit {
   }
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
+  }
+
+  openEnrollModal(): void {
+    this.activeLink = '/enroll-by-code';
+    this.showModal = true;
+  }
+  isActive(link: string): boolean {
+    return this.activeLink === link;
+  }
+  closeEnrollModal(): void {
+    this.showModal = false;
+    this.enrollMethod = '';
+    this.enrollCode = '';
+    this.enrollPassword = '';
+    this.activeLink = '/student-courses';
+  }
+  enrollCourse(): void {
+    const studentId = localStorage.getItem('userID');
+    console.log(this.enrollCode+" "+this.enrollPassword)
+    if (this.enrollCode && studentId && this.enrollPassword) {
+      this.enrollmentService.enrollByCode(this.enrollCode, Number(studentId), this.enrollPassword).subscribe(
+        (response) => {
+          if(response.status===200){
+          this.snackBar.open('Enrolled successfully by code', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
+          this.closeEnrollModal();
+        }
+        },
+        error => {
+          if (error.status === 400) {
+              this.snackBar.open('Course password or Code is incorrect', 'Close', {
+                  duration: 5000,
+                  verticalPosition: 'top',
+                  horizontalPosition: 'right'
+              });
+          }
+          if (error.status === 401) {
+              this.snackBar.open('You are already enrolled in the course', 'Close', {
+                  duration: 5000,
+                  verticalPosition: 'top',
+                  horizontalPosition: 'right'
+              });
+      }
+  }
+  );
+}
+
+    else {
+      this.snackBar.open('Missing required fields: selectedCourse, studentId, or enrollPassword', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+      });
+  }
   }
 }

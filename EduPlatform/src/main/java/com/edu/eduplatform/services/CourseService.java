@@ -2,6 +2,7 @@ package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.dtos.CourseDTO;
+import com.edu.eduplatform.dtos.CourseDetailsDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
 import com.edu.eduplatform.models.Instructor;
@@ -223,5 +224,16 @@ public class CourseService {
         Course course = getCourseById(courseId);
         return course.getTaInstructors();
     }
+    public CourseDetailsDTO getCourseDetailsById(long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found with ID: " + courseId));
 
+        CourseDetailsDTO courseDetailsDTO = new CourseDetailsDTO();
+        courseDetailsDTO.setTitle(course.getTitle());
+        courseDetailsDTO.setDescription(course.getDescription());
+        courseDetailsDTO.setPassword(course.getPassword());
+        courseDetailsDTO.setCourseCode(course.getCourseCode());
+
+        return courseDetailsDTO;
+    }
 }

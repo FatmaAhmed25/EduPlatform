@@ -30,6 +30,12 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* Ensures elements inside are spaced properly */
+  transition: transform 0.5s ease, box-shadow 0.3s ease; /* Smooth transition for transform and box-shadow */
+}
+
+.course-card:hover {
+  transform: translateY(-10px); /* Moves the card up by 10px on hover */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Enhances shadow effect on hover */
 }
 
 .progress-bar-container {
