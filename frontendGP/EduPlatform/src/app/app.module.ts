@@ -34,7 +34,16 @@ import { LabComponent } from 'src/app/modules/student/lab/lab.component';
 import { SearchService } from './services/search/search.service';
 import { AuthInterceptor } from './iterceptors/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';import { AssignmentService } from 'src/app/services/assignementService/assignement.service';
+import { AssignmentComponent } from 'src/app/modules/student/assignment/assignment.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input'; // Needed for the input element
+import { SubmitDialogComponent } from 'src/app/modules/student/submit-dialog/submit-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Add this import
+import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.component';
+import { QuizService } from 'src/app/services/quizService/quiz.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +56,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent,LectureComponent,LabComponent
+    HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent
 
   ],
   imports: [
@@ -63,7 +72,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatDialogModule,
     SharedModule,
     MatIconModule,
-    RouterModule,
+    RouterModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatProgressSpinnerModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right', // Position of the toast
       timeOut: 3000, // Duration in milliseconds
@@ -71,8 +80,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     }),
     MatSnackBarModule,
   ],
-  providers: [EnrolledCoursesService,AuthService,  WebSocketService, {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    SearchService,WebSocketService,LectureService,LabService
+  providers: [EnrolledCoursesService,AuthService,
+    WebSocketService,LectureService,LabService
   ],
   bootstrap: [AppComponent]
 })

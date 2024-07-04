@@ -1,0 +1,13 @@
+<!-- src/app/components/quiz/quiz.component.html -->
+<div *ngFor="let quiz of quizzes" class="quiz-card">
+    <div class="quiz-header">
+      <h2>{{ quiz.title }}</h2>
+      <div class="quiz-actions">
+        <span class="quiz-due-date">
+          End Time: {{ quiz.endTime | date:'short' }}
+        </span>
+        <button class="take-quiz-button" (click)="takeQuiz(quiz)">Take Quiz</button>
+      </div>
+    </div>
+  </div>
+  

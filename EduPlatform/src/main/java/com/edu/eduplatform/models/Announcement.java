@@ -39,6 +39,7 @@ public class Announcement {
 
     @JsonBackReference
     @ManyToOne
+
     @JoinColumn(name = "InstructorID", nullable = false)
     private Instructor instructor;
 

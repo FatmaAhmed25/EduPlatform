@@ -1,0 +1,25 @@
+.file-input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+  }
+  
+  .file-label {
+    background-color: #3f51b5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 16px;
+  }
+  
+  #file-upload {
+    display: none;
+  }
+  
+  .loading-spinner-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  

@@ -5,6 +5,10 @@ import { QuizComponent } from './quiz/quiz.component';
 import { StudentCoursesComponent } from './student-courses/student-courses.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { AssignmentComponent } from './assignment/assignment.component';
+import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.component';
+// import { QuizComponentComponent } from './quiz-component/quiz-component.component';
+// import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from 'src/app/iterceptors/auth.interceptor';
@@ -18,7 +22,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     QuizComponent,
     StudentCoursesComponent,
     NavbarComponent,
-    SearchResultComponent
     // LabComponent,
   ],
   imports: [

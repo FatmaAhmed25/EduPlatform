@@ -7,6 +7,7 @@ import com.edu.eduplatform.models.Assignment;
 import com.edu.eduplatform.services.AssignmentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +33,9 @@ public class AssignmentController {
             @PathVariable Long courseId,
             @RequestParam Long instructorId,
             @RequestParam MultipartFile file,
-            @RequestParam LocalDateTime dueDate,
+
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            LocalDateTime dueDate,
             @RequestParam String title,
             @RequestParam String content,
             @RequestParam boolean allowLateSubmissions) throws IOException {
