@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { CreateQuizService } from 'src/app/services/quiz-service/create-quiz.service';
 import { SpinnerComponent } from 'src/app/utils/spinner/spinner.component';
+import { Router } from '@angular/router';
+import { Quiz } from 'src/app/models/Quiz';
+import { QuestionForInstructor } from 'src/app/models/questionForInstructor';
 
 @Component({
   selector: 'app-ai-generate-quiz',
@@ -9,40 +12,26 @@ import { SpinnerComponent } from 'src/app/utils/spinner/spinner.component';
   styleUrls: ['./ai-generate-quiz.component.scss']
 })
 export class AiGenerateQuizComponent {
-
-  constructor(private quizService: CreateQuizService) {}
-deleteQuestion(_t40: number) {
+saveQuestions() {
 throw new Error('Method not implemented.');
 }
+
+  constructor(private quizService: CreateQuizService, private router: Router) {}
+  quiz: Quiz | null = null;
   loading: boolean = false;
   inputType: string = 'pdf';
   textInput: string = '';
   selectedFiles: File[] = [];
-  questions: any[] = [
-    {
-      title: 'Sample Question 1',
-      content: 'What is Angular?',
-      expanded: false,
-      answers: [
-        { text: 'A framework', isCorrect: true },
-        { text: 'A library', isCorrect: false },
-        { text: 'A language', isCorrect: false },
-        { text: 'A plugin', isCorrect: false }
-      ]
-    },
-    {
-      title: 'Sample Question 2',
-      content: 'Describe the MVC architecture.',
-      expanded: false,
-      answers: [
-        { text: 'Model, View, Controller', isCorrect: true },
-        { text: 'Model, View, Component', isCorrect: false },
-        { text: 'Module, View, Controller', isCorrect: false },
-        { text: 'Module, View, Component', isCorrect: false }
-      ]
-    }
-  ];
+  questions: QuestionForInstructor[] = [];
   file: File | null = null;
+
+  ngOnInit() {
+    this.quiz = this.quizService.getQuiz();
+    if (!this.quiz) {
+      console.error('No quiz data found!');
+      this.router.navigate(['/create-quiz']);
+    }
+  }
   onFilesSelected(event: any) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
@@ -87,75 +76,63 @@ throw new Error('Method not implemented.');
     console.log('Generating')
     this.submitQuiz();
     if (this.inputType === 'text' && this.textInput) {
-      this.questions.push({
-        title: 'AI-Generated Question',
-        content: this.textInput,
-        expanded: false,
-        answers: [
-          { text: 'Answer 1', isCorrect: false },
-          { text: 'Answer 2', isCorrect: false },
-          { text: 'Answer 3', isCorrect: false },
-          { text: 'Answer 4', isCorrect: false }
-        ]
-      });
+      this.submitQuiz();
+      
     } else if (this.inputType === 'pdf' && this.file) {
-      // this.questions.push({
-      //   title: 'AI-Generated Question from PDF',
-      //   content: `Questions generated from: ${this.file.name}`,
-      //   expanded: false,
-      //   answers: [
-      //     { text: 'Answer 1', isCorrect: false },
-      //     { text: 'Answer 2', isCorrect: false },
-      //     { text: 'Answer 3', isCorrect: false },
-      //     { text: 'Answer 4', isCorrect: false }
-      //   ]
-      // });
       this.submitQuiz();
     }
   }
   submitQuiz() {
+
     this.loading = true;
-    console.log("here")
-    const formData = new FormData();
-
-    this.selectedFiles.forEach(file => {
-      formData.append('pdf_files', file, file.name);
-    });
-
-    formData.append('courseId', '1');
-    formData.append('quiz_title', 'DS Quiz');
-    formData.append('startTime', '2024-06-23T07:25:24.952Z');
-    formData.append('endTime', '2024-06-23T07:25:24.952Z');
-
-    this.quizService.submitQuiz(formData).subscribe(response => {
+  
+    this.quizService.submitQuiz(this.selectedFiles).subscribe(response => {
       
       console.log('Quiz submitted successfully:', response);
+      console
+      this.quizService.setQuizId(response.quizId);
+      this.getQuiz();
       // Handle the response here
     }, error => {
       console.error('Error submitting quiz:', error);
       // Handle the error here
     });
   }
+  getQuiz() {
+    this.quizService.getQuizForInstructor().subscribe(response => {
+      console.log(response)
+      this.questions=response.questions;
+      this.loading = false;
+
+    },error => {
+      console.error('Error getting quiz:', error);
+    }
+  )
+    
+  }
 
   toggleQuestion(index: number) {
     this.questions[index].expanded = !this.questions[index].expanded;
   }
 
-  addNewQuestion() {
-    this.questions.push({
-      title: 'New Question',
-      content: '',
-      expanded: true,
-      answers: [
-        { text: 'Answer 1', isCorrect: false },
-        { text: 'Answer 2', isCorrect: false },
-        { text: 'Answer 3', isCorrect: false },
-        { text: 'Answer 4', isCorrect: false }
-      ]
-    });
-  }
+  // addNewQuestion() {
+  //   this.questions.push({
+  //     title: 'New Question',
+  //     content: '',
+  //     expanded: true,
+  //     answers: [
+  //       { text: 'Answer 1', isCorrect: false },
+  //       { text: 'Answer 2', isCorrect: false },
+  //       { text: 'Answer 3', isCorrect: false },
+  //       { text: 'Answer 4', isCorrect: false }
+  //     ]
+  //   });
+  // }
 
   saveQuestion(index: number) {
     console.log(`Question ${index + 1} saved`);
+  }
+  deleteQuestion(_t40: number) {
+    throw new Error('Method not implemented.');
   }
 }

@@ -8,6 +8,7 @@ import com.edu.eduplatform.repos.QuestionRepository;
 import com.edu.eduplatform.repos.QuizRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -128,6 +129,7 @@ public class QuizService {
     public Quiz generateQuiz(GenerateQuizDTO requestDTO,String url)
     {
         String flaskUrl = flaskBaseUrl + url;
+        System.out.println(flaskUrl);
         // Prepare headers and request body
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -180,6 +182,10 @@ public class QuizService {
         return generateQuiz(requestDTO,"/essay");
 
     }
-
-
+    public boolean isQuizExists(Long quizId) {
+        if (!quizRepository.existsByQuizId(quizId)) {
+            throw new EntityNotFoundException("Quiz with id " + quizId + " not found");
+        }
+        return true;
+    }
 }
