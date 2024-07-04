@@ -3,6 +3,7 @@ package com.edu.eduplatform.aspects;
 
 import com.edu.eduplatform.services.CourseService;
 import com.edu.eduplatform.services.InstructorService;
+import com.edu.eduplatform.services.QuizService;
 import com.edu.eduplatform.services.StudentService;
 import jakarta.persistence.EntityNotFoundException;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,6 +17,8 @@ public class EntityValidationAspect {
 
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private QuizService quizService;
 
     @Autowired
     private StudentService studentService;
@@ -51,6 +54,16 @@ public class EntityValidationAspect {
         }
     }
 
+    @Before("@annotation(com.edu.eduplatform.annotations.ValidateQuiz) && args(quizId,..)")
+    public void validateQuiz(Long quizId) {
+        try{
+            quizService.isQuizExists(quizId);
+        }
+        catch (EntityNotFoundException ex) {
+            throw new EntityNotFoundException("Quiz not found with id: " + quizId);
+        }
+    }
+
     @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructorBelongsToCourse) && args(instructorId, courseId, ..)")
     public void validateInstructorBelongsToCourse(Long instructorId, Long courseId) {
         boolean isValid = courseService.isInstructorOfCourse(instructorId, courseId);
@@ -67,6 +80,15 @@ public class EntityValidationAspect {
         }
 
     }
+
+//    @Before("@annotation(com.edu.eduplatform.annotations.ValidateQuizBelongsToCourse) && args(courseId,quizId, ..)")
+//    public void validateQuizBelongsToCourse(Long courseId, Long quizId) throws Exception {
+//        boolean isValid = quizService.validateQuizBelongsToCourse(courseId,quizId);
+//        if (!isValid) {
+//            throw new EntityNotFoundException("Quiz does not belong to this course.");
+//        }
+//
+//    }
 
 }
 

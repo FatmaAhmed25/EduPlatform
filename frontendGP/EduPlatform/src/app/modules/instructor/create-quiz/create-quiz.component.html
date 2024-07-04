@@ -1,29 +1,50 @@
 <div class="container">
-  <form class="assessment-form">
+  <form [formGroup]="quizForm" class="assessment-form" (ngSubmit)="navigateToGenerateQuiz()">
     <h3>Create New Assessment</h3>
     <div class="form-group">
       <label for="type-of-assessment">Type of assessment</label>
-      <select id="type-of-assessment">
+      <select id="type-of-assessment" formControlName="typeOfAssessment" class="form-control">
         <option *ngFor="let type of assessmentTypes" [value]="type.value">{{ type.label }}</option>
       </select>
+      <div *ngIf="quizForm.controls['typeOfAssessment'].invalid && quizForm.controls['typeOfAssessment'].touched">
+        <small class="text-danger">Type of assessment is required.</small>
+      </div>
     </div>
     <div class="form-group">
       <label for="assessment-name">Assessment Name <span class="info-tooltip"></span></label>
-      <input type="text" id="assessment-name" placeholder="Assessment - Computer Science">
+      <input type="text" id="assessment-name" formControlName="assessmentName" placeholder="Assessment - Computer Science" class="form-control">
+      <div *ngIf="quizForm.controls['assessmentName'].invalid && quizForm.controls['assessmentName'].touched">
+        <small class="text-danger">Assessment Name is required.</small>
+      </div>
     </div>
     <div class="form-group">
       <label for="start-date">Start Date</label>
-      <input type="date" id="start-date">
-      <input type="time" id="start-time">
+      <input type="date" id="start-date" formControlName="startDate" class="form-control">
+      <input type="time" id="start-time" formControlName="startTime" class="form-control">
+      <div *ngIf="quizForm.controls['startDate'].invalid && quizForm.controls['startDate'].touched">
+        <small class="text-danger">Start Date is required.</small>
+      </div>
+      <div *ngIf="quizForm.controls['startTime'].invalid && quizForm.controls['startTime'].touched">
+        <small class="text-danger">Start Time is required.</small>
+      </div>
     </div>
     <div class="form-group">
       <label for="end-date">End Date</label>
-      <input type="date" id="end-date">
-      <input type="time" id="end-time">
+      <input type="date" id="end-date" formControlName="endDate" class="form-control">
+      <input type="time" id="end-time" formControlName="endTime" class="form-control">
+      <div *ngIf="quizForm.controls['endDate'].invalid && quizForm.controls['endDate'].touched">
+        <small class="text-danger">End Date is required.</small>
+      </div>
+      <div *ngIf="quizForm.controls['endTime'].invalid && quizForm.controls['endTime'].touched">
+        <small class="text-danger">End Time is required.</small>
+      </div>
     </div>
     <div class="form-group">
-      <label for="passing-percentage">Passing Percentage</label>
-      <input type="number" id="passing-percentage" placeholder="25">
+      <label for="numOfQuestions">Number of questions</label>
+      <input type="number" id="numOfQuestions" formControlName="numOfQuestions" placeholder="20" class="form-control">
+      <div *ngIf="quizForm.controls['numOfQuestions'].invalid && quizForm.controls['numOfQuestions'].touched">
+        <small class="text-danger">Number of questions must be more than 1.</small>
+      </div>
     </div>
     <button type="submit" class="btn-next" (click)="navigateToGenerateQuiz()">Next</button>
   </form>
