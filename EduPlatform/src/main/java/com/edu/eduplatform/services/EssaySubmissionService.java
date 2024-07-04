@@ -59,7 +59,16 @@ public class EssaySubmissionService
 
 
         List<StudentEssayAnswer> studentEssayAnswers = new ArrayList<>();
-        for (StudentAnswerDTO studentAnswerDTO : essaySubmissionDTO.getAnswers()) {
+        for (StudentAnswerDTO studentAnswerDTO : essaySubmissionDTO.getAnswers())
+        {
+            Question question = questionRepository.findById(studentAnswerDTO.getQuestionId())
+                    .orElseThrow(() -> new IllegalArgumentException("Question not found"));
+
+            if (!question.getQuiz().getQuizId().equals(essaySubmissionDTO.getQuizId())) {
+                return ResponseEntity.badRequest().body("One or more questions do not belong to the specified quiz");
+            }
+
+
             StudentEssayAnswer studentEssayAnswer = createStudentAnswer(studentAnswerDTO, essaySubmission);
             studentEssayAnswers.add(studentEssayAnswer);
         }

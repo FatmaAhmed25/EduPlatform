@@ -5,6 +5,7 @@ import com.edu.eduplatform.annotations.*;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentResponseDTO;
 import com.edu.eduplatform.dtos.CreateCommentDTO;
+import com.edu.eduplatform.dtos.getCommentDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.models.Comment;
 import com.edu.eduplatform.models.MaterialType;
@@ -218,8 +219,8 @@ public class AnnouncementController {
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
     @GetMapping("/getComments/{announcementId}")
-    public ResponseEntity<List<Comment>> getAllCommentsForAnnouncement(@PathVariable Long announcementId) {
-        List<Comment> comments = announcementService.getCommentsForAnnouncement(announcementId);
+    public ResponseEntity<List<getCommentDTO>> getAllCommentsForAnnouncement(@PathVariable Long announcementId) {
+        List<getCommentDTO> comments = announcementService.getCommentsForAnnouncement(announcementId);
         return ResponseEntity.ok(comments);
     }
 

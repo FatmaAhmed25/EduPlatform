@@ -267,11 +267,23 @@ public class AnnouncementService {
     }
 
     @Transactional
-    public List<Comment> getCommentsForAnnouncement(Long announcementId) {
+
+    public List<getCommentDTO> getCommentsForAnnouncement(Long announcementId) {
         Announcement announcement = announcementRepo.findById(announcementId)
                 .orElseThrow(() -> new RuntimeException("Announcement not found"));
 
-        return commentRepo.findByAnnouncementOrderByCreatedAtAsc(announcement);
+        List<Comment> comments = commentRepo.findByAnnouncementOrderByCreatedAtAsc(announcement);
+
+        return comments.stream()
+                .map(comment -> {
+                    getCommentDTO dto = modelMapper.map(comment, getCommentDTO.class);
+                    UserCommentDTO userDto = new UserCommentDTO();
+                    userDto.setUserId(comment.getUser().getUserID());
+                    userDto.setUserName(comment.getUser().getUsername());
+                    dto.setUserCommentDTO(userDto);
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
     }
 
-}

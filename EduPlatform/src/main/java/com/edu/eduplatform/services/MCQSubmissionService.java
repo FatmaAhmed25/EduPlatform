@@ -58,9 +58,16 @@ public class MCQSubmissionService {
             Question question = questionRepository.findById(answerDTO.getQuestionId())
                     .orElseThrow(() -> new RuntimeException("Question not found"));
 
+            if (!question.getQuiz().getQuizId().equals(mcqQuizSubmissionDTO.getQuizId())) {
+                return ResponseEntity.badRequest().body("One or more questions do not belong to the specified quiz");
+            }
+
             Answer answer = answerRepository.findById(answerDTO.getAnswerId())
                     .orElseThrow(() -> new RuntimeException("Answer not found"));
 
+            if (!answer.getQuestion().getQuestionId().equals(question.getQuestionId())) {
+                return ResponseEntity.badRequest().body("One or more answers do not belong to the specified question");
+            }
             boolean isCorrect = answer.isCorrect();
             int answerGrade = 0;
             totalPossiblePoints += question.getPoints();
