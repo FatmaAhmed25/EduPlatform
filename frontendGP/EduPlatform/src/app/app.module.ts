@@ -31,10 +31,11 @@ import { LectureService } from 'src/app/services/lectureService/lecture.service'
 import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
 import { LabService } from 'src/app/services/Lab/lab.service';
 import { LabComponent } from 'src/app/modules/student/lab/lab.component';
-import { SearchService } from './services/search/search.service';
+import { SearchService } from 'src/app/services/search/search.service';
 import { AuthInterceptor } from './iterceptors/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
-import { MatSnackBarModule } from '@angular/material/snack-bar';import { AssignmentService } from 'src/app/services/assignementService/assignement.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AssignmentService } from 'src/app/services/assignementService/assignement.service';
 import { AssignmentComponent } from 'src/app/modules/student/assignment/assignment.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,6 +45,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; /
 import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.component';
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
+import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,7 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
     SafeUrlPipe,
     AnnouncementComponent,
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
-
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +84,8 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
     MatSnackBarModule,
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService,LectureService,LabService,QuizService
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService
   ],
   bootstrap: [AppComponent]
 })
