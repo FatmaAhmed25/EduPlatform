@@ -162,6 +162,45 @@ public class AnnouncementController {
         return ResponseEntity.ok(announcement);
     }
 
+
+    @PutMapping(value = "/{courseId}/{instructorId}/update-announcement/{announcementId}",consumes = {"multipart/form-data"})
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    public ResponseEntity<?> updateAnnouncement(@PathVariable @ValidateCourse Long courseId,
+                                                @PathVariable @ValidateInstructor Long instructorId,
+                                                @PathVariable Long announcementId,
+                                                @RequestParam(required = false) String title,
+                                                @RequestParam(required = false) String content,
+                                                @RequestParam(required = false) MaterialType materialType,
+                                                @RequestParam(required = false) MultipartFile file) {
+        try {
+            if (materialType == MaterialType.ASSIGNMENTS) {
+                return ResponseEntity.badRequest().body("Invalid folder name");
+            }
+            Announcement updatedAnnouncement = announcementService.updateAnnouncement(courseId, instructorId, announcementId, title, content, materialType, file);
+            return ResponseEntity.ok(updatedAnnouncement);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Failed to update material: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{courseId}/{instructorId}/{announcementId}")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    public ResponseEntity<?> deleteAnnouncement(@PathVariable @ValidateCourse Long courseId,
+                                                @PathVariable @ValidateInstructor Long instructorId,
+                                                @PathVariable Long announcementId) {
+        try {
+            announcementService.deleteAnnouncement(courseId, instructorId, announcementId);
+            return ResponseEntity.ok("Announcement deleted successfully");
+        } catch (RuntimeException | IOException e) {
+            return ResponseEntity.status(500).body("Failed to delete announcement: " + e.getMessage());
+        }
+    }
+
+
     @PostMapping("/add-comment")
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")

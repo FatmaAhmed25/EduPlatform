@@ -89,6 +89,15 @@ public class QuizController {
         return ResponseEntity.ok(createdQuiz);
     }
 
+    @PutMapping("/update-quiz/{quizId}/{instructorId}")
+    @SecurityRequirement(name = "BearerAuth")
+    public ResponseEntity<Quiz> updateQuiz(@PathVariable @ValidateQuiz Long quizId,
+                                           @PathVariable @ValidateInstructor Long instructorId,
+                                           @RequestBody QuizDTO quizDTO) {
+        Quiz updatedQuiz = quizService.updateQuiz(quizId,instructorId,quizDTO);
+        return ResponseEntity.ok(updatedQuiz);
+    }
+
 
     @GetMapping("/{quizId}/questions")
     @SecurityRequirement(name="BearerAuth")
@@ -132,23 +141,18 @@ public class QuizController {
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{studentId}/{courseId}/{quizId}/student")
-    public ResponseEntity<QuizForStudentDTO> getQuizForStudent(@PathVariable @ValidateStudent Long studentId ,@PathVariable @ValidateCourse Long courseId,@PathVariable @ValidateQuiz Long quizId) {
+    public ResponseEntity<QuizForStudentDTO> getQuizForStudent(
+            @PathVariable @ValidateStudent Long studentId,
+            @PathVariable @ValidateCourse Long courseId,
+            @PathVariable @ValidateQuiz Long quizId) {
         try {
-            QuizForStudentDTO quizDTO = quizService.getQuizForStudentById(quizId);
+            QuizForStudentDTO quizDTO = quizService.getQuizForStudentById(studentId, quizId);
             return ResponseEntity.ok(quizDTO);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
-
-//    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR') or hasAuthority('ROLE_STUDENT')")
-//    @SecurityRequirement(name="BearerAuth")
-//    @GetMapping("/course/{instructorId}/{courseId}")
-//    public List<Quiz> getQuizzesByCourseId(@PathVariable @ValidateInstructor ,@PathVariable @ValidateCourse Long courseId) {
-//        return quizService.getQuizzesByCourseId(courseId);
-//    }
 
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @SecurityRequirement(name="BearerAuth")

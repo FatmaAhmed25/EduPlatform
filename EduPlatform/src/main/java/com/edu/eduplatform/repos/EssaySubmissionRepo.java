@@ -10,6 +10,5 @@ public interface EssaySubmissionRepo extends JpaRepository<EssaySubmission, Long
 
     EssaySubmission findByQuizQuizIdAndStudentUserID(Long quizId, Long studentId);
 
-
     Optional<EssaySubmission> findByQuizAndStudent(Quiz quiz, Student student);
 }

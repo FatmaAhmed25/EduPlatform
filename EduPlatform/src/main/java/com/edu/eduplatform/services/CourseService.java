@@ -155,6 +155,18 @@ public class CourseService {
         return courseRepository.findByTitleContainingIgnoreCase(title);
     }
 
+    public List<Course> searchCoursesInstructor(String searchTerm, Long instructorId) {
+        return courseRepository.searchByCourseCodeOrTitleAndInstructor(searchTerm, instructorId);
+    }
+
+    public List<Course> findByCourseCodeInstructor(String courseCode, Long instructorId) {
+        return courseRepository.findByCourseCodeContainingIgnoreCaseAndInstructor(courseCode, instructorId);
+    }
+
+    public List<Course> findByTitleInstructor(String title, Long instructorId) {
+        return courseRepository.findByTitleContainingIgnoreCaseAndInstructor(title, instructorId);
+    }
+
     //    public Course updateCourse(Long courseId, UpdateCourseDTO updateCourseDTO) {
 //        Course course = courseRepository.findById(courseId)
 //                .orElseThrow(() -> new EntityNotFoundException("Course not found"));

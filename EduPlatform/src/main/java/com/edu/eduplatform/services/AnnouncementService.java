@@ -142,6 +142,82 @@ public class AnnouncementService {
         return saveAnnouncement;
     }
 
+    @Transactional
+    public Announcement updateAnnouncement(Long courseId, Long instructorId, Long announcementId,
+                                           String title, String content, MaterialType materialType,
+                                           MultipartFile file) throws IOException {
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        Announcement announcement = announcementRepo.findById(announcementId)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId ||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID() == instructorId);
+
+        if (!isCourseCreatorOrTA) {
+            throw new RuntimeException("Instructor not authorized to update announcement for this course");
+        }
+
+        if (title != null) {
+            announcement.setTitle(title);
+        }
+        if (content != null) {
+            announcement.setContent(content);
+        }
+
+        if (file != null && materialType != null) {
+            // Delete the old file if it exists
+            if (announcement.getFileName() != null) {
+                courseContentService.deleteFile(courseId.toString(), announcement.getFileName());
+            }
+            // Upload the new file
+            String newFileName = courseContentService.uploadFile(courseId.toString(), materialType.getFolder(), file);
+            announcement.setFileName(newFileName);
+        }
+
+        announcement.setCreatedAt(LocalDateTime.now());
+
+        String notificationMessage = announcement.getInstructor().getUsername() + " " + announcement.getCourse().getTitle() + " " + announcement.getTitle() + " " + announcement.getContent();
+        announcement.setNotificationMessage(notificationMessage);
+
+        Announcement savedAnnouncement = announcementRepo.save(announcement);
+
+        NotificationDTO notificationDTO = new NotificationDTO(savedAnnouncement.getId(), notificationMessage);
+        messagingTemplate.convertAndSend("/topic/course/" + courseId, notificationDTO);
+
+        return savedAnnouncement;
+    }
+
+
+    @Transactional
+    public void deleteAnnouncement(Long courseId, Long instructorId, Long announcementId) throws IOException {
+        Course course = courseRepo.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Instructor instructor = instructorRepo.findById(instructorId)
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        Announcement announcement = announcementRepo.findById(announcementId)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        boolean isCourseCreatorOrTA = course.getCreatedBy().getUserID() == instructorId ||
+                course.getTaInstructors().stream().anyMatch(ta -> ta.getUserID() == instructorId);
+
+        if (!isCourseCreatorOrTA) {
+            throw new RuntimeException("Instructor not authorized to delete announcement for this course");
+        }
+
+        // Delete the file if it exists
+        if (announcement.getFileName() != null) {
+            courseContentService.deleteFile(courseId.toString(), announcement.getFileName());
+        }
+
+        announcementRepo.delete(announcement);
+    }
 
 
     public List<Announcement> getNotiicationsForStudent(Long studentId) {

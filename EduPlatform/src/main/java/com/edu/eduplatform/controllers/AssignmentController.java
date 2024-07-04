@@ -1,5 +1,7 @@
 package com.edu.eduplatform.controllers;
 
+import com.edu.eduplatform.annotations.ValidateCourse;
+import com.edu.eduplatform.annotations.ValidateInstructor;
 import com.edu.eduplatform.dtos.AnnouncementDTO;
 import com.edu.eduplatform.dtos.AssignmentDTO;
 import com.edu.eduplatform.dtos.AssignmentSubmissionDTO;
@@ -33,7 +35,6 @@ public class AssignmentController {
             @PathVariable Long courseId,
             @RequestParam Long instructorId,
             @RequestParam MultipartFile file,
-
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime dueDate,
             @RequestParam String title,
@@ -44,6 +45,36 @@ public class AssignmentController {
         Assignment assignment = assignmentService.createAssignment(instructorId, courseId, file, announcementDto, dueDate, allowLateSubmissions);
         return ResponseEntity.status(HttpStatus.CREATED).body(assignment);
     }
+
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @PutMapping(value="/update-assignment/{assignmentId}", consumes = {"multipart/form-data"})
+    public ResponseEntity<Assignment> updateAssignment(@PathVariable Long assignmentId,
+                                                       @RequestParam @ValidateCourse Long courseId,
+                                                       @RequestParam @ValidateInstructor Long instructorId,
+                                                       @RequestParam(required = false) String title,
+                                                       @RequestParam(required = false) String content,
+                                                       @RequestParam(required = false) LocalDateTime dueDate,
+                                                       @RequestParam(required = false) Boolean allowLateSubmissions,
+                                                       @RequestParam(required = false) MultipartFile file) throws IOException {
+        Assignment assignment = assignmentService.updateAssignment(courseId, instructorId, assignmentId, title, content, dueDate, allowLateSubmissions, file);
+        return new ResponseEntity<>(assignment, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete-assignment/{courseId}/{instructorId}/{assignmentId}")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    public ResponseEntity<?> deleteAssignment(@PathVariable @ValidateCourse Long courseId,
+                                              @PathVariable @ValidateInstructor Long instructorId,
+                                              @PathVariable Long assignmentId) {
+        try {
+            assignmentService.deleteAssignment(courseId, instructorId, assignmentId);
+            return ResponseEntity.ok("Assignment deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(500).body("Failed to delete assignment: " + e.getMessage());
+        }
+    }
+
 
     @PostMapping(value="/submit", consumes = {"multipart/form-data"})
     @SecurityRequirement(name="BearerAuth")
