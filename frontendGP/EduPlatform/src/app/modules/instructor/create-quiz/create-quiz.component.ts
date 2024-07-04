@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Quiz } from 'src/app/models/Quiz';
-import { CreateQuizService } from 'src/app/services/quiz-service/create-quiz.service';
+import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
 
 @Component({
   selector: 'app-create-quiz',

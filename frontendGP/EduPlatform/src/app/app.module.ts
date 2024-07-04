@@ -43,6 +43,7 @@ import { SubmitDialogComponent } from 'src/app/modules/student/submit-dialog/sub
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'; // Add this import
 import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.component';
 import { QuizService } from 'src/app/services/quizService/quiz.service';
+// import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,7 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
-    HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent
+    HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
 
   ],
   imports: [
@@ -81,7 +82,7 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
     MatSnackBarModule,
   ],
   providers: [EnrolledCoursesService,AuthService,
-    WebSocketService,LectureService,LabService
+    WebSocketService,LectureService,LabService,QuizService
   ],
   bootstrap: [AppComponent]
 })
