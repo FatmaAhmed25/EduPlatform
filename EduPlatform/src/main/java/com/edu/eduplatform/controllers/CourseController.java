@@ -4,6 +4,7 @@ import com.edu.eduplatform.annotations.ValidateCourse;
 import com.edu.eduplatform.annotations.ValidateInstructor;
 import com.edu.eduplatform.annotations.ValidateStudent;
 import com.edu.eduplatform.dtos.CourseDTO;
+import com.edu.eduplatform.dtos.CourseDetailsDTO;
 import com.edu.eduplatform.dtos.CourseResponseDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.services.CourseContentService;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/courses")
@@ -63,14 +65,13 @@ public class CourseController {
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     public ResponseEntity<?> createCourse(
             @PathVariable Long instructorId,
-            @RequestBody CourseDTO courseDTO){
+            @RequestBody CourseDTO courseDTO) {
         try {
             courseService.generateCourse(instructorId, courseDTO);
-            return ResponseEntity.ok("Course "+courseDTO.getTitle()+ " created for instructor"+instructorId+" successfully.");
+            return ResponseEntity.ok(Map.of("message", "Course " + courseDTO.getTitle() + " created for instructor " + instructorId + " successfully."));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", e.getMessage()));
         }
-
     }
 
     @PostMapping("/{courseId}/enroll-student")
@@ -152,5 +153,11 @@ public class CourseController {
             @RequestParam String fileName) throws IOException {
         boolean deleted = contentService.deleteFile(courseId, fileName);
         return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/instructor/courses/details/{courseId}")
+    public CourseDetailsDTO getCourseDetails(@PathVariable Long courseId) {
+        return courseService.getCourseDetailsById(courseId);
     }
 }

@@ -1,7 +1,6 @@
 <div class="container">
   <div class="main-content">
     <div class="courses">
-      <app-navbar></app-navbar>
       <h2>Search Results</h2>
       <div class="course-list">
         <div class="course-card" *ngFor="let course of searchResults">
@@ -25,7 +24,7 @@
       </label><br>
       <label class="labelPass">
         Enter Course's Password:
-        <input type="password" [(ngModel)]="enrollPassword" class="input">
+        <input type="text" [(ngModel)]="enrollPassword" class="input">
       </label>
       <button type="button" class="btn2" (click)="enrollCourse()">Enroll</button>
     </div>

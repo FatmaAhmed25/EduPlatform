@@ -6,12 +6,15 @@ import { CreateQuizComponent } from 'src/app/modules/instructor/create-quiz/crea
 import { AiGenerateQuizComponent } from './ai-generate-quiz/ai-generate-quiz.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms'; 
-
+import { CreateCourseComponent } from './create-course/create-course.component';
+import { CoursesComponent } from './courses/courses.component';
 @NgModule({
   declarations: [
     InstructorDashboardComponent,
     CreateQuizComponent,
-    AiGenerateQuizComponent
+    AiGenerateQuizComponent,
+    CreateCourseComponent,
+    CoursesComponent,
   ],
   imports: [
     CommonModule,

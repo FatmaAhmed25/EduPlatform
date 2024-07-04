@@ -69,52 +69,8 @@ export class SearchResultComponent implements OnInit {
   }
   enrollCourse(): void {
     const studentId = localStorage.getItem('userID');
-    
     console.log(this.enrollPassword + " salamo3aleko")
     if (this.selectedCourse && studentId && this.enrollPassword) {
-
-        // if (this.enrollMethod === 'code' && this.enrollCode) {
-        //     this.enrollmentService.enrollByCode(this.enrollCode, Number(studentId), this.enrollPassword).subscribe(
-        //         (response: HttpResponse<void>) => {
-        //             if (response.status === 200) {
-        //                 this.snackBar.open('Enrolled successfully by code', 'Close', {
-        //                     duration: 5000,
-        //                     verticalPosition: 'top',
-        //                     horizontalPosition: 'right'
-        //                 });
-        //                 this.closeEnrollModal();
-        //             } else if (response.status === 401) {
-        //                 this.snackBar.open('Course password is incorrect', 'Close', {
-        //                     duration: 5000,
-        //                     verticalPosition: 'top',
-        //                     horizontalPosition: 'right'
-        //                 });
-        //             } else if (response.status === 400) {
-        //                 this.snackBar.open('You are already enrolled in the course', 'Close', {
-        //                     duration: 5000,
-        //                     verticalPosition: 'top',
-        //                     horizontalPosition: 'right'
-        //                 });
-        //             }
-        //         },
-        //         error => {
-        //             if (error.status === 400) {
-        //                 this.snackBar.open('Course password is incorrect', 'Close', {
-        //                     duration: 5000,
-        //                     verticalPosition: 'top',
-        //                     horizontalPosition: 'right'
-        //                 });
-        //             }
-        //             if (error.status === 401) {
-        //                 this.snackBar.open('Course password is incorrect', 'Close', {
-        //                     duration: 5000,
-        //                     verticalPosition: 'top',
-        //                     horizontalPosition: 'right'
-        //                 });
-        //         }
-        //     }
-        //     );
-        // } else if (this.enrollMethod === 'courseId') {
             this.enrollmentService.enrollByCourseId(this.selectedCourse.courseId, Number(studentId), this.enrollPassword).subscribe(
                 (response: HttpResponse<void>) => {
                     if (response.status === 200) {
