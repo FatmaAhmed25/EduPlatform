@@ -46,6 +46,7 @@ import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.compon
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 
 @NgModule({
   declarations: [
@@ -85,7 +86,7 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService
+    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService,ManualQuizService
   ],
   bootstrap: [AppComponent]
 })

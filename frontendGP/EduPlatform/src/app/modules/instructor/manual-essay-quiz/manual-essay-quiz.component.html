@@ -1,0 +1,80 @@
+<div class="manual-quiz-container">
+    <form [formGroup]="quizForm" (ngSubmit)="submitQuiz()">
+      <h3>Create Essay Quiz</h3>
+      
+      <!-- Quiz Info -->
+      <div class="form-section">
+        <div class="form-group">
+          <label for="title">Title:</label>
+          <input id="title" formControlName="title" type="text">
+          <div *ngIf="quizForm.get('title')?.invalid && quizForm.get('title')?.touched">
+            Title is required.
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="startTime">Start Time:</label>
+          <input id="startTime" formControlName="startTime" type="datetime-local">
+          <div *ngIf="quizForm.get('startTime')?.invalid && quizForm.get('startTime')?.touched">
+            Start Time is required.
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="endTime">End Time:</label>
+          <input id="endTime" formControlName="endTime" type="datetime-local">
+          <div *ngIf="quizForm.get('endTime')?.invalid && quizForm.get('endTime')?.touched">
+            End Time is required.
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="totalGrade">Total Grade:</label>
+          <input id="totalGrade" formControlName="totalGrade" type="number">
+          <div *ngIf="quizForm.get('totalGrade')?.invalid && quizForm.get('totalGrade')?.touched">
+            Total Grade is required.
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="courseId">Course ID:</label>
+          <input id="courseId" formControlName="courseId" type="number">
+          <div *ngIf="quizForm.get('courseId')?.invalid && quizForm.get('courseId')?.touched">
+            Course ID is required.
+          </div>
+        </div>
+      </div>
+  
+      <!-- Questions -->
+      <div class="questions-section" formArrayName="questions">
+        <div *ngFor="let question of questions.controls; let questionIndex = index" [formGroupName]="questionIndex" class="question-block">
+          <h4>Question {{ questionIndex + 1 }}</h4>
+  
+          <div class="form-group">
+            <label for="text">Question Text:</label>
+            <input id="text" formControlName="text" type="text">
+            <div *ngIf="question.get('text')?.invalid && question.get('text')?.touched">
+              Question text is required.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="points">Points:</label>
+            <input id="points" formControlName="points" type="number">
+            <div *ngIf="question.get('points')?.invalid && question.get('points')?.touched">
+              Points are required.
+            </div>
+          </div>
+  
+          <button type="button" class="btn-remove" (click)="removeQuestion(questionIndex)">Remove Question</button>
+        </div>
+      </div>
+  
+      <!-- Form Buttons -->
+      <div class="button-group">
+        <button type="button" class="btn-add" (click)="addQuestion()">Add Question</button>
+        <button type="submit" class="btn-submit">Submit Quiz</button>
+      </div>
+    </form>
+  </div>
+  

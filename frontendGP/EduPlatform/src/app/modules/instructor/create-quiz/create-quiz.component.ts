@@ -32,29 +32,34 @@ export class CreateQuizComponent {
   navigateToGenerateQuiz() {
     console.log(this.quizForm);
     if (this.quizForm.invalid) {
-      // Mark all controls as touched to trigger validation messages
       this.quizForm.markAllAsTouched();
       return;
     }
-
+  
     const startDate = this.quizForm.get('startDate')?.value;
     const startTime = this.quizForm.get('startTime')?.value;
     const endDate = this.quizForm.get('endDate')?.value;
     const endTime = this.quizForm.get('endTime')?.value;
-
-    const quiz: Quiz = {
+  
+    const quizData = {
       typeOfAssessment: this.quizForm.get('typeOfAssessment')?.value,
       assessmentName: this.quizForm.get('assessmentName')?.value,
-      startDate: new Date(`${startDate}T${startTime}`).toISOString(), // Combine date and time
-      endDate: new Date(`${endDate}T${endTime}`).toISOString(), // Combine date and time
+      startDate: new Date(`${startDate}T${startTime}`).toISOString(),
+      endDate: new Date(`${endDate}T${endTime}`).toISOString(),
       numOfQuestions: this.quizForm.get('numOfQuestions')?.value,
       courseName: 'Sarsour quiz',
       courseId: '1',
-      instructorId:'7' 
+      instructorId: '7'
     };
-
-    this.quizService.setQuiz(quiz);
-    this.router.navigate(['/ai-generate-quiz']);
+  
+    this.quizService.setQuiz(quizData);
+    if (quizData.typeOfAssessment === 'manual-mcq') {
+      this.router.navigate(['/manual-quiz']);
+    } else {
+      this.router.navigate(['/ai-generate-quiz']);
+    }
   }
+  
+  
 }
 

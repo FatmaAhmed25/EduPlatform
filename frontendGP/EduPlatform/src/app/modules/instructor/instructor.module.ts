@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InstructorDashboardComponent } from './instructor-dashboard/instructor-dashboard.component';
@@ -8,6 +9,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms'; 
 import { CreateCourseComponent } from './create-course/create-course.component';
 import { CoursesComponent } from './courses/courses.component';
+import { ManualMcqQuizComponent } from './manual-MCQ-quiz/manual-MCQ-quiz.component';
+import { ManualEssayQuizComponent } from './manual-essay-quiz/manual-essay-quiz.component';
+
 @NgModule({
   declarations: [
     InstructorDashboardComponent,
@@ -15,7 +19,9 @@ import { CoursesComponent } from './courses/courses.component';
     AiGenerateQuizComponent,
     CreateCourseComponent,
     CoursesComponent,
-  ],
+    ManualMcqQuizComponent,
+    ManualEssayQuizComponent
+    ],
   imports: [
     CommonModule,
     FormsModule,
