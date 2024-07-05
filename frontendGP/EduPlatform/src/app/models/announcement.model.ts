@@ -5,6 +5,6 @@ export interface Announcement {
     fileName?: string;
     showComments?: boolean;
     comments: Comment[];
-    // Add other necessary fields if there are more
+    createdAt:string;
   }
   

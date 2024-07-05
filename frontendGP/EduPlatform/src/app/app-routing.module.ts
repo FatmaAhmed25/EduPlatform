@@ -15,6 +15,8 @@ import { ManualEssayQuizComponent } from 'src/app/modules/instructor/manual-essa
 import { QuizDetailsComponent } from './modules/student/quiz-details/quiz-details.component';
 import {ProctoredVideoComponent} from './proctored-video/proctored-video.component'
 import { McqQuizViewerInstructorComponent } from './modules/instructor/mcq-quiz-viewer-instructor/mcq-quiz-viewer-instructor.component';
+import { SearchResultInstructorComponent } from './modules/instructor/search-result-instructor/search-result-instructor.component';
+import { StreamComponent } from './modules/instructor/stream/stream.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent},
@@ -27,11 +29,14 @@ const routes: Routes = [
   { path: 'searchResult', component: SearchResultComponent },
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'instructor-courses', component: CoursesComponent },
+  { path: 'searchResult-Instructor', component: SearchResultInstructorComponent },
+  { path: 'stream/:id', component: StreamComponent },
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent },
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
   { path: 'take-quiz', component: QuizDetailsComponent },
   { path: 'video-player', component: ProctoredVideoComponent },
   { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent }
+
 
 
 ];

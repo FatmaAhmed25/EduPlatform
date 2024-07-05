@@ -1,0 +1,141 @@
+<div class="container">
+  <!-- Left side panel -->
+  <div class="left-panel">
+    <div class="course-info">
+      <mat-form-field appearance="fill" class="course-code-field">
+        <h3>Course Code</h3>
+        <div class="course-code-wrapper">
+          <input matInput [value]="course?.courseCode" readonly>
+          <mat-icon class="copy-icon" (click)="copyCourseCode()">content_copy</mat-icon>
+        </div>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <h1>{{ course?.title }}</h1>
+      <p>{{ instructor?.username }}</p>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab label="Stream">
+        <!-- Announcements Section -->
+        <div class="announcements">
+          <div class="announcement-header">
+            <button class="add-announcement-btn" (click)="openAnnouncementDialog()">
+              <i class="fa fa-pencil-alt add-announcement-icon"></i>
+              Announce Something!
+            </button>
+          </div>
+
+          <div *ngIf="announcements.length === 0" class="no-announcements">
+            <p>No announcements yet.</p>
+          </div>
+
+          <div *ngFor="let announcement of announcements" class="announcement-card">
+            <div class="announcement-header">
+              <h3>{{ announcement.title }}</h3>
+              <p class="announcement-content">{{ announcement.content }}</p>
+            </div>
+
+            <div *ngIf="announcement.fileName" class="announcement-file">
+              <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(announcement)">
+              <a (click)="openFileLink(announcement)" class="announcement-file-link">
+                {{ announcement.fileName }}
+              </a>
+            </div>
+
+            <button class="view-comments-btn" (click)="toggleComments(announcement.id)">
+              {{ announcement.showComments ? 'Hide Comments' : 'View Comments' }}
+            </button>
+
+            <div *ngIf="announcement.showComments" class="comments-section">
+              <div class="comment-input-section">
+                <mat-form-field appearance="fill">
+                  <mat-label>Add a comment...</mat-label>
+                  <textarea matInput [(ngModel)]="newComment[announcement.id]" placeholder="Type your comment here..."></textarea>
+                </mat-form-field>
+                <button class="comment-send-btn" (click)="sendComment(announcement.id)">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Lectures & Videos">
+        <!-- Lectures and Videos Section -->
+        <div class="lectures">
+          <div class="lecture-header">
+            <button class="add-announcement-btn" (click)="openAddMaterialDialog()">
+              <i class="fa fa-video add-announcement-icon"></i>
+              Add Lecture/Video
+            </button>
+          </div><br>
+          <h2>Lectures</h2>
+          <div *ngIf="lectures.length === 0 && videos.length === 0" class="no-lectures">
+            <p>No lectures or videos available.</p>
+          </div>
+
+          <div *ngFor="let lecture of lectures" class="lecture-card announcement-card">
+            <div class="announcement-header">
+              <h3>{{ lecture.title }}</h3>
+              <p class="announcement-content">{{ lecture.content }}</p>
+            </div>
+
+            <div *ngIf="lecture.fileName" class="announcement-file">
+              <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lecture)">
+              <a (click)="openFileLink(lecture)" class="announcement-file-link">
+                {{ lecture.fileName }}
+              </a>
+            </div>
+          </div>
+
+          <div class="video-panel" *ngIf="videos.length > 0">
+            <h2>Videos</h2>
+            <div *ngFor="let video of videos" class="video-card announcement-card">
+              <h3>{{ video.title }}</h3>
+              <video controls [src]="link2" class="video-content" (click)="openVideoLink(video)"></video>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Labs">
+        <div class="labs">
+          <h2>Labs</h2>
+          <p>No labs available.</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Assignments">
+        <div class="assignments">
+          <h2>Assignments</h2>
+          <p>No assignments assigned.</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Quizzes">
+        <div class="quizzes">
+          <h2>Quizzes</h2>
+          <p>No quizzes available.</p>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <!-- Right side panel -->
+  <div class="side-panel">
+    <h3>Enrolled Students</h3>
+    <div class="student-list">
+      <div *ngFor="let student of students | slice:0:5" class="student-item">
+        <div class="student-info">
+          <div class="student-name">{{ student.username }}</div>
+          <div class="student-email">{{ student.email }}</div>
+        </div>
+      </div>
+    </div>
+    <button mat-raised-button color="primary" (click)="openStudentDetails()">See All</button>
+  </div>
+</div>

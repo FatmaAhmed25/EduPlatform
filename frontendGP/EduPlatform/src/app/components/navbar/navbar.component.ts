@@ -102,18 +102,30 @@ export class NavbarComponent implements OnInit {
   }
   
   searchCoursesByCode(): void {
+    const userType = localStorage.getItem('userType');
+    console.log(userType +" navbar")
     this.searchService.searchByCode(this.searchQuery).subscribe(
       () => {
+        if(userType==='ROLE_STUDENT'){
         this.router.navigate(['/searchResult']);
+        }else{
+          this.router.navigate(['/searchResult-Instructor'])
+        }
       },
       error => console.error('Error searching courses by code:', error)
     );
   }
 
   searchCoursesByTitle(): void {
+    const userType = localStorage.getItem('userType');
+    console.log(userType +" navbar")
     this.searchService.searchByTitle(this.searchQuery).subscribe(
       () => {
-        this.router.navigate(['/searchResult']);
+        if(userType==='ROLE_STUDENT'){
+          this.router.navigate(['/searchResult']);
+          }else{
+            this.router.navigate(['/searchResult-Instructor'])
+          }
       },
       error => console.error('Error searching courses by title:', error)
     );

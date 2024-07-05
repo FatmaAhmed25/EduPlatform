@@ -1,0 +1,234 @@
+.container {
+    display: flex;
+    /* width: calc(100% - 280px); Adjust width to leave space for the sidebar */
+    margin-left: 110px; /* Adjust margin as needed */
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .courses h2 {
+    margin-bottom: 35px;
+  }
+  
+  .course-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .course-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    width: 250px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures elements inside are spaced properly */
+  }
+  
+  .progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: #eee;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    background-color: linear-gradient(to right, 
+      hsl(0, 100%, 50%),
+      hsl(30, 100%, 50%),
+      hsl(60, 100%, 50%),
+      hsl(90, 100%, 50%),
+      hsl(120, 100%, 50%),
+      hsl(150, 100%, 50%),
+      hsl(180, 100%, 50%),
+      hsl(210, 100%, 50%),
+      hsl(240, 100%, 50%),
+      hsl(270, 100%, 50%),
+      hsl(300, 100%, 50%),
+      hsl(330, 100%, 50%),
+      hsl(360, 100%, 50%)
+    );
+    transition: width 0.3s ease-out, background-color 0.3s ease-out;
+    position: relative;
+  }
+  
+  .progress-bar-striped {
+    animation: progress-bar-stripes 1s linear infinite;
+  }
+  
+  @keyframes progress-bar-stripes {
+    from { background-position: 1rem 0; }
+    to { background-position: 0 0; }
+  }
+  
+  h3 {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-top: 10px; /* Adjust margin as needed */
+  }
+  
+  p {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+  }
+  
+  .progress-bar span {
+    position: absolute;
+    top: 3.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 12px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+  }
+  
+  /* Optional: Adjust the text color based on background */
+  .progress-bar.light span {
+    color: black;
+  }
+  
+  .course-image {
+    width: 100%; /* Set image width to fill the container */
+    height: 120px; /* Maintain aspect ratio */
+    border-radius: 15px 15px 0px 0px; /* Optionally, you can add more styles like border-radius, box-shadow, etc. */
+  }
+  
+  .btn {
+    background: #5E5DF0;
+    border-radius: 8px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%; /* Ensure button fills container */
+    word-break: break-word;
+    border: 0;
+    margin-top: auto; /* Push button to the bottom */
+    height: 32px;
+    transition: all 0.3s ease;
+
+  }
+  
+  .btn:hover {
+    background-color: #222295;
+  }
+  
+  .logo-image {
+    width: 170px;
+    height: 34px;
+  }
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px;
+  }
+  
+  .modal.show {
+    display: block;
+  }
+  
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 0px solid #888;
+    width: 269px;
+    height: 242px;
+    border-radius: 10px;
+  }
+  .btn2{
+    background: #5E5DF0;
+    border-radius: 8px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 14px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 126px;
+    word-break: break-word;
+    border: 0;
+    margin-top: -3px;
+    height: 32px;
+    transition: all 0.3s ease;
+    margin-left: 50px;
+  }
+  .btn2:hover {
+    background-color: #222295;
+  }
+  
+  .labelCourse,
+.labelPass {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.input {
+  width: calc(100% - 0px);
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  margin-top: 13px;
+}
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  

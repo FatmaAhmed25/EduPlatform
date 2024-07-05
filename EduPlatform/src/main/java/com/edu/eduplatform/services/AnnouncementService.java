@@ -285,5 +285,8 @@ public class AnnouncementService {
                 })
                 .collect(Collectors.toList());
     }
-    }
 
+    public List<Announcement> getVideoAnnouncements(Long courseId) {
+        return getAnnouncementsByFileNamePattern(courseId, "videos/");
+    }
+}

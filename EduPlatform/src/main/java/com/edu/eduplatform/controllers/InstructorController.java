@@ -1,12 +1,15 @@
 package com.edu.eduplatform.controllers;
 
+import com.edu.eduplatform.dtos.InstructorDTO;
 import com.edu.eduplatform.dtos.UpdateCourseDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.services.CourseService;
 import com.edu.eduplatform.services.InstructorService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -71,4 +74,16 @@ public class InstructorController {
         List<Announcement> announcements = instructorService.getAnnouncementsByCourse(courseId);
         return ResponseEntity.ok(announcements);
     }
+    @GetMapping("/{instructorId}")
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_INSTRUCTOR')")
+    public ResponseEntity<InstructorDTO> getInstructorDetails(@PathVariable Long instructorId) {
+        try {
+            InstructorDTO instructorDTO = instructorService.getInstructorDetails(instructorId);
+            return new ResponseEntity<>(instructorDTO, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

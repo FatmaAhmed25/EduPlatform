@@ -1,0 +1,20 @@
+<div class="dialog-container">
+    <header class="dialog-header">
+      <h1>Student Details</h1>
+      <button class="close-button" (click)="close()">×</button>
+    </header>
+    
+    <div class="dialog-content">
+      <ul class="student-list">
+        <li class="student-item" *ngFor="let student of data.students">
+          <h4 class="student-name">{{ student.username }}</h4>
+          <p class="student-email">{{ student.email }}</p>
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="dialog-footer">
+      <button class="close-btn" (click)="close()">Close</button>
+    </footer>
+  </div>
+  
