@@ -1,8 +1,8 @@
 <div class="container">
   <header>
-    <a href="#">Back to Configure Learning Path</a>
+    <a routerLink="/configure-learning-path">Back to Configure Learning Path</a>
     <h1>MCQ Questions Generator</h1>
-    <a href="#">Continue to Configure Learning Path</a>
+    <a routerLink="/configure-learning-path">Continue to Configure Learning Path</a>
   </header>
   <section *ngIf="quiz">
     <h5>Assessment: {{ quiz.assessmentName }}</h5>
@@ -14,12 +14,10 @@
 </div>
 
 <div class="container">
-  <!-- Check if there are no questions -->
   <div *ngIf="!questions || questions.length === 0">
     <p>No questions available. Please generate some questions.</p>
   </div>
 
-  <!-- Section to generate questions -->
   <section *ngIf="questions && questions.length === 0">
     <div class="form-group">
       <label for="input-type">Input Type</label>
@@ -38,10 +36,9 @@
       <label for="pdf-upload">Upload PDF</label>
       <div class="file-upload-container">
         <input type="file" id="pdf-upload" accept=".pdf,application/pdf" multiple (change)="onFilesSelected($event)">
-
         <span class="upload-instruction">You can upload multiple PDF files</span>
         <i class="fas fa-info-circle tooltip">
-          <span class="tooltiptext">Hold Ctrl (or Command) to select multiple files.Only PDF files are allowed. </span>
+          <span class="tooltiptext">Hold Ctrl (or Command) to select multiple files. Only PDF files are allowed.</span>
         </i>
       </div>
     </div>
@@ -51,7 +48,7 @@
       <ul class="selected-files-list">
         <li *ngFor="let file of selectedFiles; let i = index" class="selected-file-item">
           <i class="fas fa-file"></i> {{ file.name }}
-          <i class="fas fa-trash-alt removeFile delete-icon" (click)="removeFile(i)"></i>
+          <i class="fas fa-trash-alt delete-icon" (click)="removeFile(i)"></i>
         </li>
       </ul>
     </div>
@@ -63,7 +60,6 @@
     <button (click)="generateQuestions()">Generate Questions</button>
   </section>
 
-  <!-- Section to display questions -->
   <div *ngIf="questions && questions.length > 0">
     <h3 class="generated-questions-title">Generated Questions</h3>
     <div *ngFor="let question of questions; let i = index" class="question-card">
@@ -78,18 +74,14 @@
           <label>{{ answer.text }}</label>
         </div>
         <div class="question-actions">
-          <label for="question-grade-{{ i }}">Grade:</label>
-          <div class="space">
-            <input type="number" id="question-grade-{{ i }}" [(ngModel)]="question.points" min="0" max="100">
+          <!-- <label for="question-grade-{{ i }}">Grade:</label> -->
+          <!-- <div class="space"> -->
+            <!-- <input type="number" id="question-grade-{{ i }}" [(ngModel)]="question.points" min="1" max="100" (change)="validatePoints(i)"> -->
             <i class="fas fa-trash-alt delete-icon" (click)="deleteQuestion(i)"></i>
-        </div>
+          <!-- </div> -->
         </div>
       </div>
-      
     </div>
-    <button class="add-new-question" (click)="saveQuestions()">Save</button>
-
-    
-</div>
-
+    <button class="save-questions" (click)="saveQuestions()">Save</button>
+  </div>
 </div>

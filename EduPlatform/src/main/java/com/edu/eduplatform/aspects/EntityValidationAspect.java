@@ -72,7 +72,7 @@ public class EntityValidationAspect {
         }
 
     }
-    @Before("@annotation(com.edu.eduplatform.annotations.ValidateInstructor) && args(studentId, courseId, ..)")
+    @Before("@annotation(com.edu.eduplatform.annotations.ValidateStudentEnrollmentInCourse) && args(studentId, courseId, ..)")
     public void validateStudentBelongsToCourse(Long studentId, Long courseId) throws Exception {
         boolean isValid = studentService.isStudentEnrolledInCourse(studentId, courseId);
         if (!isValid) {

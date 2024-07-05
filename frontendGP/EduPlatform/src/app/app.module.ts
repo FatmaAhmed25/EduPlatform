@@ -47,6 +47,7 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
+import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,13 +56,13 @@ import { ManualQuizService } from 'src/app/services/manual-quizService/manual-qu
     SidebarComponent,
     LoginComponent,
     CourseDetailsComponent,
-    CourseDetailsComponent,
     SpinnerComponent,
     FileViewerDialogComponent,  
     SafeUrlPipe,
     AnnouncementComponent,
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
-    NavbarComponent
+    NavbarComponent,
+    ConfirmQuizSubmissionDialogComponent,
   ],
   imports: [
     BrowserModule,

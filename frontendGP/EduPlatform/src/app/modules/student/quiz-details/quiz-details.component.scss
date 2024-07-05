@@ -1,0 +1,189 @@
+@import '../../../../styles.scss';
+.quiz-container {
+    display: flex;
+  }
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: $primary-color;
+    color: white;
+  }
+  
+  .navbar-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .navbar-info {
+    display: flex;
+    gap: 20px;
+  
+    .countdown-timer {
+      color: #ff0000; 
+      font-weight: bold;
+    }
+  }
+  .error-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1000; 
+    display: none; }
+  
+    p {
+      margin-bottom: 10px;
+    }
+  
+  .sidebar {
+    width: 12%;
+    background-color: #ffffff;
+    padding: 10px;
+    border-right: 1px solid #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 100vh;
+    overflow-y: auto; 
+
+    &::-webkit-scrollbar {
+        display: none;
+      }
+    
+      /* Hide scrollbar for IE and Edge */
+      -ms-overflow-style: none;  /* Internet Explorer 10+ */
+      scrollbar-width: none;  /* Firefox */
+    
+  
+    ul {
+      list-style: none;
+      padding: 0;
+  
+      li {
+        padding: 16px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 7px;
+        align-items: center;
+        transition: background-color 0.3s ease, color 0.3s ease;
+  
+        &:hover {
+          background-color: #d4e0f8;
+        }
+  
+        &.completed {
+          background-color: #a3faa3;
+        }
+  
+        &.selected {
+          background-color: #007bffd0; /* Blue background for selected question */
+          color: #fff; /* White text for selected question */
+        }
+  
+        .question-index {
+          margin-right: 10px;
+          font-weight: bold;
+          color: #333;
+        }
+  
+        .points {
+          font-size: 0.8em;
+          color: #666;
+        }
+      }
+    }
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+  
+    h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+  
+    .question {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+  
+    .answer-options {
+      margin-top: 10px;
+    }
+  
+    .answer-option {
+      background-color: #f9f9f9;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+  
+      &:hover {
+        background-color: #eef4ff;
+        border-color: #b3c6e7;
+      }
+  
+      input[type="radio"] {
+        margin-right: 15px;
+      }
+  
+      label {
+        cursor: pointer;
+        margin: 0;
+      }
+    }
+  
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 10px;
+    }
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+}
+.submit-button-container {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    margin-top: 20px;
+  }
+  
+  .submitQuizButton {
+    position: fixed;
+    bottom: 20px; 
+    right: 20px; 
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  

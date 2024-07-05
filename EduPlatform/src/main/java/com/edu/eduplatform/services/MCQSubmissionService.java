@@ -55,6 +55,10 @@ public class MCQSubmissionService {
         int totalPointsEarned = 0;
 
         for (StudentMCQAnswerDTO answerDTO : mcqQuizSubmissionDTO.getAnswers()) {
+            if(answerDTO.getAnswerId() == null)
+            {
+                continue;
+            }
             Question question = questionRepository.findById(answerDTO.getQuestionId())
                     .orElseThrow(() -> new RuntimeException("Question not found"));
 

@@ -128,28 +128,28 @@ public class QuizController {
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{instructorId}/{courseId}/{quizId}/instructor")
     @ValidateInstructorBelongsToCourse
-    public ResponseEntity<Quiz> getQuizForInstructor(@PathVariable @ValidateInstructor Long instructorId ,@PathVariable @ValidateCourse Long courseId,@PathVariable @ValidateQuiz Long quizId) {
+    public ResponseEntity<?> getQuizForInstructor(@PathVariable @ValidateInstructor Long instructorId ,@PathVariable @ValidateCourse Long courseId,@PathVariable @ValidateQuiz Long quizId) {
         try {
             Quiz quiz = quizService.getQuizByIdForInstructor(quizId);
             return ResponseEntity.ok(quiz);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{studentId}/{courseId}/{quizId}/student")
-    public ResponseEntity<QuizForStudentDTO> getQuizForStudent(
+    public ResponseEntity<?> getQuizForStudent(
             @PathVariable @ValidateStudent Long studentId,
             @PathVariable @ValidateCourse Long courseId,
             @PathVariable @ValidateQuiz Long quizId) {
         try {
             QuizForStudentDTO quizDTO = quizService.getQuizForStudentById(studentId, quizId);
             return ResponseEntity.ok(quizDTO);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
