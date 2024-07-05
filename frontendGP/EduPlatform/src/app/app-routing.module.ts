@@ -10,8 +10,8 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SearchResultComponent } from './modules/student/search-result/search-result.component';
 import { CreateCourseComponent } from './modules/instructor/create-course/create-course.component';
 import { CoursesComponent } from './modules/instructor/courses/courses.component';
-
-
+import { SearchResultInstructorComponent } from './modules/instructor/search-result-instructor/search-result-instructor.component';
+import { StreamComponent } from './modules/instructor/stream/stream.component';
 const routes: Routes = [
   { path: '', component: HomepageComponent},
   { path: 'ai-generate-quiz', component: AiGenerateQuizComponent },
@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: 'searchResult', component: SearchResultComponent },
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'instructor-courses', component: CoursesComponent },
-
+  { path: 'searchResult-Instructor', component: SearchResultInstructorComponent },
+  { path: 'stream/:id', component: StreamComponent }
 ];
 
 @NgModule({

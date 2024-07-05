@@ -1,8 +1,10 @@
 package com.edu.eduplatform.controllers;
 
 
+import com.edu.eduplatform.dtos.StudentDTO;
 import com.edu.eduplatform.dtos.UserDTO;
 import com.edu.eduplatform.models.Course;
+import com.edu.eduplatform.models.Student;
 import com.edu.eduplatform.repos.StudentRepo;
 import com.edu.eduplatform.repos.UserRepo;
 import com.edu.eduplatform.services.StudentService;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -28,8 +32,6 @@ public class StudentController
     public Set<Course> getEnrolledCourses(@PathVariable long studentId)
     {
         return studentService.getEnrolledCourses(studentId);
-
-
     }
 
     @GetMapping("/details/{userId}")
@@ -37,5 +39,12 @@ public class StudentController
     @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
     public UserDTO getUserDetails(@PathVariable long userId) {
         return studentService.getUserDetails(userId);
+    }
+
+    @GetMapping("/by-course/{courseId}")
+    @SecurityRequirement(name = "BearerAuth")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_INSTRUCTOR')")
+    public List<StudentDTO> getStudentsByCourseId(@PathVariable long courseId) {
+        return studentService.getStudentsByCourseId(courseId);
     }
 }

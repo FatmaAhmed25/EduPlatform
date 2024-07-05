@@ -198,4 +198,7 @@ public class AnnouncementService {
         return commentRepo.findByAnnouncementOrderByCreatedAtAsc(announcement);
     }
 
+    public List<Announcement> getVideoAnnouncements(Long courseId) {
+        return getAnnouncementsByFileNamePattern(courseId, "videos/");
+    }
 }

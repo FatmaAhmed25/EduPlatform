@@ -1,0 +1,30 @@
+<h1 class="dialog-title">Add Lecture/Video</h1>
+<div class="dialog-content">
+  <form (ngSubmit)="onSubmit()" #lectureForm="ngForm">
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input type="text" id="title" [(ngModel)]="lecture.title" name="title" required>
+    </div>
+
+    <div class="form-field">
+      <label for="type">Type</label>
+      <select id="type" [(ngModel)]="lecture.type" name="type" required>
+        <option value="LECTURE">Lecture</option>
+        <option value="VIDEO">Video</option>
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label for="content">Content</label>
+      <textarea id="content" [(ngModel)]="lecture.content" name="content" rows="3" required></textarea>
+    </div>
+
+    <div class="file-upload">
+      <input type="file" (change)="onFileChange($event)" />
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button class="btn cancel-btn" (click)="onClose()">Cancel</button>
+  <button class="btn submit-btn" (click)="onSubmit()">Submit</button>
+</div>

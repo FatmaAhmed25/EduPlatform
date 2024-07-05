@@ -143,12 +143,12 @@ public class AnnouncementController {
             }
             AnnouncementDTO announcementDto=new AnnouncementDTO(title,content);
             announcementService.uploadMaterialAndNotifyStudents(instructorId, courseId, materialType, file, announcementDto);
-            return ResponseEntity.ok("Material uploaded and students notified successfully");
+            return ResponseEntity.ok().build();
         }catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid folder name");
+            return ResponseEntity.badRequest().build();
         }
         catch (IOException e) {
-            return ResponseEntity.status(500).body("Failed to upload material: " + e.getMessage());
+            return ResponseEntity.status(500).build();
         }
     }
 
@@ -184,5 +184,18 @@ public class AnnouncementController {
         return ResponseEntity.ok(comments);
     }
 
-
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/{instructorId}/{courseId}/videos/instructor")
+    @ValidateInstructorBelongsToCourse
+    public ResponseEntity<List<Announcement>> getVideoAnnouncementsForInstructor(@PathVariable @ValidateInstructor Long instructorId, @PathVariable @ValidateCourse Long courseId) {
+        try {
+            List<Announcement> announcements = announcementService.getVideoAnnouncements(courseId);
+            return ResponseEntity.ok(announcements);
+        } catch(EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

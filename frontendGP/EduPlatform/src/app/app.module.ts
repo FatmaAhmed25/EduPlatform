@@ -46,6 +46,7 @@ import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.compon
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -82,6 +83,8 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
       preventDuplicates: true, // Prevent duplicate toasts
     }),
     MatSnackBarModule,
+    MatSelectModule,
+
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
