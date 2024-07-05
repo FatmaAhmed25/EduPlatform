@@ -23,6 +23,8 @@ import java.util.List;
 public class QuizService {
 
     @Autowired
+    private StudentMCQAnswerRepo studentMCQAnswerRepo;
+    @Autowired
     private ModelMapper modelMapper;
     @Autowired
     private QuizRepository quizRepository;
@@ -112,8 +114,19 @@ public class QuizService {
         for (Question question : quiz.getQuestions()) {
             if (question instanceof MCQQuestion) {
                 MCQQuestion mcqQuestion = (MCQQuestion) question;
+
+                // Delete related StudentMCQAnswers
+                for (Answer answer : mcqQuestion.getAnswers()) {
+                    List<StudentMCQAnswer> studentMCQAnswers = studentMCQAnswerRepo.findByAnswer(answer);
+                    studentMCQAnswerRepo.deleteAll(studentMCQAnswers);
+                }
+
                 answerRepository.deleteAll(mcqQuestion.getAnswers());
             }
+
+            List<StudentMCQAnswer> studentMCQAnswers = studentMCQAnswerRepo.findByQuestion(question);
+            studentMCQAnswerRepo.deleteAll(studentMCQAnswers);
+
             questionRepository.delete(question);
         }
         quiz.getQuestions().clear();
@@ -148,7 +161,6 @@ public class QuizService {
 
         return quizRepository.save(quiz);
     }
-
 
 
     public Question addQuestionToQuiz(Long quizId, Question question) {

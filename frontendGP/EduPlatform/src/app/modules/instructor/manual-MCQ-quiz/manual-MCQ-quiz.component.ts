@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
+import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
 
 @Component({
   selector: 'app-manual-MCQ-quiz',
@@ -16,16 +16,12 @@ export class ManualMcqQuizComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private manualQuizService: ManualQuizService
+    private quizService: CreateQuizService
   ) {}
 
   ngOnInit(): void {
     this.quizForm = this.fb.group({
-      title: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
       totalGrade: ['', Validators.required],
-      courseId: ['', Validators.required],
       questions: this.fb.array([])
     });
   }
@@ -46,7 +42,8 @@ export class ManualMcqQuizComponent implements OnInit {
       answers: this.fb.array([
         this.fb.group({
           text: ['', Validators.required],
-          correct: [false]
+          correct: [false],
+          questionType:['MCQ']
         })
       ])
     }));
@@ -79,12 +76,26 @@ export class ManualMcqQuizComponent implements OnInit {
 
   submitQuiz(): void {
     if (this.quizForm.valid) {
-      const quizData = this.quizForm.value;
-      this.manualQuizService.createQuiz(quizData).subscribe(() => {
-        this.router.navigate(['/quiz-list']);
-      });
+      const quizData = {
+        ...this.quizForm.value,
+        assessmentName: this.quizService.getQuiz()?.assessmentName,
+        startDate: this.quizService.getQuiz()?.startDate,
+        endDate: this.quizService.getQuiz()?.endDate,
+      };
+      
+      this.quizService.createManualQuiz(quizData).subscribe(
+        response => {
+          const quizId=response.quizId;
+          console.log(quizId);
+          // this.router.navigate(['/mcq-quiz-viewer',quizId]);
+        },
+        error => {
+          console.error('Error submitting quiz:', error);
+        }
+      );
     } else {
       console.error('Form is invalid');
     }
   }
+  
 }

@@ -49,8 +49,7 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
-import {ProctoredVideoService} from './services/proctored-service/proctored-video.service'
-
+import {ProctoredVideoService} from './services/proctored-service/proctored-video.service';
 @NgModule({
   declarations: [
     AppComponent,

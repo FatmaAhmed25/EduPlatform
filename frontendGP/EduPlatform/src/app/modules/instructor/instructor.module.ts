@@ -11,6 +11,7 @@ import { CreateCourseComponent } from './create-course/create-course.component';
 import { CoursesComponent } from './courses/courses.component';
 import { ManualMcqQuizComponent } from './manual-MCQ-quiz/manual-MCQ-quiz.component';
 import { ManualEssayQuizComponent } from './manual-essay-quiz/manual-essay-quiz.component';
+import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/mcq-quiz-viewer-instructor.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ManualEssayQuizComponent } from './manual-essay-quiz/manual-essay-quiz.
     CreateCourseComponent,
     CoursesComponent,
     ManualMcqQuizComponent,
-    ManualEssayQuizComponent
+    ManualEssayQuizComponent,
+    McqQuizViewerInstructorComponent
     ],
   imports: [
     CommonModule,

@@ -31,6 +31,6 @@ public class Quiz {
     @JsonBackReference
     private Course course;
 
-    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 }

@@ -14,6 +14,7 @@ export class CreateQuizService {
   constructor(private http: HttpClient) {}
 
   private quiz: Quiz | null = null;
+
   setQuiz(quiz: Quiz) {
     this.quiz = quiz;
   }
@@ -23,11 +24,26 @@ export class CreateQuizService {
       this.quiz.quizId = id;
     }
   }
+
+  getQuizById(quizID: any): any | null {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    const instructorId = localStorage.getItem('userID');
+    const courseId = 1;
+    const quizId =quizID.toString();
+    console.log(instructorId+ " ,"+courseId+ ","+quizId)
+    return this.http.get<any>(`${this.apiUrl}/${instructorId}/${courseId}/${quizId}/instructor`, { headers }).pipe(
+      catchError(error => {
+        console.error('Error submitting quiz:', error);
+        return of({ error: 'Error getting quiz. Please try again later.' });
+      })
+    );
+  }
   
 
   getQuiz(): Quiz | null {
     return this.quiz;
   }
+
   private createFormData(files: File[], quiz: Quiz): FormData {
     const formData = new FormData();
 
@@ -80,17 +96,11 @@ export class CreateQuizService {
       })
     );
   }
-  getQuizForInstructor(): Observable<any> {
-    console.log('Getting quiz')
-    if (this.quiz === null) {
-      console.error('Quiz is not defined.');
-      return of({ error: 'Quiz is not defined. Please set the quiz before trying to access it.' });
-    }
+  getQuizForInstructor(quizID:any): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
-    const instructorId = this.quiz.instructorId.toString();
-    const courseId = this.quiz.courseId.toString();
-    const quizId = this.quiz.quizId.toString();
-    console.log(instructorId+ " ,"+courseId+ ","+quizId)
+    const instructorId = localStorage.getItem('userID');
+    const courseId = 1;
+    const quizId =quizID.toString();
     return this.http.get<any>(`${this.apiUrl}/${instructorId}/${courseId}/${quizId}/instructor`, { headers }).pipe(
       catchError(error => {
         console.error('Error submitting quiz:', error);
@@ -98,11 +108,40 @@ export class CreateQuizService {
       })
     );
   }
-//   return this.http.get<any>(`${this.apiUrl}/7/1/2/instructor`, { headers }).pipe(
-//     catchError(error => {
-//       console.error('Error submitting quiz:', error);
-//       return of({ error: 'Error submitting quiz. Please try again later.' });
-//     })
-//   );
-// }
+
+
+  createManualQuiz(quizData: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    
+    if (!this.quiz) {
+      console.error('Quiz is not defined.');
+      return of({ error: 'Quiz is not defined. Please set the quiz before trying to access it.' });
+    }
+  
+    const finalQuizData = {
+      title: quizData.assessmentName,
+      startTime: quizData.startDate,
+      endTime: quizData.endDate,
+      totalGrade: quizData.totalGrade,
+      courseId: this.quiz.courseId,
+      questions: quizData.questions.map((q: any) => ({
+        text: q.text,
+        points: q.points,
+        questionType: q.questionType
+      }))
+    };
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post(this.apiUrl, JSON.stringify(finalQuizData), { headers }).pipe(
+      catchError(error => {
+        console.error('Error submitting quiz:', error);
+        return of({ error: 'Error submitting quiz. Please try again later.' });
+      })
+    );
+  }
+  
 }

@@ -4,43 +4,12 @@
     
     <!-- Quiz Info -->
     <div class="form-section">
-      <div class="form-group">
-        <label for="title">Title:</label>
-        <input id="title" formControlName="title" type="text">
-        <div *ngIf="quizForm.get('title')?.invalid && quizForm.get('title')?.touched">
-          Title is required.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="startTime">Start Time:</label>
-        <input id="startTime" formControlName="startTime" type="datetime-local">
-        <div *ngIf="quizForm.get('startTime')?.invalid && quizForm.get('startTime')?.touched">
-          Start Time is required.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="endTime">End Time:</label>
-        <input id="endTime" formControlName="endTime" type="datetime-local">
-        <div *ngIf="quizForm.get('endTime')?.invalid && quizForm.get('endTime')?.touched">
-          End Time is required.
-        </div>
-      </div>
 
       <div class="form-group">
         <label for="totalGrade">Total Grade:</label>
         <input id="totalGrade" formControlName="totalGrade" type="number">
         <div *ngIf="quizForm.get('totalGrade')?.invalid && quizForm.get('totalGrade')?.touched">
           Total Grade is required.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="courseId">Course ID:</label>
-        <input id="courseId" formControlName="courseId" type="number">
-        <div *ngIf="quizForm.get('courseId')?.invalid && quizForm.get('courseId')?.touched">
-          Course ID is required.
         </div>
       </div>
     </div>
