@@ -46,10 +46,14 @@ import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.compon
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { MatSelectModule } from '@angular/material/select';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
 import {ProctoredVideoService} from './services/proctored-service/proctored-video.service';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,6 +90,7 @@ import {ProctoredVideoService} from './services/proctored-service/proctored-vide
       preventDuplicates: true, // Prevent duplicate toasts
     }),
     MatSnackBarModule,
+    MatSelectModule,
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

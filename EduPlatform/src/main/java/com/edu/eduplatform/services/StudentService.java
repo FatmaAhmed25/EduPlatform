@@ -1,6 +1,7 @@
 package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.annotations.ValidateStudent;
+import com.edu.eduplatform.dtos.StudentDTO;
 import com.edu.eduplatform.dtos.UserDTO;
 import com.edu.eduplatform.models.Course;
 import com.edu.eduplatform.models.Student;
@@ -8,15 +9,21 @@ import com.edu.eduplatform.models.User;
 import com.edu.eduplatform.repos.StudentRepo;
 import com.edu.eduplatform.repos.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
 
     @Autowired
     private StudentRepo studentRepo;
+    @Autowired
+    private ModelMapper modelMapper;
     @ValidateStudent
     public Student getStudentById(long studentId) {
         return studentRepo.findById(studentId)
@@ -57,5 +64,12 @@ public class StudentService {
         userDTO.setBio(user.getBio());
 
         return userDTO;
+    }
+
+    public List<StudentDTO> getStudentsByCourseId(Long courseId) {
+        List<Student> students = studentRepo.findStudentsByCourseId(courseId);
+        return students.stream()
+                .map(student -> modelMapper.map(student, StudentDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -5,8 +5,8 @@ public enum MaterialType {
     LECTURES("lectures"),
     LABS("labs"),
     VIDEOS("videos"),
-    ASSIGNMENTS("assignments");
-
+    ASSIGNMENTS("assignments"),
+    OTHER("others");
     private final String folder;
 
     MaterialType(String folder) {

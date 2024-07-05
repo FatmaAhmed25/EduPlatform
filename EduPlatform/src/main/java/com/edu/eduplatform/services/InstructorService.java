@@ -1,5 +1,6 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.dtos.InstructorDTO;
 import com.edu.eduplatform.dtos.UpdateInstructorDTO;
 import com.edu.eduplatform.models.Announcement;
 import com.edu.eduplatform.models.Course;
@@ -59,5 +60,16 @@ public class InstructorService {
     public List<Announcement> getAnnouncementsByCourse(Long courseId) {
         return announcementRepository.findByCourse_CourseId(courseId);
     }
+    public InstructorDTO getInstructorDetails(Long instructorId) {
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor not found with ID: " + instructorId));
 
+        InstructorDTO instructorDTO = new InstructorDTO();
+        instructorDTO.setUsername(instructor.getUsername());
+        instructorDTO.setEmail(instructor.getEmail());
+        instructorDTO.setBio(instructor.getBio());
+        // Note: Add other fields if needed
+
+        return instructorDTO;
+    }
 }

@@ -58,7 +58,7 @@ export class CoursesComponent implements OnInit {
   }
 
   goToCourse(courseId: number): void {
-    this.router.navigate(['/course-details', courseId]);
+    this.router.navigate(['/stream', courseId]);
   }
 
   toggleDropdown(course: any): void {
