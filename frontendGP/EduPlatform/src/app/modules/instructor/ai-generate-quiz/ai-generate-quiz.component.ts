@@ -4,26 +4,28 @@ import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-qu
 import { SpinnerComponent } from 'src/app/utils/spinner/spinner.component';
 import { Router } from '@angular/router';
 import { Quiz } from 'src/app/models/Quiz';
-import { QuestionForInstructor } from 'src/app/models/questionForInstructor';
+import { Question } from 'src/app/models/question';
+import { EditQuizService } from 'src/app/services/editQuizService/edit-quiz.service';
 
 @Component({
   selector: 'app-ai-generate-quiz',
   templateUrl: './ai-generate-quiz.component.html',
   styleUrls: ['./ai-generate-quiz.component.scss']
 })
-export class AiGenerateQuizComponent {
-saveQuestions() {
-throw new Error('Method not implemented.');
-}
 
-  constructor(private quizService: CreateQuizService, private router: Router) {}
+export class AiGenerateQuizComponent {
+  instructorId: any;
+
+  constructor(private quizService: CreateQuizService, private router: Router, private editQuizService: EditQuizService) {}
   quiz: Quiz | null = null;
   loading: boolean = false;
   inputType: string = 'pdf';
   textInput: string = '';
   selectedFiles: File[] = [];
-  questions: QuestionForInstructor[] = [];
+  questions: Question[] = [];
   file: File | null = null;
+  validationErrors: string[] = [];
+  
 
   ngOnInit() {
     this.quiz = this.quizService.getQuiz();
@@ -129,10 +131,39 @@ throw new Error('Method not implemented.');
   //   });
   // }
 
-  saveQuestion(index: number) {
-    console.log(`Question ${index + 1} saved`);
+  saveQuestions() {
+    // this.validationErrors = [];
+    // let allValid = true;
+    // this.questions.forEach((question, index) => {
+    //   if (question.points <= 0 || isNaN(question.points)) {
+    //     this.validationErrors.push(`Question ${index + 1} must have a point value greater than zero.`);
+    //     allValid = false;
+    //   }
+    // });
+    // if (allValid && this.quiz) {
+    console.log("here");
+    const instructorId = localStorage.getItem('userID');
+        if(instructorId && this.quiz?.quizId){
+          this.editQuizService.updateQuiz(this.quiz.quizId,instructorId,this.quiz).subscribe({
+            next: (updatedQuiz) => {
+              console.log('Quiz updated successfully:', updatedQuiz);
+              this.getQuiz();
+            },
+            error: (err) => {
+              console.error('Error updating quiz:', err);
+            }
+          });
+        }
+  // }}
   }
-  deleteQuestion(_t40: number) {
-    throw new Error('Method not implemented.');
+  deleteQuestion(index: number) {
+    this.questions.splice(index, 1);
   }
-}
+  validatePoints(index: number) {
+    const points = this.questions[index].points;
+    if (points <= 0 || isNaN(points)) {
+      this.validationErrors.push(`Question ${index + 1} must have a point value greater than zero.`);
+    }
+  }
+  }
+  

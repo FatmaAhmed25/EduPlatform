@@ -1,3 +1,5 @@
+import { Question } from "./question";
+
 export interface Quiz {
     quizId?: any;
     typeOfAssessment: string;
@@ -8,4 +10,6 @@ export interface Quiz {
     courseId: string;
     instructorId:string;
     numOfQuestions: number;
+    questions?: Question[]
+
   }
