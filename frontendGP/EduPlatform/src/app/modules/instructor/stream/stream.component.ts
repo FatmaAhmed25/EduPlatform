@@ -28,7 +28,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   lectures: any[] = [];
   videos: any[] = []; // Added for videos
   newComment: { [key: number]: string } = {};
-  commentSubscriptions: Map<number, StompSubscription> = new Map();
+  commentSubscriptions: Map<number, any> = new Map();
   userCache: Map<string, string> = new Map(); // Cache for user data
   courseId: number | undefined;
   instructor: Instructor | undefined; 
@@ -63,7 +63,24 @@ export class StreamComponent implements OnInit, OnDestroy {
       });
     }
   }
-
+  fetchAnnouncementsAndSetupWebSocket(): void {
+    if (this.courseId) {
+      this.stream.getAnnouncementsByCourseId(this.courseId).subscribe(data => {
+        this.announcements = data;
+        this.setupWebSocket();
+      });
+    }
+  }
+  setupWebSocket(): void {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      this.webSocketService.connect(token, () => {
+        console.log('WebSocket connected.');
+        this.subscribeToAnnouncementTopics();
+      });
+    }
+  }
+  
   copyCourseCode(): void {
     if (this.course?.courseCode) {
       this.clipboard.copy(this.course.courseCode);
@@ -113,7 +130,11 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.commentSubscriptions.forEach(subscription => subscription.unsubscribe());
+    this.commentSubscriptions.forEach(subscription => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    });
     this.webSocketService.disconnect();
   }
 
@@ -208,7 +229,6 @@ export class StreamComponent implements OnInit, OnDestroy {
     this.webSocketService.send(`/app/announcement/${announcementId}/comments`, comment);
     this.newComment[announcementId] = '';
   }
-
   openAddMaterialDialog(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(LecturesComponent, {
@@ -248,22 +268,32 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   subscribeToAnnouncementTopics(): void {
     this.announcements.forEach(announcement => {
+      this.fetchInitialComments(announcement.id);
       this.subscribeToCommentUpdates(announcement.id);
+    });
+  }
+  fetchInitialComments(announcementId: number): void {
+    console.log(`Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`); // Log before API call
+    this.announcementService.getCommentsByAnnouncementId(announcementId).subscribe(comments => {
+      console.log(`Received comments for announcement ID: ${announcementId}`, comments); // Log received comments
+      const announcement = this.announcements.find(a => a.id === announcementId);
+      if (announcement) {
+        announcement.comments = comments;
+      }
     });
   }
 
   subscribeToCommentUpdates(announcementId: number): void {
     const topic = `/topic/announcement/${announcementId}/comments`;
+    console.log(`Subscribing to topic: ${topic}`);
     const subscription = this.webSocketService.subscribeToComments(topic, (message: any) => {
+      console.log(`Received WebSocket message for announcement ID: ${announcementId}`, message);
       const announcement = this.announcements.find(a => a.id === announcementId);
       if (announcement) {
         announcement.comments.push(message);
       }
     });
-
-    if (subscription) {
-      this.commentSubscriptions.set(announcementId, subscription);
-    }
+    this.commentSubscriptions.set(announcementId, subscription);
   }
 
   getUsername(userId: string): Observable<string> {
