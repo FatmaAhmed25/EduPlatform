@@ -46,6 +46,8 @@ import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.compon
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
+import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
+import {ProctoredVideoService} from './services/proctored-service/proctored-video.service'
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
     SafeUrlPipe,
     AnnouncementComponent,
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProctoredVideoComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +88,7 @@ import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService
+    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService,ProctoredVideoService
   ],
   bootstrap: [AppComponent]
 })
