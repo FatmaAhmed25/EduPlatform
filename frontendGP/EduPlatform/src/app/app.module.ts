@@ -47,6 +47,8 @@ import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
+import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
+import {ProctoredVideoService} from './services/proctored-service/proctored-video.service'
 
 @NgModule({
   declarations: [
@@ -61,7 +63,8 @@ import { ManualQuizService } from 'src/app/services/manual-quizService/manual-qu
     SafeUrlPipe,
     AnnouncementComponent,
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProctoredVideoComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +89,7 @@ import { ManualQuizService } from 'src/app/services/manual-quizService/manual-qu
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService,ManualQuizService
+    WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService,ManualQuizService,ProctoredVideoService
   ],
   bootstrap: [AppComponent]
 })
