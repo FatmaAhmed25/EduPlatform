@@ -1,0 +1,35 @@
+@import '../../../../styles.scss';
+.dialog-title {
+    font-size: 24px;
+    color: #333;
+  }
+  .container{
+    border-radius: 20px;
+    padding:20px;
+  }
+  
+  .dialog-content {
+    font-size: 16px;
+    color: #555;
+
+  }
+  
+  .dialog-actions {
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  
+  .cancel-button {
+    color: #888;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    margin-left: 8px;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  

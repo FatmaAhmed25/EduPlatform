@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Data
 public class QuestionForStudentDTO {
+    private Long questionId;
     private String text;
     private int points;
     private QuestionType questionType;

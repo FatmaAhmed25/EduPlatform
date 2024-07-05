@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { ConfirmQuizSubmissionDialogComponent } from 'src/app/dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 import { AuthService } from 'src/app/services/authService/auth.service';
 
 @Component({
@@ -17,6 +19,8 @@ export class LoginComponent {
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
   }
+
+
 
   onSubmit() {
     this.authService.login(this.email, this.password).subscribe(

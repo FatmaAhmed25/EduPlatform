@@ -12,6 +12,7 @@ import { CreateCourseComponent } from './modules/instructor/create-course/create
 import { CoursesComponent } from './modules/instructor/courses/courses.component';
 import { ManualMcqQuizComponent } from './modules/instructor/manual-MCQ-quiz/manual-MCQ-quiz.component';
 import { ManualEssayQuizComponent } from 'src/app/modules/instructor/manual-essay-quiz/manual-essay-quiz.component';
+import { QuizDetailsComponent } from './modules/student/quiz-details/quiz-details.component';
 
 
 const routes: Routes = [
@@ -26,7 +27,9 @@ const routes: Routes = [
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'instructor-courses', component: CoursesComponent },
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent },
-  { path: 'manual-essay-quiz', component: ManualEssayQuizComponent }
+  { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
+  { path: 'take-quiz', component: QuizDetailsComponent },
+
 ];
 
 @NgModule({

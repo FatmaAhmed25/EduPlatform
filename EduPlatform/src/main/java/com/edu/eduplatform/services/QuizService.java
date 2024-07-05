@@ -194,14 +194,14 @@ public class QuizService {
 
     public QuizForStudentDTO getQuizForStudentById(Long studentId, Long quizId) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
 
         Quiz quiz = quizRepository.findById(quizId)
-                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
 
         boolean alreadySubmitted = quizSubmissionRepository.existsByQuizAndStudent(quiz, student);
         if (alreadySubmitted) {
-            throw new RuntimeException("Student has already submitted this quiz");
+            throw new EntityNotFoundException("Student has already submitted this quiz");
         }
 
         return modelMapper.map(quiz, QuizForStudentDTO.class);
