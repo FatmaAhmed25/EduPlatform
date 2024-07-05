@@ -20,7 +20,6 @@ import { StudentDetailsDialogComponent } from './student-details-dialog/student-
 import { MatListModule } from '@angular/material/list';
 import { AnnouncementDialogComponent } from './announcement-dialog/announcement-dialog.component';
 import { MatIconModule } from '@angular/material/icon';
-import { TudentDetailsDialogComponent } from './tudent-details-dialog/tudent-details-dialog.component';
 import { LabsComponent } from './labs/labs.component';
 import { LecturesComponent } from './lectures/lectures.component';
 import { ManualMcqQuizComponent } from './manual-MCQ-quiz/manual-MCQ-quiz.component';
@@ -38,7 +37,6 @@ import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/m
     StreamComponent,
     StudentDetailsDialogComponent,
     AnnouncementDialogComponent,
-    TudentDetailsDialogComponent,
     LabsComponent,
     LecturesComponent,
     ManualMcqQuizComponent,
