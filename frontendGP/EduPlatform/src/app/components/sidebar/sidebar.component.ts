@@ -24,8 +24,11 @@ export class SidebarComponent implements OnInit {
   enrollCode: string = '';
   enrollPassword: string = '';
   activeLink: string | null = null;
+  userType:string| null = null;
 
   ngOnInit(): void {
+   this.userType = localStorage.getItem('userType');
+   console.log(this.userType)
     const body = document.body;
     const sidebar = document.querySelector('nav') as HTMLElement;
     const toggle = document.querySelector(".toggle") as HTMLElement;
@@ -119,4 +122,5 @@ export class SidebarComponent implements OnInit {
       });
   }
   }
+
 }
