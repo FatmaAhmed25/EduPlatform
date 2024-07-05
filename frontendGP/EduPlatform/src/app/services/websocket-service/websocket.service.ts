@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { getCommentDTO } from 'src/app/models/getCommentDTO.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class WebSocketService {
   subscribeToComments(topic: string, callback: (message: any) => void): StompSubscription | null {
     if (this.stompClient) {
       return this.stompClient.subscribe(topic, message => {
-        callback(JSON.parse(message.body)); // Parse message body assuming it's JSON
+        callback(JSON.parse(message.body)); 
       });
     }
     return null;

@@ -23,8 +23,7 @@
         <div class="comment-content">
           <div class="comment-header">
             <span class="comment-user">
-              <!-- Call the getUsername method to get the username -->
-              {{ getUsername(comment.userid) | async }}
+              {{ comment.userCommentDTO?.userName || 'Unknown User' }}
             </span>
             <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
           </div>

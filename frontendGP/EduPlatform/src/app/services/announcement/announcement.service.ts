@@ -27,7 +27,7 @@ export class AnnouncementService {
   getCommentsByAnnouncementId(announcementId: number): Observable<any> {
     const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`${this.baseUrl}/announcement/getComments/${announcementId}`, { headers });
+    return this.http.get(`${this.baseUrl}/announcment/getComments/${announcementId}`, { headers });
   }
   getUserDetails(userId: string): Observable<any> {
     const token = localStorage.getItem('authToken');
