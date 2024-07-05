@@ -13,7 +13,7 @@ import { CoursesComponent } from './modules/instructor/courses/courses.component
 import { ManualMcqQuizComponent } from './modules/instructor/manual-MCQ-quiz/manual-MCQ-quiz.component';
 import { ManualEssayQuizComponent } from 'src/app/modules/instructor/manual-essay-quiz/manual-essay-quiz.component';
 import { QuizDetailsComponent } from './modules/student/quiz-details/quiz-details.component';
-
+import {ProctoredVideoComponent} from './proctored-video/proctored-video.component'
 
 const routes: Routes = [
   { path: '', component: HomepageComponent},
@@ -29,6 +29,8 @@ const routes: Routes = [
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent },
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
   { path: 'take-quiz', component: QuizDetailsComponent },
+  { path: 'video-player', component: ProctoredVideoComponent },
+
 
 ];
 
