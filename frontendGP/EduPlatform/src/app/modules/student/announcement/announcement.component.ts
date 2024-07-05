@@ -1,4 +1,3 @@
-// In announcement.component.ts
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -8,6 +7,7 @@ import { FileViewerDialogComponent } from 'src/app/file-viewer-dialog/file-viewe
 import { formatDate } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { switchMap, catchError } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-announcement',
@@ -31,9 +31,20 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.courseId = +params['id'];
-      this.fetchAnnouncements();
+      this.fetchAnnouncementsAndSetupWebSocket();
     });
-
+  }
+  
+  fetchAnnouncementsAndSetupWebSocket(): void {
+    if (this.courseId) {
+      this.announcementService.getAnnouncementsByCourseId(this.courseId).subscribe(data => {
+        this.announcements = data;
+        this.setupWebSocket();
+      });
+    }
+  }
+  
+  setupWebSocket(): void {
     const token = localStorage.getItem('authToken');
     if (token) {
       this.webSocketService.connect(token, () => {
@@ -42,7 +53,27 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
       });
     }
   }
-
+  
+  subscribeToAnnouncementTopics(): void {
+    this.announcements.forEach(announcement => {
+      this.fetchInitialComments(announcement.id);
+      this.subscribeToCommentUpdates(announcement.id);
+    });
+  }
+  
+  subscribeToCommentUpdates(announcementId: number): void {
+    const topic = `/topic/announcement/${announcementId}/comments`;
+    console.log(`Subscribing to topic: ${topic}`);
+    const subscription = this.webSocketService.subscribeToComments(topic, (message: any) => {
+      console.log(`Received WebSocket message for announcement ID: ${announcementId}`, message);
+      const announcement = this.announcements.find(a => a.id === announcementId);
+      if (announcement) {
+        announcement.comments.push(message);
+      }
+    });
+    this.commentSubscriptions.set(announcementId, subscription);
+  }
+  
   ngOnDestroy(): void {
     this.commentSubscriptions.forEach(subscription => {
       if (subscription) {
@@ -51,18 +82,7 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
     });
     this.webSocketService.disconnect();
   }
-
-  fetchAnnouncements(): void {
-    if (this.courseId) {
-      this.announcementService.getAnnouncementsByCourseId(this.courseId).subscribe(data => {
-        this.announcements = data;
-        this.announcements.forEach(announcement => {
-          this.fetchInitialComments(announcement.id);
-          this.subscribeToCommentUpdates(announcement.id);
-        });
-      });
-    }
-  }
+  
 
   openFileLink(announcement: any): void {
     if (this.courseId && announcement.fileName) {
@@ -94,7 +114,9 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
   }
 
   fetchInitialComments(announcementId: number): void {
+    console.log(`Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`); // Log before API call
     this.announcementService.getCommentsByAnnouncementId(announcementId).subscribe(comments => {
+      console.log(`Received comments for announcement ID: ${announcementId}`, comments); // Log received comments
       const announcement = this.announcements.find(a => a.id === announcementId);
       if (announcement) {
         announcement.comments = comments;
@@ -102,40 +124,11 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
     });
   }
 
-  getUsername(userId: number): Observable<string> {
-    if (this.userCache.has(userId)) {
-      return of(this.userCache.get(userId) as string);
-    } else {
-      return this.announcementService.getUserDetails(localStorage.getItem("userID")!).pipe(
-        switchMap(user => {
-          this.userCache.set(userId, user.username);
-          return of(user.username);
-        }),
-        catchError(() => of('Unknown User')) // Handle error and return a default value
-      );
-    }
-  }
-
-  subscribeToAnnouncementTopics(): void {
-    this.announcements.forEach(announcement => {
-      this.subscribeToCommentUpdates(announcement.id);
-    });
-  }
-
-  subscribeToCommentUpdates(announcementId: number): void {
-    const topic = `/topic/announcement/${announcementId}/comments`;
-    const subscription = this.webSocketService.subscribeToComments(topic, (message: any) => {
-      const announcement = this.announcements.find(a => a.id === announcementId);
-      if (announcement) {
-        announcement.comments.push(message);
-      }
-    });
-
-    this.commentSubscriptions.set(announcementId, subscription);
-  }
 
   formatDate(dateString: string): string {
-    return formatDate(dateString, 'mediumDate', 'en-US');
+    const formattedDate = formatDate(dateString, 'mediumDate', 'en-US');
+    const formattedTime = formatDate(dateString, 'mediumTime', 'en-US');
+    return `${formattedDate} - ${formattedTime}`;
   }
 
   toggleComments(announcementId: number): void {
@@ -144,4 +137,5 @@ export class AnnouncementComponent implements OnInit, OnDestroy {
       announcement.showComments = !announcement.showComments;
     }
   }
+
 }
