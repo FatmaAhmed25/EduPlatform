@@ -1,0 +1,40 @@
+<div class="container">
+    <section *ngIf="quiz">
+      <h5>Assessment: {{ quizTitle }}</h5>
+      <h5>Duration: {{ quizDuration }} minutes</h5>
+      <h5>Start date: {{ quizStartTime }} </h5>
+      <h5>Course: {{ quiz.courseName }}</h5>
+    </section>
+    <div *ngIf="!quiz">
+      <p>No quiz data available.</p>
+    </div>
+  </div>
+  
+  <div class="container">
+
+    <div *ngIf="questions && questions.length > 0">
+      <h3 class="generated-questions-title">Generated Questions</h3>
+      <div *ngFor="let question of questions; let i = index" class="question-card">
+        <div class="question-header" (click)="toggleQuestion(i)">
+          <h4>Question {{ i + 1 }}</h4>
+          <span>{{ question.expanded ? '-' : '+' }}</span>
+        </div>
+        <div *ngIf="question.expanded" class="question-body">
+          <p>{{ question.text }}</p>
+          <div *ngFor="let answer of question.answers; let j = index" class="answer-option">
+            <input type="radio" name="question-{{i}}" [checked]="answer.correct" [disabled]="true">
+            <label>{{ answer.text }}</label>
+          </div>
+          <div class="question-actions">
+            <!-- <label for="question-grade-{{ i }}">Grade:</label> -->
+            <!-- <div class="space"> -->
+              <!-- <input type="number" id="question-grade-{{ i }}" [(ngModel)]="question.points" min="1" max="100" (change)="validatePoints(i)"> -->
+              <i class="fas fa-trash-alt delete-icon" (click)="deleteQuestion(i)"></i>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+      <button class="save-questions" (click)="saveQuestions()">Save</button>
+    </div>
+  </div>
+  

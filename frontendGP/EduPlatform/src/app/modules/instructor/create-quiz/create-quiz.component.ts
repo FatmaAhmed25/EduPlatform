@@ -47,15 +47,18 @@ export class CreateQuizComponent {
       startDate: new Date(`${startDate}T${startTime}`).toISOString(),
       endDate: new Date(`${endDate}T${endTime}`).toISOString(),
       numOfQuestions: this.quizForm.get('numOfQuestions')?.value,
-      courseName: 'Sarsour quiz',
+      courseName: 'Sarsour',
       courseId: '1',
-      instructorId: '7'
+      instructorId: localStorage.getItem('userID')!,
     };
-  
     this.quizService.setQuiz(quizData);
     if (quizData.typeOfAssessment === 'manual-mcq') {
-      this.router.navigate(['/manual-quiz']);
-    } else {
+      this.router.navigate(['/manual-mcq-quiz']);
+    } 
+    else if (quizData.typeOfAssessment === 'manual-essay') {
+      this.router.navigate(['/manual-essay-quiz']);
+    }
+    else {
       this.router.navigate(['/ai-generate-quiz']);
     }
   }

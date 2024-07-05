@@ -97,19 +97,19 @@ export class AiGenerateQuizComponent {
       // Handle the response here
     }, error => {
       console.error('Error submitting quiz:', error);
-      // Handle the error here
+
     });
   }
   getQuiz() {
-    this.quizService.getQuizForInstructor().subscribe(response => {
-      console.log(response)
-      this.questions=response.questions;
-      this.loading = false;
+  //   this.quizService.getQuizForInstructor().subscribe(response => {
+  //     console.log(response)
+  //     this.questions=response.questions;
+  //     this.loading = false;
 
-    },error => {
-      console.error('Error getting quiz:', error);
-    }
-  )
+  //   },error => {
+  //     console.error('Error getting quiz:', error);
+  //   }
+  // )
     
   }
 
@@ -117,30 +117,7 @@ export class AiGenerateQuizComponent {
     this.questions[index].expanded = !this.questions[index].expanded;
   }
 
-  // addNewQuestion() {
-  //   this.questions.push({
-  //     title: 'New Question',
-  //     content: '',
-  //     expanded: true,
-  //     answers: [
-  //       { text: 'Answer 1', isCorrect: false },
-  //       { text: 'Answer 2', isCorrect: false },
-  //       { text: 'Answer 3', isCorrect: false },
-  //       { text: 'Answer 4', isCorrect: false }
-  //     ]
-  //   });
-  // }
-
   saveQuestions() {
-    // this.validationErrors = [];
-    // let allValid = true;
-    // this.questions.forEach((question, index) => {
-    //   if (question.points <= 0 || isNaN(question.points)) {
-    //     this.validationErrors.push(`Question ${index + 1} must have a point value greater than zero.`);
-    //     allValid = false;
-    //   }
-    // });
-    // if (allValid && this.quiz) {
     console.log("here");
     const instructorId = localStorage.getItem('userID');
         if(instructorId && this.quiz?.quizId){
@@ -154,7 +131,6 @@ export class AiGenerateQuizComponent {
             }
           });
         }
-  // }}
   }
   deleteQuestion(index: number) {
     this.questions.splice(index, 1);

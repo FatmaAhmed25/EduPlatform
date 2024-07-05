@@ -13,7 +13,7 @@ import java.util.List;
 @DiscriminatorValue("MCQ")
 @Data
 public class MCQQuestion extends Question {
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "question", cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Answer> answers= new ArrayList<>();
 
 }

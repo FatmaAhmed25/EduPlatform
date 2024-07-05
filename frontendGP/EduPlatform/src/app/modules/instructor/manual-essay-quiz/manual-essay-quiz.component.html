@@ -4,8 +4,8 @@
       
       <!-- Quiz Info -->
       <div class="form-section">
-        <div class="form-group">
-          <label for="title">Title:</label>
+        <!-- <div class="form-group"> -->
+          <!-- <label for="title">Title:</label>
           <input id="title" formControlName="title" type="text">
           <div *ngIf="quizForm.get('title')?.invalid && quizForm.get('title')?.touched">
             Title is required.
@@ -26,7 +26,7 @@
           <div *ngIf="quizForm.get('endTime')?.invalid && quizForm.get('endTime')?.touched">
             End Time is required.
           </div>
-        </div>
+        </div> -->
   
         <div class="form-group">
           <label for="totalGrade">Total Grade:</label>
@@ -36,13 +36,13 @@
           </div>
         </div>
   
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="courseId">Course ID:</label>
           <input id="courseId" formControlName="courseId" type="number">
           <div *ngIf="quizForm.get('courseId')?.invalid && quizForm.get('courseId')?.touched">
             Course ID is required.
           </div>
-        </div>
+        </div> -->
       </div>
   
       <!-- Questions -->

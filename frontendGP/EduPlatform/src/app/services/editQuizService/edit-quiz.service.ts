@@ -14,6 +14,7 @@ export class EditQuizService {
   token = localStorage.getItem('authToken');
 
   updateQuiz(quizId: any, instructorId: any, quiz: Quiz): Observable<Quiz> {
+    console.log('update');
     const url = `${this.baseUrl}/update-quiz/${quizId}/${instructorId}`;
     return this.http.put<Quiz>(url, quiz);
   }
