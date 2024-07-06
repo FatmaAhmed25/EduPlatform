@@ -64,7 +64,6 @@ import {ProctoredVideoService} from './services/proctored-service/proctored-vide
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
     NavbarComponent,
     ConfirmQuizSubmissionDialogComponent,
-    ProctoredVideoComponent,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +85,9 @@ import {ProctoredVideoService} from './services/proctored-service/proctored-vide
       preventDuplicates: true, // Prevent duplicate toasts
     }),
     MatSnackBarModule,
+  ],
+  exports: [
+
   ],
   providers: [EnrolledCoursesService,AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

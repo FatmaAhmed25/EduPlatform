@@ -1,7 +1,7 @@
 <div class="container">
   <header>
     <a routerLink="/configure-learning-path">Back to Configure Learning Path</a>
-    <h1>MCQ Questions Generator</h1>
+    <h1>{{ getAssessmentTitle() }}</h1>
     <a routerLink="/configure-learning-path">Continue to Configure Learning Path</a>
   </header>
   <section *ngIf="quiz">

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
+import { Quiz } from 'src/app/models/Quiz';
 
 @Component({
   selector: 'app-manual-essay-quiz',
@@ -13,6 +14,7 @@ import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-qu
 })
 export class ManualEssayQuizComponent implements OnInit {
   quizForm!: FormGroup;
+  quiz: Quiz | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -22,6 +24,11 @@ export class ManualEssayQuizComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.quiz = this.quizService.getQuiz();
+    if (!this.quiz) {
+      console.error('No quiz data found!');
+      this.router.navigate(['/create-quiz']);
+    }
     this.quizForm = this.fb.group({
       totalGrade: ['', Validators.required],
       questions: this.fb.array([])
@@ -53,10 +60,10 @@ export class ManualEssayQuizComponent implements OnInit {
         endDate: this.quizService.getQuiz()?.endDate,
       };
       
-      this.quizService.createManualQuiz(quizData).subscribe(
+      this.quizService.createManualEssayQuiz(quizData).subscribe(
         response => {
           const quizId=response.quizId;
-          this.router.navigate(['/mcq-quiz-viewer',quizId]);
+          this.router.navigate(['/instructor/quiz-viewer',quizId]);
         },
         error => {
           console.error('Error submitting quiz:', error);

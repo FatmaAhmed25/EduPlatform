@@ -22,7 +22,7 @@ import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/m
     CoursesComponent,
     ManualMcqQuizComponent,
     ManualEssayQuizComponent,
-    McqQuizViewerInstructorComponent
+    McqQuizViewerInstructorComponent,
     ],
   imports: [
     CommonModule,

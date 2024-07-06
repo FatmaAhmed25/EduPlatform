@@ -31,9 +31,7 @@ const routes: Routes = [
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
   { path: 'take-quiz', component: QuizDetailsComponent },
   { path: 'video-player', component: ProctoredVideoComponent },
-  { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent }
-
-
+  { path: 'instructor/quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent }
 ];
 
 @NgModule({

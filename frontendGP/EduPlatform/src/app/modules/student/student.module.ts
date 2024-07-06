@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { CourseDetailsComponent } from './course-details/course-details.component';
 import { QuizDetailsComponent } from './quiz-details/quiz-details.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   declarations: [
     StudentDashboardComponent,
@@ -35,6 +36,9 @@ import { QuizDetailsComponent } from './quiz-details/quiz-details.component';
       preventDuplicates: true, // Prevent duplicate toasts
     }),
     MatSnackBarModule,
+    SharedModule
+
+    
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
