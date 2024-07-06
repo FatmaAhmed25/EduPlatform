@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Import Users</h2>
+<mat-dialog-content>
+  <form>
+    <mat-form-field>
+      <mat-label>Select User Type</mat-label>
+      <mat-select [(ngModel)]="selectedUserType" name="userType" required>
+        <mat-option value="student">Student</mat-option>
+        <mat-option value="instructor">Instructor</mat-option>
+      </mat-select>
+    </mat-form-field>
+   <!-- import-dialog.component.html -->
+
+<input type="file" (change)="onFileSelected($event)" accept=".csv,application/vnd.ms-excel">
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancel</button>
+  <button mat-button [disabled]="!selectedUserType || !selectedFile" (click)="confirmImport()">Import</button>
+</mat-dialog-actions>

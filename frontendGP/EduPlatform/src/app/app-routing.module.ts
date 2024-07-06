@@ -10,6 +10,10 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { SearchResultComponent } from './modules/student/search-result/search-result.component';
 import { CreateCourseComponent } from './modules/instructor/create-course/create-course.component';
 import { CoursesComponent } from './modules/instructor/courses/courses.component';
+import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
+import { AdminProfileComponent } from './admin-profile/admin-profile.component';
+import { UsersProfileComponent } from './users-profile/users-profile.component';
+
 import { ManualMcqQuizComponent } from './modules/instructor/manual-MCQ-quiz/manual-MCQ-quiz.component';
 import { ManualEssayQuizComponent } from 'src/app/modules/instructor/manual-essay-quiz/manual-essay-quiz.component';
 import { QuizDetailsComponent } from './modules/student/quiz-details/quiz-details.component';
@@ -39,6 +43,15 @@ const routes: Routes = [
   { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'homepage', pathMatch: 'full' }
 
+
+  { path: 'instructor-dashboard', component:InstructorDashboardComponent},
+  { path: 'course-details/:id', component: CourseDetailsComponent },
+  { path: 'searchResult', component: SearchResultComponent },
+  { path: 'create-course', component: CreateCourseComponent },
+  { path: 'instructor-courses', component: CoursesComponent },
+  {path:'admin',component:AdminDashboardComponent},
+  {path:'admin-profile',component:AdminProfileComponent},
+  {path:'users-profile',component:UsersProfileComponent},
 
 
 ];

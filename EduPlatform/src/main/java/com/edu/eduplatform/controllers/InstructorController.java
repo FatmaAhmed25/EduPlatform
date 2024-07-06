@@ -40,18 +40,18 @@ public class InstructorController {
 //        }
 //    }
 
-    @PutMapping("update-profile/{instructorId}")
-    @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
-    public ResponseEntity<String> updateInstructorProfile(@PathVariable Long instructorId,
-                                                          @RequestBody UpdateInstructorDTO updateInstructorDTO) {
-        try {
-            instructorService.updateInstructor(instructorId, updateInstructorDTO);
-            return ResponseEntity.ok("Profile details updated successfully.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+//    @PutMapping("update-profile/{instructorId}")
+//    @SecurityRequirement(name="BearerAuth")
+//    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+//    public ResponseEntity<String> updateInstructorProfile(@PathVariable Long instructorId,
+//                                                          @RequestBody UpdateInstructorDTO updateInstructorDTO) {
+//        try {
+//            instructorService.updateInstructor(instructorId, updateInstructorDTO);
+//            return ResponseEntity.ok("Profile details updated successfully.");
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     @PutMapping("courses/update-course-details/{courseId}")
     @SecurityRequirement(name="BearerAuth")

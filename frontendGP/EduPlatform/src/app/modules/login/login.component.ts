@@ -24,6 +24,7 @@ export class LoginComponent {
         // Save the token in local storage
         this.authService.setToken(response.token);
         localStorage.setItem('userID', response.userID);
+        
         localStorage.setItem('userType', response.userType);
         console.log(response.userType);
         // Check the user role and navigate accordingly
@@ -31,6 +32,9 @@ export class LoginComponent {
           this.router.navigate(['/student-courses']);
         } else if (response.userType === 'ROLE_INSTRUCTOR') {
           this.router.navigate(['/instructor-dashboard']);
+        }
+        else if (response.userType === 'ROLE_ADMIN') {
+          this.router.navigate(['/admin']);
         }
       },
       error => {

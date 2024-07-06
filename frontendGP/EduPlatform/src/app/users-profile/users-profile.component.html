@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users Details</title>
+</head>
+<body>
+        <!-- <div class="nav">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30">
+            <ul class="flex items-center text-sm ml-4">
+                <li class="mr-2">
+                    <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Users</a>
+                </li>
+            </ul>
+           
+        </div>
+    </div> -->
+    <nav class="navbar">
+        <a _ngcontent-ng-c3481420427="" href="#" class="text-gray-400 hover:text-gray-600 font-medium title">Users</a>
+    </nav>
+    <div class="container">
+        <div class="add-buttons">
+            <div>
+                <button (click)="addNewUser()" class="btn">Add New User</button>
+            </div>
+            <div>
+                <button (click)="showImportDialog()"class="btn">Import Users</button>
+            </div>
+        </div>
+
+        <!-- <h1>User Details</h1> -->
+        <div class="search-add">
+            <input type="text" placeholder="Search user" [(ngModel)]="searchTerm" (input)="triggerSearch(searchTerm)">
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>UserID</th>
+                    <th>User Type</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Bio</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of paginatedUsers(); let i = index">
+                    <td>{{ user.userId }}</td>
+                    <td>{{ user.userType }}</td>
+                    <td>
+                        <span *ngIf="!user.editing">{{ user.username }}</span>
+                        <input *ngIf="user.editing" [(ngModel)]="user.username">
+                    </td>
+                    <td>
+                        <span *ngIf="!user.editing">{{ user.email }}</span>
+                        <input *ngIf="user.editing" [(ngModel)]="user.email">
+                    </td>
+                    <td>
+                        <span *ngIf="!showPassword[i] && !user.editing">********</span>
+                        <span *ngIf="showPassword[i] && !user.editing">{{ user.password }}</span>
+                        <input *ngIf="user.editing" [(ngModel)]="user.password">
+                        <button *ngIf="!user.editing" (click)="toggleShowPassword(i)">
+                            {{ showPassword[i] ? 'Hide' : 'Show' }}
+                        </button>
+                    </td>
+                    <td>
+                        <span *ngIf="!user.editing">{{ user.bio }}</span>
+                        <input *ngIf="user.editing" [(ngModel)]="user.bio">
+                    </td>
+                    <td>
+                        <button *ngIf="!user.editing" class="icon-button edit-button" (click)="user.editing = true">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button *ngIf="user.editing" class="icon-button save-button" (click)="editUser(user)">
+                            <i class="fas fa-save"></i>
+                        </button>
+                        <button *ngIf="!user.editing" class="icon-button delete-button" (click)="deleteUser(user.userId)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <button (click)="previousPage()" [disabled]="currentPage === 1">&laquo;</button>
+            <button *ngFor="let page of totalPagesArray()" (click)="goToPage(page)" [class.active]="currentPage === page">{{ page }}</button>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages()">&raquo;</button>
+        </div>
+    </div>
+</body>
+</html>

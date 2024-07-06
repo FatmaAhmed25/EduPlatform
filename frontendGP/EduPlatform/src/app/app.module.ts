@@ -46,7 +46,12 @@ import { QuizzesComponent } from 'src/app/modules/student/quizzes/quizzes.compon
 import { QuizService } from 'src/app/services/quizService/quiz.service';
 // import { CreateQuizComponent } from 'src/app/modules//create-quiz/create-quiz.component';
 import { NavbarComponent } from 'src/app/components/navbar/navbar.component';
-import { MatSelectModule } from '@angular/material/select';
+import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
+import { AdminProfileComponent } from './admin-profile/admin-profile.component';
+import { UsersProfileComponent } from './users-profile/users-profile.component';
+import { UserPopupComponent } from './user-popup/user-popup.component';
+import { ImportDialogComponent } from './import-dialog/import-dialog.component';
+import { MatSelectModule } from '@angular/material/select'; 
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
@@ -65,13 +70,19 @@ import { AuthGuard } from './modules/login/auth.guard';
     SpinnerComponent,
     FileViewerDialogComponent,  
     SafeUrlPipe,
+    AdminDashboardComponent,
     AnnouncementComponent,
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
     NavbarComponent,
     ConfirmQuizSubmissionDialogComponent,
-    ProctoredVideoComponent,
+    ProctoredVideoComponent,,
+    AdminProfileComponent,
+    UsersProfileComponent,
+    UserPopupComponent,
+    ImportDialogComponent
   ],
   imports: [
+    MatSelectModule,
     BrowserModule,
     FormsModule,
     MatTabsModule,

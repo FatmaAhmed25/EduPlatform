@@ -11,6 +11,8 @@ import com.edu.eduplatform.repos.UserRepo;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class StudentService {
+public class   StudentService {
 
     @Autowired
     private StudentRepo studentRepo;
+
+
+    @Autowired
+    PasswordEncoder encoder;
+
+
+    @Autowired
+    private UserRepo userRepo;
     @Autowired
     private ModelMapper modelMapper;
     @ValidateStudent
@@ -65,6 +75,34 @@ public class StudentService {
 
         return userDTO;
     }
+
+    public ResponseEntity<?> updateUserProfile(Long userId, String currentPassword, String newPassword, String newBio) {
+        try {
+            User user = userRepo.findById(userId).orElse(null);
+            if (user == null) {
+                return ResponseEntity.badRequest().body("User not found!");
+            }
+
+            if (!encoder.matches(currentPassword, user.getPassword())) {
+                return ResponseEntity.badRequest().body("Incorrect current password!");
+            }
+
+            if (newPassword != null && !newPassword.isEmpty()) {
+                user.setPassword(encoder.encode(newPassword));
+            }
+
+            if (newBio != null && !newBio.isEmpty()) {
+                user.setBio(newBio);
+            }
+
+            userRepo.save(user);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
     public List<StudentDTO> getStudentsByCourseId(Long courseId) {
         List<Student> students = studentRepo.findStudentsByCourseId(courseId);

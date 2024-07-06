@@ -1,0 +1,284 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Make container relative for absolute positioning */
+}
+
+.btn{
+    border-color:#5E5DF0 ;
+    border-radius: 5px;
+    transition: all 0.3 ease;
+}
+.nav{
+    margin-left: 75px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-add {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-add input[type="text"] {
+    width: 200px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-add button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-add button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+table img {
+    width: 50px;
+    height: auto;
+}
+
+button.edit-button, button.delete-button,button.save-button {
+    padding: 5px 10px;
+    margin: 2px;
+    border: none;
+    
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+button.edit-button {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+button.edit-button:hover {
+    background-color: #e0a800;
+}
+button.save-button {
+    background-color: #008CBA;;
+    color: #fff;
+}
+
+button.save-button:hover {
+    background-color: #008CBA;;
+}
+
+button.delete-button {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+button.delete-button:hover {
+    background-color: #c82333;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #5E5DF0;
+    color: #fff;
+    border: 1px solid #5E5DF0;
+}
+
+.pagination button:hover:not(.active) {
+    background-color: #ddd;
+}
+
+/* Style for the buttons */
+.container .add-buttons {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.container .add-buttons button {
+    margin-left: 10px;
+    background-color: #5E5DF0;
+    color: #fff;
+    // border-radius: 20px;
+    padding: 5px;
+    margin-top: 20px;
+
+}
+
+.container .add-buttons button:hover {
+    background-color: #3a3a9f;
+ 
+}
+
+.pagination {
+    margin-top: 10px;
+}
+.active {
+    font-weight: bold;
+}
+
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 14px;
+    margin: 4px;
+}
+.icon-button i {
+    pointer-events: none;
+}
+.icon-button:hover {
+    opacity: 0.7;
+}
+
+
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    height: 38px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0 0px;
+    margin-left:86px
+}
+
+
+.title {
+
+    padding-left: 32px;
+}
+
+.text-gray-400[_ngcontent-ng-c3481420427] {
+    --tw-text-opacity: 1;
+    color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+.font-medium[_ngcontent-ng-c3481420427] {
+    font-weight: 500;
+}
+
+a[_ngcontent-ng-c3481420427] {
+    color: inherit;
+    text-decoration: inherit;
+}
+*[_ngcontent-ng-c3481420427], [_ngcontent-ng-c3481420427]::before, [_ngcontent-ng-c3481420427]::after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x: ;
+    --tw-pan-y: ;
+    --tw-pinch-zoom: ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position: ;
+    --tw-gradient-via-position: ;
+    --tw-gradient-to-position: ;
+    --tw-ordinal: ;
+    --tw-slashed-zero: ;
+    --tw-numeric-figure: ;
+    --tw-numeric-spacing: ;
+    --tw-numeric-fraction: ;
+    --tw-ring-inset: ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur: ;
+    --tw-brightness: ;
+    --tw-contrast: ;
+    --tw-grayscale: ;
+    --tw-hue-rotate: ;
+    --tw-invert: ;
+    --tw-saturate: ;
+    --tw-sepia: ;
+    --tw-drop-shadow: ;
+    --tw-backdrop-blur: ;
+    --tw-backdrop-brightness: ;
+    --tw-backdrop-contrast: ;
+    --tw-backdrop-grayscale: ;
+    --tw-backdrop-hue-rotate: ;
+    --tw-backdrop-invert: ;
+    --tw-backdrop-opacity: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-sepia: ;
+}
+*[_ngcontent-ng-c3481420427], [_ngcontent-ng-c3481420427]::before, [_ngcontent-ng-c3481420427]::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: #e5e7eb;
+}
+
+
+
+
+
+
+
+
+
+

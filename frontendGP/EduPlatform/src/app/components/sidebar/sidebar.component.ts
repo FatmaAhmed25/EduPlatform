@@ -25,8 +25,11 @@ export class SidebarComponent implements OnInit {
   enrollPassword: string = '';
   activeLink: string | null = null;
   userType:string| null = null;
+  userType:string| null = null;
 
   ngOnInit(): void {
+   this.userType = localStorage.getItem('userType');
+   console.log(this.userType)
    this.userType = localStorage.getItem('userType');
    console.log(this.userType)
     const body = document.body;
