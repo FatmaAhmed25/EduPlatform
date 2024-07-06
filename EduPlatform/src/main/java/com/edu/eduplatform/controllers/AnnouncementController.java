@@ -192,9 +192,9 @@ public class AnnouncementController {
                                                 @PathVariable Long announcementId) {
         try {
             announcementService.deleteAnnouncement(courseId, instructorId, announcementId);
-            return ResponseEntity.ok("Announcement deleted successfully");
+            return ResponseEntity.ok().build();
         } catch (RuntimeException | IOException e) {
-            return ResponseEntity.status(500).body("Failed to delete announcement: " + e.getMessage());
+            return ResponseEntity.status(500).build();
         }
     }
 
@@ -233,6 +233,23 @@ public class AnnouncementController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/get-announcement/{InstructorId}/{announcementId}")
+        public ResponseEntity<Object> getAnnouncementInstructorById(@PathVariable @ValidateInstructor Long InstructorId, @PathVariable Long announcementId) {
+        try {
+            Object announcementObject = announcementService.getAnnouncementDetailsById(announcementId);
+
+            if (announcementObject != null) {
+                return ResponseEntity.ok(announcementObject);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
 }

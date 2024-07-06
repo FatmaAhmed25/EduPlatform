@@ -92,6 +92,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .material-card {
   background: #ffffff;
   border-radius: 8px;
@@ -121,7 +122,75 @@
   font-size: 1.5rem;
   margin-bottom: 20px;
 }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
 
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 5px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;
+  top: 20px;
+}
+.settings-dropdown {
+  position: relative;
+}
+
+.bx-dots-horizontal-rounded {
+  font-size: 1.5rem;
+  cursor: pointer;
+  float: right;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.announcement-action{
+  display:block
+}
+
+
+.announcement-date {
+  margin-top: 1px;
+  color: #757575;
+  font-size: 0.68em;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f5f5f5;
+}
+.btn-settings {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+.dropdown-item {
+  cursor: pointer;
+  padding: 8px 16px;
+  color: gray;
+}
+.dropdown-item :hover{
+  color: black;
+}
 .student-list {
   max-height: 400px;
   overflow-y: auto;
@@ -178,21 +247,6 @@ button:hover {
     position: relative;
   }
 }
-.add-announcement-btn {
-  width: 100%;
-  background-color: #f0f0f0;
-  color: #131397;
-  font-size: 0.87rem;
-  padding: 20px;
-  text-align: left;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-.add-announcement-btn:hover {
-  background-color: #e0e0e0;
-}
 
 .course-code-wrapper {
   display: flex;
@@ -204,16 +258,22 @@ button:hover {
   margin-left: 8px;
   color: #5E5DF0;
 }
+.announcement-file-link {
+  display: block;
+  color: #007bff;
+  text-decoration: underline;
+  margin-top: 5px;
+  cursor: pointer;
+  width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: var(--mdc-filled-text-field-container-color);
   margin-top: 77px;
 }
-
-.announcement-header {
-  margin-bottom: 15px;
-}
-
 .announcement-card {
   background: #ffffff;
   border-radius: 8px;
@@ -222,25 +282,8 @@ button:hover {
   margin-bottom: 20px;
 }
 
-.announcement-file {
-  margin-top: 10px;
-}
 .left-panel{
   margin-top: 20px;
-}
-.file-thumbnail {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  cursor: pointer;
-}
-
-.announcement-file-link {
-  display: block;
-  color: #007bff;
-  text-decoration: underline;
-  margin-top: 5px;
-  cursor: pointer;
 }
 
 .view-comments-btn {
@@ -333,7 +376,6 @@ button:hover {
   text-align: center;
   color: #6c757d;
 }
-/* Announcements Section */
 .announcements {
   background: #fff;
   border-radius: 10px;
@@ -341,11 +383,8 @@ button:hover {
   padding: 20px;
   margin-top: 20px;
 }
-
-/* Announcement Header */
 .announcement-header {
   align-items: center;
-  margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e0e0e0;
 }
@@ -370,10 +409,9 @@ button:hover {
 
 .add-announcement-icon {
   margin-right: 10px;
-  font-size: 1.2rem; /* Adjust icon size */
+  font-size: 1.2rem;
 }
 
-/* Announcement Card */
 .announcement-card {
   background: #ffffff;
   border-radius: 8px;
@@ -382,11 +420,6 @@ button:hover {
   margin-bottom: 20px;
 }
 
-.announcement-header {
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e0e0e0;
-}
 
 .announcement-header h3 {
   font-size: 1.5rem;
@@ -455,8 +488,6 @@ button:hover {
   color: #6c757d;
 }
 
-
-/* Custom Button Styles */
 .add-announcement-btn {
   width: 100%;
   background-color: #f5f5f5;

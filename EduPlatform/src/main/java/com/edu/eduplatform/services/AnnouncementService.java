@@ -285,4 +285,15 @@ public class AnnouncementService {
     public List<Announcement> getVideoAnnouncements(Long courseId) {
         return getAnnouncementsByFileNamePattern(courseId, "videos/");
     }
+    public Object getAnnouncementDetailsById(Long announcementId) {
+        Announcement announcement = announcementRepo.findById(announcementId)
+                .orElseThrow(() -> new RuntimeException("Announcement not found"));
+
+        if (announcement instanceof Assignment) {
+            return modelMapper.map(announcement, AssignmentDTO.class);
+        } else {
+            return modelMapper.map(announcement, AnnouncementDTO.class);
+        }
+    }
+
 }
