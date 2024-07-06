@@ -12,7 +12,7 @@
           </div>
         </div>
         <i class='bx bx-chevron-right toggle' (click)="toggleSidebar()"></i>
-        <i class='bx bx-chevron-right toggle' (click)="toggleSidebar()"></i>
+       
       </header>
       <div class="menu-bar">
         <div class="menu">
@@ -20,7 +20,6 @@
             <!-- Dashboard Link -->
             <!-- Dashboard Link -->
             <li class="nav-link">
-              <a [routerLink]="['/admin']" [ngClass]="{'active': isActive('/admin')}">
               <a [routerLink]="['/admin']" [ngClass]="{'active': isActive('/admin')}">
                 <i class='bx bx-home-alt icon'></i>
                 <span class="text nav-text">Dashboard</span>
@@ -32,14 +31,10 @@
               <a [routerLink]="['/admin-profile']" [ngClass]="{'active': isActive('/admin-profile')}">
                 <i class='bx bx-user icon'></i>
                 <span class="text nav-text">Profile</span>
-      
-            <!-- Courses Link -->
-            <li class="nav-link">
-              <a [routerLink]="['/student-courses']" [ngClass]="{'active': isActive('/student-courses')}">
-                <i class='bx bx-book-open icon'></i>
-                <span class="text nav-text">Courses</span>
               </a>
             </li>
+            <!-- Courses Link -->
+      
 
             <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
               <a [routerLink]="['/users-profile']" [ngClass]="{'active': isActive('/users-profile')}">
@@ -48,7 +43,7 @@
               </a>
             </li>
                         <!-- Courses Link -->
-                        <li class="nav-link">
+                       
                           <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
                           <a [routerLink]="['/student-courses']" [ngClass]="{'active': isActive('/student-courses')}">
                             <i class='bx bx-book-open icon'></i>

@@ -41,7 +41,7 @@ const routes: Routes = [
   { path: 'take-quiz', component: QuizDetailsComponent, canActivate: [AuthGuard] },
   { path: 'video-player', component: ProctoredVideoComponent, canActivate: [AuthGuard] },
   { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: 'homepage', pathMatch: 'full' }
+  { path: '', redirectTo: 'homepage', pathMatch: 'full' },
 
 
   { path: 'instructor-dashboard', component:InstructorDashboardComponent},
