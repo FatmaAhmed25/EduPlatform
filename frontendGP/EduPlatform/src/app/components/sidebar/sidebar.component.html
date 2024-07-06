@@ -17,8 +17,6 @@
       <div class="menu-bar">
         <div class="menu">
           <ul class="menu-links">
-            <!-- Dashboard Link -->
-            <!-- Dashboard Link -->
             <li class="nav-link">
               <a [routerLink]="['/admin']" [ngClass]="{'active': isActive('/admin')}">
                 <i class='bx bx-home-alt icon'></i>
@@ -61,6 +59,7 @@
        
           </ul>
         </div>
+        
         <div class="bottom-content">
           <li>
             <a href="#">
@@ -83,3 +82,20 @@
     </div>
   </nav>
 </div>
+<div id="enrollModal" class="modal" [ngClass]="{ 'show': showModal }">
+  <div class="modal-content">
+    <span class="close" (click)="closeEnrollModal()">&times;</span>
+    
+    <h2>Enroll in Course</h2>
+    <div>
+      <label class="labelCode">
+        Enter Course's Code:
+        <input type="text" [(ngModel)]="enrollCode" class="inputCode">
+      </label>
+      <label class="labelPass">
+        Enter Password:
+        <input type="text" [(ngModel)]="enrollPassword" class="input">
+      </label>
+      <button type="button" class="btn2" (click)="enrollCourse()">Enroll</button>
+    </div>
+  </div>

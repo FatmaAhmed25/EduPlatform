@@ -27,6 +27,7 @@ import { ManualEssayQuizComponent } from './manual-essay-quiz/manual-essay-quiz.
 import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/mcq-quiz-viewer-instructor.component';
 import { QuizSubmissionsComponent } from './quiz-submissions/quiz-submissions.component';
 import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submissions-list.component';
+import { AssignmentsComponent } from './assignments/assignments.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submi
     ManualEssayQuizComponent,
     McqQuizViewerInstructorComponent,
     QuizSubmissionsComponent,
-    QuizSubmissionsListComponent
+    QuizSubmissionsListComponent,
+    AssignmentsComponent
   ],
   imports: [
     CommonModule,
