@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Instructor } from 'src/app/models/instructor.model';
@@ -40,5 +40,29 @@ export class AnnouncementService {
     const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/announcment/getComments/${announcementId}`, { headers });
+  }
+  updateAnnouncement(courseId: number, instructorId: number, announcementId: number,
+    title: string, content: string, materialType: string, file: File): Observable<any> {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('content', content);
+      formData.append('materialType', materialType);
+      if (file) {
+      formData.append('file', file, file.name);
+      }
+      const url = `${this.apiUrl}/announcment/${courseId}/${instructorId}/update-announcement/${announcementId}`;
+      const params = new HttpParams()
+      .set('courseId', courseId.toString())
+      .set('instructorId', instructorId.toString())
+      .set('announcementId', announcementId.toString());
+
+      const headers = new HttpHeaders();
+      headers.append('Content-Type', 'multipart/form-data');
+      headers.append('Accept', 'application/json');
+
+      return this.http.post<any>(url, formData, { params, headers });
+}
+  deleteAnnouncement(courseId:number,instructorId:string,announcementId:number){
+    return this.http.delete(`${this.apiUrl}/announcment/${courseId}/${instructorId}/${announcementId}`);
   }
 }

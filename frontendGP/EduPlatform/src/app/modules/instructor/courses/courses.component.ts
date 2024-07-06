@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class CoursesComponent implements OnInit {
   isSidebarOpen = false;
-  myCourses: any[] = []; // Use the appropriate type or interface if available
+  myCourses: any[] = []; 
   images: string[] = [
     'assets/images/courses/course1.webp',
     'assets/images/courses/course2.jpg',

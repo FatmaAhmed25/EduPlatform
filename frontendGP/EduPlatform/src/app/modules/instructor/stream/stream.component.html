@@ -21,7 +21,6 @@
 
     <mat-tab-group>
       <mat-tab label="Stream">
-        <!-- Announcements Section -->
         <div class="announcements">
           <div class="announcement-header">
             <button class="add-announcement-btn" (click)="openAnnouncementDialog()">
@@ -30,27 +29,34 @@
             </button>
           </div>
 
-          <div *ngIf="announcements.length === 0" class="no-announcements">
-            <p>No announcements yet.</p>
-          </div>
-
           <div *ngFor="let announcement of announcements" class="announcement-card">
+            <div class="announcement-actions">
+              <div class="settings-dropdown">
+                <i class="bx bx-dots-horizontal-rounded" (click)="toggleDropdown(announcement)"></i>
+                <div class="dropdown-menu" *ngIf="announcement.showDropdown">
+                  <button class="dropdown-item">Update</button>
+                  <button class="dropdown-item" (click)="Delete(announcement.id)">Delete</button>
+                </div>
+              </div>
+              <span class="announcement-date">{{ formatDate(announcement.createdAt) }}</span>
+            </div>
+            
             <div class="announcement-header">
               <h3>{{ announcement.title }}</h3>
               <p class="announcement-content">{{ announcement.content }}</p>
             </div>
-
+          
             <div *ngIf="announcement.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(announcement)">
               <a (click)="openFileLink(announcement)" class="announcement-file-link">
-                {{ announcement.fileName }}
+                {{ getFileName(announcement.fileName) }}
               </a>
             </div>
-
+          
             <button class="view-comments-btn" (click)="toggleComments(announcement.id)">
               {{ announcement.showComments ? 'Hide Comments' : 'View Comments' }}
             </button>
-
+          
             <div *ngIf="announcement.showComments" class="comments-section">
               <ul [id]="'comments-' + announcement.id" class="comments-list">
                 <li *ngFor="let comment of announcement.comments" class="comment-item">
@@ -79,7 +85,6 @@
       </mat-tab>
 
       <mat-tab label="Lectures & Videos">
-        <!-- Lectures and Videos Section -->
         <div class="lectures">
           <div class="lecture-header">
             <button class="add-announcement-btn" (click)="openAddMaterialDialog()">
@@ -101,7 +106,7 @@
             <div *ngIf="lecture.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lecture)">
               <a (click)="openFileLink(lecture)" class="announcement-file-link">
-                {{ lecture.fileName }}
+                {{ getFileName(lecture.fileName)  }}
               </a>
             </div>
           </div>
@@ -137,27 +142,58 @@
             <div *ngIf="lab.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lab)">
               <a (click)="openFileLink(lab)" class="announcement-file-link">
-                {{ lab.fileName }}
+                {{ getFileName(lab.fileName)  }}
               </a>
             </div>
           </div>
         </div>
       </mat-tab>
-      
 
       <mat-tab label="Assignments">
         <div class="assignments">
+          <div class="assignment-header">
+            <button class="add-announcement-btn" (click)="openAssignmentsDialog()">
+              <i class="fa fa-file-alt add-assignment-icon"></i>
+              Add Assignment
+            </button>
+          </div><br>
           <h2>Assignments</h2>
-          <p>No assignments assigned.</p>
+          <div *ngIf="assignments.length === 0" class="no-assignments">
+            <p>No assignments assigned.</p>
+          </div>
+          <div *ngFor="let assignment of assignments" class="assignment-card announcement-card" (click)="viewSubmissions(assignment.id)">
+            <div class="announcement-header">
+              <h3>{{ assignment.title }}</h3>
+              <p class="announcement-content">{{ assignment.content }}</p>
+            </div>
+      
+            <div *ngIf="assignment.fileName" class="announcement-file">
+              <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(assignment)">
+              <a (click)="openFileLink(assignment)" class="announcement-file-link">
+                {{ getFileName(assignment.fileName)  }}
+              </a>
+            </div>
+          </div>
         </div>
       </mat-tab>
 
       <mat-tab label="Quizzes">
         <div class="quizzes">
           <h2>Quizzes</h2>
-          <p>No quizzes available.</p>
+          <div *ngIf="quizzes.length === 0">
+            <p>No quizzes available.</p>
+          </div>
+          <div *ngFor="let quiz of quizzes" class="quiz-card announcement-card">
+            <div class="announcement-header">
+              <h3>{{ quiz.title }}</h3>
+              <p>Start Time: {{ quiz.startTime | date }}</p>
+              <p>End Time: {{ quiz.endTime | date }}</p>
+              <p>Total Grade: {{ quiz.totalGrade }}</p>
+            </div>
+          </div>
         </div>
       </mat-tab>
+      
     </mat-tab-group>
   </div>
 
