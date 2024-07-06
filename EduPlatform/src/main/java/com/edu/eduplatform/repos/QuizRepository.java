@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -16,4 +17,8 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Quiz findByQuizIdWithQuestions(@Param("quizId") Long quizId);
 
     boolean existsByQuizId(Long quizId);
+
+    Collection<Quiz> findByCourse_Students_UserID(Long studentId);
+
+    Collection<Quiz> findByCourse_CourseId(Long courseId);
 }
