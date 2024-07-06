@@ -1,1 +1,21 @@
-<p>labs works!</p>
+<h1 class="dialog-title">Add Labs</h1>
+<div class="dialog-content">
+  <form (ngSubmit)="onSubmit()" #lectureForm="ngForm">
+    <div class="form-field">
+      <label for="title">Title</label>
+      <input type="text" id="title" [(ngModel)]="lab.title" name="title" required>
+    </div>
+    <div class="form-field">
+      <label for="content">Content</label>
+      <textarea id="content" [(ngModel)]="lab.content" name="content" rows="3" required></textarea>
+    </div>
+
+    <div class="file-upload">
+      <input type="file" (change)="onFileChange($event)" />
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button class="btn cancel-btn" (click)="onClose()">Cancel</button>
+  <button class="btn submit-btn" (click)="onSubmit()">Submit</button>
+</div>

@@ -117,11 +117,33 @@
       </mat-tab>
 
       <mat-tab label="Labs">
-        <div class="labs">
+        <div class="lectures">
+          <div class="lecture-header">
+              <button class="add-announcement-btn" (click)="openAddMaterialDialogLabs()">
+                <i class="fa fa-book add-announcement-icon"></i>
+                Add Labs
+              </button>
+            </div><br>
           <h2>Labs</h2>
-          <p>No labs available.</p>
+          <div *ngIf="labs.length === 0" class="no-lectures">
+            <p>No labs available.</p>
+          </div>
+          <div *ngFor="let lab of labs" class="lecture-card announcement-card">
+            <div class="announcement-header">
+              <h3>{{ lab.title }}</h3>
+              <p class="announcement-content">{{ lab.content }}</p>
+            </div>
+      
+            <div *ngIf="lab.fileName" class="announcement-file">
+              <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lab)">
+              <a (click)="openFileLink(lab)" class="announcement-file-link">
+                {{ lab.fileName }}
+              </a>
+            </div>
+          </div>
         </div>
       </mat-tab>
+      
 
       <mat-tab label="Assignments">
         <div class="assignments">
