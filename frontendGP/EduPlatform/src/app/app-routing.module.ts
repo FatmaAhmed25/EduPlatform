@@ -51,7 +51,7 @@ const routes: Routes = [
   { path: 'take-quiz', component: QuizDetailsComponent },
   { path: 'video-player', component: ProctoredVideoComponent },
   { path: 'instructor/quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent },
-  {path:'admin',component:AdminDashboardComponent},
+  {path:'admin-dashboard',component:AdminDashboardComponent},
   {path:'admin-profile',component:AdminProfileComponent},
   {path:'users-profile',component:UsersProfileComponent},
 

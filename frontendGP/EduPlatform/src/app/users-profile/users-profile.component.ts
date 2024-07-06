@@ -190,9 +190,11 @@ export class UsersProfileComponent implements OnInit {
         if (result.userType === 'student') {
           this.createStudent(result); 
           this.getAllStudents();
+          this.getAllInstructors();
         } else if (result.userType === 'instructor') {
           this.createInstructor(result); 
           this.getAllInstructors();
+          this.getAllStudents();
         }
       }
     });
