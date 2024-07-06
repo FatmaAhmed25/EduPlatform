@@ -15,7 +15,7 @@ export class StudentQuizService {
   studentId = localStorage.getItem('userID');
 
   getQuiz(): Observable<Quiz> {
-    const url = `${this.baseUrl}/quizzes/${this.studentId}/1/2/student`;
+    const url = `${this.baseUrl}/quizzes/${this.studentId}/1/20/student`;
     return this.http.get<Quiz>(url).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404 && error.error === "Student has already submitted this quiz") {
@@ -28,9 +28,14 @@ export class StudentQuizService {
       })
     );
   }
-  submitQuiz(payload: { studentId: any; quizId: any; answers: { questionId: any; answerId: any; }[]; }) { 
+  submitMCQQuiz(payload: { studentId: any; quizId: any; answers: { questionId: any; answerId: any; }[]; }) { 
     console.log(payload);
     const url = `${this.baseUrl}/api/quiz/submit/mcq-quiz`;
+    return this.http.post<any>(url, payload);
+  }
+  submitEssayQuiz(payload: { studentId: number; quizId: any; answers: { questionId: any; answer: any; }[]; }) { 
+    console.log(payload);
+    const url = `${this.baseUrl}/api/quiz/submit/essay-quiz`;
     return this.http.post<any>(url, payload);
   }
 

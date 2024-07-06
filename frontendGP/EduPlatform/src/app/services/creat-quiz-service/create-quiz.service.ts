@@ -80,8 +80,24 @@ export class CreateQuizService {
     return formData;
   }
 
-  submitQuiz(files: File[]): Observable<any> {
+  GenerateMCQQuiz(files: File[]): Observable<any> {
     const  url = this.apiUrl + '/generateMcq';
+    if (this.quiz === null) {
+      console.error('Quiz is not defined.');
+      return of({ error: 'Quiz is not defined. Please set the quiz before submitting.' });
+    }
+
+    const formData = this.createFormData(files, this.quiz);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.post<any>(url, formData, { headers }).pipe(
+      catchError(error => {
+        console.error('Error submitting quiz:', error);
+        return of({ error: 'Error submitting quiz. Please try again later.' });
+      })
+    );
+  }
+  GenerateEssayQuiz(files: File[]): Observable<any> {
+    const  url = this.apiUrl + '/generateEssay';
     if (this.quiz === null) {
       console.error('Quiz is not defined.');
       return of({ error: 'Quiz is not defined. Please set the quiz before submitting.' });
@@ -108,9 +124,10 @@ export class CreateQuizService {
       })
     );
   }
+  
 
 
-  createManualQuiz(quizData: any): Observable<any> {
+  createManualEssayQuiz(quizData: any): Observable<any> {
     const token = localStorage.getItem('authToken');
     
     if (!this.quiz) {
@@ -128,6 +145,43 @@ export class CreateQuizService {
         text: q.text,
         points: q.points,
         questionType: q.questionType
+      }))
+    };
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post(this.apiUrl, JSON.stringify(finalQuizData), { headers }).pipe(
+      catchError(error => {
+        console.error('Error submitting quiz:', error);
+        return of({ error: 'Error submitting quiz. Please try again later.' });
+      })
+    );
+  }
+  createManualMCQQuiz(quizData: any): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    
+    if (!this.quiz) {
+      console.error('Quiz is not defined.');
+      return of({ error: 'Quiz is not defined. Please set the quiz before trying to access it.' });
+    }
+  
+    const finalQuizData = {
+      title: quizData.assessmentName,
+      startTime: quizData.startDate,
+      endTime: quizData.endDate,
+      totalGrade: quizData.totalGrade,
+      courseId: this.quiz.courseId,
+      questions: quizData.questions.map((q: any) => ({
+        text: q.text,
+        points: q.points,
+        questionType: q.questionType,
+        answers: q.answers.map((a: any) => ({
+          text: a.text,
+          correct: a.correct
+        }))
       }))
     };
   

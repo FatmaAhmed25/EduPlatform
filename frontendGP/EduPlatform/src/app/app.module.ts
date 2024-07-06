@@ -74,7 +74,6 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     HomepageComponent,LectureComponent,LabComponent,AssignmentComponent,SubmitDialogComponent,QuizzesComponent,
     NavbarComponent,
     ConfirmQuizSubmissionDialogComponent,
-    ProctoredVideoComponent,
     AdminProfileComponent,
     UsersProfileComponent,
     UserPopupComponent,

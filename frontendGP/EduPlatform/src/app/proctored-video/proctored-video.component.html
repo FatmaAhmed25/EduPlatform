@@ -1,10 +1,14 @@
+<!-- proctored-video.component.html -->
+<button class="toggle-button" (click)="toggleVideoVisibility()"><i class="fas fa-camera"></i></button>
 <div class="container">
+  
   <div class="box">
-      <span class="borderline"></span>
-      <div class="display">
-          <video #videoEl width="300" height="300" autoplay muted></video>
-          <div *ngIf="displayText" class="text-overlay">{{ displayText }}</div>
-          <canvas #canvasEl style="display: none;"></canvas>
-      </div>
+    <span class="borderline"></span>
+    <div class="display">
+      
+      <video #videoEl width="300" height="300" [hidden]="!isVideoVisible" autoplay muted></video>
+      <div *ngIf="displayText" class="text-overlay">{{ displayText }}</div>
+      <canvas #canvasEl style="display: none;"></canvas>
+    </div>
   </div>
 </div>
