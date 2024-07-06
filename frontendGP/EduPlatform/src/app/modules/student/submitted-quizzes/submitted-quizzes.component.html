@@ -19,7 +19,7 @@
         </ul>
        
     </div>
-    <div class="p-6">
+    <div class="p-6 "style="margin-left:150px; width:90%">
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"style="width:180%">
@@ -43,36 +43,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let course of courses">
+                            <tr *ngFor="let quiz of quizzes">
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <div class="flex items-center">
-                                        <a href="#" class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">{{ course.id }}</a>
-                                    </div>
+                                  <div class="flex items-center">
+                                    <span class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">{{ quiz.courseName }}</span>
+                                  </div>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span class="text-[13px] font-medium text-gray-400">{{ course.title }}</span>
+                                  <span class="text-[13px] font-medium text-gray-400">{{ quiz.quizTitle }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none "style="color:#5E5DF0">{{ course.courseCode }}</span>
+                                  <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none "style="color:#5E5DF0">{{ quiz.quizSubmission.totalGrade }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <!-- Display password initially hidden -->
-                                    <span class="password-text text-[13px] font-medium text-gray-400" [style.display]="course.showPassword ? 'inline-block' : 'none'">{{ course.password }}</span>
-                                    <button class="show-password-btn text-blue-500" (click)="togglePasswordVisibility(course)">
-                                        {{ course.showPassword ? ' ' : 'Show Password' }}
-                                    </button>
-                                </td>
-                                
-                                <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span class="text-[13px] font-medium text-gray-400">{{ course.createdByInstructorName }}</span>
+                                    <span [ngClass]="{
+                                        'status-passed': quiz.quizSubmission.cheatingStatus === 'Passed',
+                                        'status-cheating': quiz.quizSubmission.cheatingStatus === 'Cheating',
+                                        'status-suspicious': quiz.quizSubmission.cheatingStatus === 'Suspicious'
+                                      }">{{ quiz.quizSubmission.cheatingStatus }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span class="text-[13px] font-medium text-gray-400">{{ course.tasInstructorNames.join(', ') }}</span>
+                                  <span class="text-[13px] font-medium text-gray-400">{{ quiz.quizSubmission.submissionTime | date }}</span>
                                 </td>
-                                <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span class="text-[13px] font-medium text-gray-400">{{ course.numberOfEnrolledStudents }}</span>
-                                </td>
-                            </tr>
+                              </tr>
                         </tbody>
                     </table>
                 </div>

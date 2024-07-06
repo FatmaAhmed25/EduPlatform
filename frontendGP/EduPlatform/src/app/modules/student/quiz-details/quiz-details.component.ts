@@ -181,7 +181,7 @@ hasNextQuestion(): boolean {
   submitMcqQuiz(): void {
     if (this.quiz) {
       const studentId = localStorage.getItem('userID')
-      const quizId = 2; 
+      const quizId = 10; 
       console.log('student id: ' + studentId);
       console.log('quiz id: ' + quizId);
       if(studentId && quizId) {
@@ -206,7 +206,7 @@ hasNextQuestion(): boolean {
     submitEssayQuiz(): void {
       if (this.quiz) {
         const studentId = Number(localStorage.getItem('userID'))
-        const quizId = 20; 
+        const quizId = 10; 
         console.log('student id: ' + studentId);
         console.log('quiz id: ' + quizId);
         if(studentId && quizId) {

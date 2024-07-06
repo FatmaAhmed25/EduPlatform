@@ -525,7 +525,7 @@ video {
 }
 
 .ml-4{
-  margin-left: 1rem;
+  margin-left: 2rem;
 }
 
 .ml-auto{
@@ -1221,3 +1221,35 @@ video {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Define reusable styles for quiz submission status */
+.status-badge {
+    display: inline-block;
+    padding: 1px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  
+  /* Styles for 'Passed' status */
+  .status-passed {
+    @extend .status-badge;
+    background-color: rgba(16, 185, 129, 0.1); /* Green background */
+    color: #10b981; /* Green text color */
+  }
+  
+  /* Styles for 'Cheating' status */
+  .status-cheating {
+    @extend .status-badge;
+    background-color: rgba(239, 68, 68, 0.1); /* Red background */
+    color: #ef4444; /* Red text color */
+  }
+  
+  /* Styles for 'Suspicious' status */
+  .status-suspicious {
+    @extend .status-badge;
+    background-color: rgba(251, 191, 36, 0.1); /* Yellow background */
+    color: #fbbf24; /* Yellow text color */
+  }
+  
