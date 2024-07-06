@@ -2,7 +2,29 @@
 @import '../../../styles.scss';
 $toggle-color-light: #ccc;
 $toggle-color-dark: #333;
+.tooltip {
+  position: absolute;
+  left: 100%; /* Position to the right */
+  transform: translateY(-50%); /* Align vertical center */
+  margin-left: 10px; /* Add space between item and tooltip */
+  background-color: #333; /* Background color */
+  color: #fff; /* Text color */
+  padding: 5px 10px; /* Padding */
+  border-radius: 4px; /* Rounded corners */
+  white-space: nowrap; /* Prevent text wrapping */
+  opacity: 0; /* Hide initially */
+  visibility: hidden; /* Hide initially */
+  transition: opacity 0.3s ease, visibility 0.3s ease; /* Smooth transition */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  font-size: 13px; /* Font size */
+  z-index: 10; /* Ensure tooltip appears above other elements */
+}
 
+/* Show tooltip on hover */
+.nav-link:hover .tooltip {
+  opacity: 1; /* Make visible */
+  visibility: visible; /* Make visible */
+}
 body {
   /* Default styles for light mode */
   .toggle-switch {
@@ -104,7 +126,7 @@ body {
 }
 
 .sidebar .text {
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
   opacity: 1;
