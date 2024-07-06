@@ -16,8 +16,4 @@ public class EssaySubmission extends QuizSubmission
     @OneToMany(mappedBy = "essaySubmission", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentEssayAnswer> answers;
 
-
-
-
-
 }

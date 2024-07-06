@@ -9,6 +9,5 @@ import java.util.List;
 
 public interface StudentMCQAnswerRepo extends JpaRepository<StudentMCQAnswer, Long> {
     List<StudentMCQAnswer> findByAnswer(Answer answer);
-
     List<StudentMCQAnswer> findByQuestion(Question question);
 }

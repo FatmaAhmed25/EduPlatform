@@ -132,7 +132,12 @@ public class CourseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
-
+    @SecurityRequirement(name="BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/{courseId}/students/count")
+    public int getEnrolledStudentCount(@PathVariable Long courseId) {
+        return courseService.getEnrolledStudentCount(courseId);
+    }
 
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
