@@ -22,6 +22,7 @@ import { McqQuizViewerInstructorComponent } from './modules/instructor/mcq-quiz-
 import { SearchResultInstructorComponent } from './modules/instructor/search-result-instructor/search-result-instructor.component';
 import { StreamComponent } from './modules/instructor/stream/stream.component';
 import { AuthGuard } from './modules/login/auth.guard';
+import { SubmittedQuizzesComponent } from './modules/student/submitted-quizzes/submitted-quizzes.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent},
@@ -57,6 +58,7 @@ const routes: Routes = [
   {path:'admin',component:AdminDashboardComponent},
   {path:'admin-profile',component:AdminProfileComponent},
   {path:'users-profile',component:UsersProfileComponent},
+  {path:'submitted-quizzes',component:SubmittedQuizzesComponent},
 
 
 ];
