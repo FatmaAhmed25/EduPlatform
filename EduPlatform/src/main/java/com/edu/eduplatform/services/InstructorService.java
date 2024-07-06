@@ -40,20 +40,20 @@ public class InstructorService {
         return null;
     }
 
-    public Instructor updateInstructor(Long instructorId, UpdateInstructorDTO updateInstructorDTO) {
-        Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new EntityNotFoundException("Instructor not found"));
-        if (updateInstructorDTO.getUsername() != null && !updateInstructorDTO.getUsername().isEmpty()) {
-            instructor.setUsername(updateInstructorDTO.getUsername());
-        }
-        if (updateInstructorDTO.getEmail() != null && !updateInstructorDTO.getEmail().isEmpty()) {
-            instructor.setEmail(updateInstructorDTO.getEmail());
-        }
-        if (updateInstructorDTO.getBio() != null && !updateInstructorDTO.getBio().isEmpty()) {
-            instructor.setBio(updateInstructorDTO.getBio());
-        }
-        return instructorRepository.save(instructor);
-    }
+//    public Instructor updateInstructor(Long instructorId, UpdateInstructorDTO updateInstructorDTO) {
+//        Instructor instructor = instructorRepository.findById(instructorId)
+//                .orElseThrow(() -> new EntityNotFoundException("Instructor not found"));
+//        if (updateInstructorDTO.getUsername() != null && !updateInstructorDTO.getUsername().isEmpty()) {
+//            instructor.setUsername(updateInstructorDTO.getUsername());
+//        }
+//        if (updateInstructorDTO.getEmail() != null && !updateInstructorDTO.getEmail().isEmpty()) {
+//            instructor.setEmail(updateInstructorDTO.getEmail());
+//        }
+//        if (updateInstructorDTO.getBio() != null && !updateInstructorDTO.getBio().isEmpty()) {
+//            instructor.setBio(updateInstructorDTO.getBio());
+//        }
+//        return instructorRepository.save(instructor);
+//    }
 
 
     public List<Announcement> getAnnouncementsByCourse(Long courseId) {

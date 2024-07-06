@@ -33,5 +33,7 @@ public interface CourseRepo extends JpaRepository<Course,Long> {
     List<Course> findByTitleContainingIgnoreCaseAndInstructor(@Param("title") String title, @Param("instructorId") Long instructorId);
     Course findByCourseCode(String courseCode);
 
+    @Query("SELECT COUNT(c) FROM Course c")
+    long countAllCourses();
 
 }

@@ -73,6 +73,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Quiz> quizzes = new HashSet<>();
 
+
+
     public void setInstructor(Instructor instructor) {
         this.createdBy = instructor;
     }
