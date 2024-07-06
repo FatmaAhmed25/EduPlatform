@@ -45,7 +45,7 @@ public class CheatingReportController {
     }
 
     @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_INSTRUCTOR', 'ROLE_STUDENT')")
     @Operation(summary = "Generate Cheating Report PDF of a student quiz submission")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "PDF generated successfully", content = {

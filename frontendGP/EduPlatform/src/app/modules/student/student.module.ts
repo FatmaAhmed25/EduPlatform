@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { QuizDetailsComponent } from './quiz-details/quiz-details.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SubmittedQuizzesComponent } from './submitted-quizzes/submitted-quizzes.component';
 @NgModule({
   declarations: [
     StudentDashboardComponent,
@@ -24,7 +25,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     // AssignmentComponent,
     SearchResultComponent,
     QuizDetailsComponent,
-    
+    SubmittedQuizzesComponent,
   ],
   imports: [
     CommonModule,

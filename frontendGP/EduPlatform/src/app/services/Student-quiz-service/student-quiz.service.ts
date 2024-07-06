@@ -15,7 +15,7 @@ export class StudentQuizService {
   studentId = localStorage.getItem('userID');
 
   getQuiz(): Observable<Quiz> {
-    const url = `${this.baseUrl}/quizzes/${this.studentId}/1/20/student`;
+    const url = `${this.baseUrl}/quizzes/${this.studentId}/1/10/student`;
     return this.http.get<Quiz>(url).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 404 && error.error === "Student has already submitted this quiz") {
