@@ -38,7 +38,7 @@ import { TakeQuizErrorComponent } from './quiz-already-submitted-error/take-quiz
     ToastrModule.forRoot({
       positionClass: 'toast-top-right', // Position of the toast
       timeOut: 3000, // Duration in milliseconds
-      preventDuplicates: true, // Prevent duplicate toasts
+      preventDuplicates: true, // Prevent duplicate toastss
     }),
     MatSnackBarModule,
     SharedModule

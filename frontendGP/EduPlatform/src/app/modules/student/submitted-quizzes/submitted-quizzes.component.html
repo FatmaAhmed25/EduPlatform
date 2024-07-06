@@ -39,6 +39,7 @@
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">GRADE</th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STATUS</th>
                                 <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">SUBMISSION TIME</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">QUIZ SUBMISSION</th>
   
                             </tr>
                         </thead>
@@ -56,16 +57,28 @@
                                   <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none "style="color:#5E5DF0">{{ quiz.quizSubmission.totalGrade }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <span [ngClass]="{
-                                        'status-passed': quiz.quizSubmission.cheatingStatus === 'Passed',
-                                        'status-cheating': quiz.quizSubmission.cheatingStatus === 'Cheating',
-                                        'status-suspicious': quiz.quizSubmission.cheatingStatus === 'Suspicious'
-                                      }">{{ quiz.quizSubmission.cheatingStatus }}</span>
-                                </td>
+                                    <a *ngIf="quiz.quizSubmission?.cheatingStatus === 'SUSPISIOUS' || quiz.quizSubmission?.cheatingStatus === 'CHEATING'"
+                                       href="javascript:void(0)"
+                                       (click)="downloadCheatingReport(quiz.quizSubmission.id)">
+                                      {{ quiz.quizSubmission.cheatingStatus }}
+                                    </a>
+                                    <a *ngIf="quiz.quizSubmission?.cheatingStatus === 'PASSED' ">
+            
+                                      {{ quiz.quizSubmission.cheatingStatus }}
+                                    </a>
+                                  </td>
+                                
                                 <td class="py-2 px-4 border-b border-b-gray-50">
                                   <span class="text-[13px] font-medium text-gray-400">{{ quiz.quizSubmission.submissionTime | date }}</span>
                                 </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <button class="quiz-submission-btn" (click)="downloadQuizSubmissionPdf(quiz.quizSubmission.id, quiz.quizId)">
+                                      Quiz Submission
+                                    </button>
+                                  </td>
                               </tr>
+                              
+                              
                         </tbody>
                     </table>
                 </div>
@@ -79,24 +92,6 @@
     </div>
 </main>
 
-
-<script>
-    // JavaScript to toggle password visibility
-    const showPasswordButtons = document.querySelectorAll('.show-password-btn');
-
-    showPasswordButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const passwordText = button.parentElement.querySelector('.password-text');
-            if (passwordText.style.display === 'none') {
-                passwordText.style.display = 'inline-block';
-                button.textContent = 'Hide Password';
-            } else {
-                passwordText.style.display = 'none';
-                button.textContent = 'Show Password';
-            }
-        });
-    });
-</script>
 
 </body>
 </html>

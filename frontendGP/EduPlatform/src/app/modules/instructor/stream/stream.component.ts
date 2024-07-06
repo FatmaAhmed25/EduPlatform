@@ -16,6 +16,8 @@ import { Courses } from 'src/app/models/course.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LecturesComponent } from '../lectures/lectures.component';
 import { LabsComponent } from '../labs/labs.component';
+import { AssignmentsComponent } from '../assignments/assignments.component';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
@@ -34,6 +36,8 @@ export class StreamComponent implements OnInit, OnDestroy {
   course: Courses | undefined; 
   link2:string='';
   labs: any[] = [];
+  assignments: any[]=[];
+  quizzes: any[]=[];
   constructor(
     private route: ActivatedRoute,
     private announcementService: AnnouncementService,
@@ -41,7 +45,8 @@ export class StreamComponent implements OnInit, OnDestroy {
     private webSocketService: WebSocketService,
     private stream: StreamService,
     private clipboard: Clipboard,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +58,8 @@ export class StreamComponent implements OnInit, OnDestroy {
         this.loadCourseAndInstructorDetails();
         this.loadLecturesAndVideos();
         this.loadLabs();
+        this.loadAssignments();
+        this.loadQuizzes();
       }
     });
 
@@ -71,6 +78,28 @@ export class StreamComponent implements OnInit, OnDestroy {
         this.setupWebSocket();
       });
     }
+  }
+  
+  toggleDropdown(announcement: any): void {
+    this.announcements.forEach(c => {
+      if (c !== announcement) {
+        c.showDropdown = false;
+      }
+    });
+    announcement.showDropdown = !announcement.showDropdown;
+  }
+  Delete(announcementId : number):void{
+    const instructorId = localStorage.getItem('userID');
+    if(this.courseId && announcementId && instructorId){
+    this.announcementService.deleteAnnouncement(this.courseId,instructorId,announcementId).subscribe(data => {
+      this.snackBar.open('Announcement Deleted Successfully.', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      });
+      this.loadAnnouncements();
+    });
+  }
   }
   setupWebSocket(): void {
     const token = localStorage.getItem('authToken');
@@ -96,12 +125,29 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.labs = labs;
         },
         (error) => {
-          console.error('Error loading labs:', error);
+          this.snackBar.open('Error loading labs', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
         }
       );
     }
   }
-  
+  loadAssignments():void{
+    if(this.courseId){
+      this.stream.getAssignments(this.courseId).subscribe(
+        (assignments) => {
+          this.assignments=assignments;
+    },(error)=>{
+      this.snackBar.open('Error loading assignments', 'Close', {
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      });
+    });
+  }
+}
   loadLecturesAndVideos(): void {
     const instructorId = localStorage.getItem('userID');
     if (this.courseId && instructorId) {
@@ -110,16 +156,23 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.lectures = lectures;
         },
         (error) => {
-          console.error('Error loading lectures:', error);
+          this.snackBar.open('Error loading lectures', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
         }
       );
       this.stream.getVideos(this.courseId, instructorId).subscribe(
         (videos) => {
           this.videos = videos;
-          console.log();
         },
         (error) => {
-          console.error('Error loading videos:', error);
+          this.snackBar.open('Error loading videos', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
         }
       );
     }
@@ -155,7 +208,15 @@ export class StreamComponent implements OnInit, OnDestroy {
     if (this.courseId) {
       this.stream.getStudentsByCourseId(this.courseId).subscribe((data: Student[]) => {
         this.students = data;
-      });
+      },(error)=>{
+        this.snackBar.open('Error loading Students enrolled in course', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
+      }
+    );
+      
     }
   }
 
@@ -169,10 +230,14 @@ export class StreamComponent implements OnInit, OnDestroy {
       const instructorId = localStorage.getItem('userID');
       if (instructorId) {
         this.announcementService.getInstructorDetails(instructorId).subscribe(instructor => {
-          console.log('Instructor details:', instructor); // Log instructor details
+          console.log('Instructor details:', instructor);
           this.instructor = instructor;
         }, error => {
-          console.error('Error fetching instructor details:', error);
+          this.snackBar.open('Error Fetching your details', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
         });
       }
     }
@@ -190,12 +255,24 @@ export class StreamComponent implements OnInit, OnDestroy {
           });
         }),
         error => {
-          console.error('Error fetching announcements:', error);
+          this.snackBar.open('Error Fetching announcements', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+          });
         }
       );
     }
   }
+  loadQuizzes():void{
+    const instructorId = localStorage.getItem('userID');
+    if(this.courseId && instructorId){
+      this.stream.getQuizzes(instructorId,this.courseId).subscribe(data=>{
+        this.quizzes=data;
 
+      })
+    }
+  }
   openAnnouncementDialog(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(AnnouncementDialogComponent, {
@@ -205,12 +282,37 @@ export class StreamComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Announcement Posted:', result);
+        this.snackBar.open('Announcement Posted !', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
         this.announcements.push(result); 
+        this.loadAnnouncements();
       }
+      
     });
   }
 
+  openAssignmentsDialog():void{
+    const instructorId = localStorage.getItem('userID');
+    const dialogRef = this.dialog.open(AssignmentsComponent, {
+      width: '600px',
+      data: { instructorId: instructorId, courseId: this.courseId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.snackBar.open('Assignment Posted !', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
+        this.announcements.push(result); 
+        this.loadAssignments();
+      }
+    });
+  }
   openStudentDetails(): void {
     const dialogRef = this.dialog.open(StudentDetailsDialogComponent, {
       width: '500px',
@@ -218,7 +320,11 @@ export class StreamComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      console.log('The dialog was closed');
+      this.snackBar.open('Error fetching student details', 'Close', {
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      });
     });
   }
 
@@ -240,7 +346,13 @@ export class StreamComponent implements OnInit, OnDestroy {
     };
 
     this.webSocketService.send(`/app/announcement/${announcementId}/comments`, comment);
+    this.snackBar.open('Your Comment is UP!', 'Close', {
+      duration: 5000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right'
+    });
     this.newComment[announcementId] = '';
+  
   }
   openAddMaterialDialog(): void {
     const instructorId = localStorage.getItem('userID');
@@ -251,12 +363,41 @@ export class StreamComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Material Added:', result);
+        this.snackBar.open('Lecture/Video added successfully!', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
         this.loadLecturesAndVideos();
       }
     });
   }
-  
+  getFileName(filePath: string | undefined): string {
+    if (!filePath) {
+      return '';
+    }
+    return filePath.substring(filePath.lastIndexOf('/') + 1);
+  }
+  // updateAnnouncement(){
+  //   const instructorId = localStorage.getItem('userID');
+  //   if(this.courseId && instructorId)
+  //   this.announcementService.updateAnnouncement(  
+  //     this.courseId,
+  //     instructorId,
+  //     this.announcementId,
+  //     this.title,
+  //     this.content,
+  //     this.materialType,
+  //     this.fileToUpload
+  //   ).subscribe(
+  //     response => {
+  //       console.log('Announcement updated successfully:', response);
+  //     },
+  //     error => {
+  //       console.error('Error updating announcement:', error);
+  //     }
+  //   );
+  // }
   openAddMaterialDialogLabs(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(LabsComponent, {
@@ -266,7 +407,11 @@ export class StreamComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Material Added:', result);
+        this.snackBar.open('Lab added successfully !', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
         this.loadLabs();
       }
     });
@@ -299,6 +444,10 @@ export class StreamComponent implements OnInit, OnDestroy {
       this.fetchInitialComments(announcement.id);
       this.subscribeToCommentUpdates(announcement.id);
     });
+  }
+
+  viewSubmissions(assignmentId: number): void {
+    this.router.navigate(['/assignment-submissions-instructor', assignmentId]);
   }
   fetchInitialComments(announcementId: number): void {
     console.log(`Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`); // Log before API call
@@ -354,7 +503,6 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
 
   publishContent() {
-    // Handle the publish logic here
     this.closePublishModal();
   }
 }

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Announcement } from 'src/app/models/announcement.model';
 import { Comment } from 'src/app/models/comment.model';
+import { data } from 'autoprefixer';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,5 +33,22 @@ export class StreamService {
   }
   getLabs(courseId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/announcment/${courseId}/labs`);
+  }
+  createAssignment(courseId: number, instructorId: number, dueDate: Date, title: string, content: string, allowLateSubmissions: boolean, file: File) {
+    const formData = new FormData();
+    formData.append('courseId', courseId.toString());
+    formData.append('instructorId', instructorId.toString());
+    formData.append('dueDate', dueDate.toISOString());
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('allowLateSubmissions', allowLateSubmissions.toString());
+    formData.append('file', file);
+    return this.http.post<void>(`${this.apiUrl}/api/assignments/${courseId}/create`, formData);
+  }
+  getAssignments(courseId:number){
+    return this.http.get<any[]>(`${this.apiUrl}/announcment/${courseId}/assignments`);
+  }
+  getQuizzes(instructorId:string,courseId:number){
+    return this.http.get<any[]>(`${this.apiUrl}/quizzes/get-course-quizzes/${instructorId}/${courseId}`)
   }
 }

@@ -19,4 +19,12 @@ export class QuizSubmissionsService {
     const url = `${this.apiUrl}/student/${studentId}`;
     return this.http.get<QuizSubmissionDTO[]>(url);
   }
+
+  downloadSubmissionPdf(studentId: number, quizId: number): Observable<Blob> {
+    const apiUrl = 'http://localhost:8080/quizzes/generate-submission-pdf/'
+    const url = `${apiUrl}${studentId}/${quizId}`;
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  
 }
