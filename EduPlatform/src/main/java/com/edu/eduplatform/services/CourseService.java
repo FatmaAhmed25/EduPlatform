@@ -167,16 +167,11 @@ public class CourseService {
         return courseRepository.findByTitleContainingIgnoreCaseAndInstructor(title, instructorId);
     }
 
-    //    public Course updateCourse(Long courseId, UpdateCourseDTO updateCourseDTO) {
-//        Course course = courseRepository.findById(courseId)
-//                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
-//        course.setTitle(updateCourseDTO.getTitle());
-//        course.setDescription(updateCourseDTO.getDescription());
-//        course.setPassword(updateCourseDTO.getPassword());
-//        // Update other fields as necessary
-//
-//        return courseRepository.save(course);
-//    }
+    public int getEnrolledStudentCount(Long courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+        return course.getStudents().size();
+    }
 
     public Course updateCourse(Long courseId, UpdateCourseDTO updatedCourse) {
         Course course = courseRepository.findById(courseId)

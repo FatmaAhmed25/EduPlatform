@@ -17,7 +17,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
@@ -179,18 +181,6 @@ public class QuizService {
         }
     }
 
-    public List<Quiz> getAllQuizzes() {
-        return quizRepository.findAll();
-    }
-
-    public Quiz getQuizById(Long quizId) {
-        return quizRepository.findByQuizIdWithQuestions(quizId);
-    }
-
-    public List<Quiz> getQuizzesByCourseId(Long courseId) {
-        return quizRepository.findByCourseCourseId(courseId);
-    }
-
     public List<String> getQuestionsByQuizId(Long quizId) {
         return questionRepository.findTextByQuizQuizId(quizId);
     }
@@ -198,11 +188,6 @@ public class QuizService {
     public Quiz getQuizByIdForInstructor(Long quizId) {
         return quizRepository.findByQuizIdWithQuestions(quizId);
     }
-
-//    public QuizForStudentDTO getQuizForStudentById(Long quizId) {
-//        Quiz quiz = quizRepository.findByQuizIdWithQuestions(quizId);
-//        return modelMapper.map(quiz, QuizForStudentDTO.class);
-//    }
 
     public QuizForStudentDTO getQuizForStudentById(Long studentId, Long quizId) {
         Student student = studentRepository.findById(studentId)
@@ -281,4 +266,32 @@ public class QuizService {
         }
         return true;
     }
+
+    public List<GetStudentQuizzesResponse> getQuizzesForStudent(Long studentId) {
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
+        return quizRepository.findByCourse_Students_UserID(studentId).stream()
+                .filter(quiz -> quiz.getEndTime().isAfter(now))
+                .map(quiz -> new GetStudentQuizzesResponse(
+                        quiz.getQuizId(),
+                        quiz.getTitle(),
+                        quiz.getStartTime(),
+                        quiz.getEndTime(),
+                        quiz.getTotalGrade(),
+                        quiz.getStartTime().isBefore(now)))
+                .collect(Collectors.toList());
+    }
+
+
+    public List<GetCourseQuizzesResponse> getQuizzesForCourse(Long courseId) {
+        return quizRepository.findByCourse_CourseId(courseId).stream()
+                .map(quiz -> new GetCourseQuizzesResponse(
+                        quiz.getQuizId(),
+                        quiz.getTitle(),
+                        quiz.getStartTime(),
+                        quiz.getEndTime(),
+                        quiz.getTotalGrade()))
+                .collect(Collectors.toList());
+    }
+
 }

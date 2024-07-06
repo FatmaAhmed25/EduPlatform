@@ -42,6 +42,7 @@ public class QuizSubmission
     @OneToOne(mappedBy = "quizSubmission", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private CheatingReport cheatingReport;
 
+
     public enum CheatingStatus {
         CHEATING,
         SUSPICIOUS,

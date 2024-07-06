@@ -39,7 +39,6 @@ public class AnnouncementService {
     private CommentRepo commentRepo;
 
 
-
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 

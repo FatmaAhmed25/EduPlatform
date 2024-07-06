@@ -1,9 +1,7 @@
 package com.edu.eduplatform.controllers;
 
 
-import com.edu.eduplatform.dtos.GenerateQuizDTO;
-import com.edu.eduplatform.dtos.QuizDTO;
-import com.edu.eduplatform.dtos.QuizForStudentDTO;
+import com.edu.eduplatform.dtos.*;
 import com.edu.eduplatform.models.Answer;
 import com.edu.eduplatform.models.Question;
 import com.edu.eduplatform.models.Quiz;
@@ -118,12 +116,6 @@ public class QuizController {
         return quizService.addAnswerToQuestion(questionId, answer);
     }
 
-    @GetMapping
-    @SecurityRequirement(name="BearerAuth")
-    public List<Quiz> getAllQuizzes() {
-        return quizService.getAllQuizzes();
-    }
-
     @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
     @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{instructorId}/{courseId}/{quizId}/instructor")
@@ -185,5 +177,22 @@ public class QuizController {
         Quiz createdQuiz = quizService.generateEssayQuiz(requestDTO);
         return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
     }
+
+    @PreAuthorize("hasAuthority('ROLE_STUDENT')")
+    @SecurityRequirement(name="BearerAuth")
+    @GetMapping("get-upcoming-quizzes/student/{studentId}")
+    public List<GetStudentQuizzesResponse> getQuizzesForStudent(@PathVariable Long studentId) {
+        return quizService.getQuizzesForStudent(studentId);
+    }
+
+
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @SecurityRequirement(name="BearerAuth")
+    @ValidateInstructorBelongsToCourse
+    @GetMapping("get-course-quizzes/{instructorId}/{courseId}")
+    public List<GetCourseQuizzesResponse> getQuizzesForCourse(@PathVariable Long instructorId,@PathVariable Long courseId) {
+        return quizService.getQuizzesForCourse(courseId);
+    }
+
 
 }
