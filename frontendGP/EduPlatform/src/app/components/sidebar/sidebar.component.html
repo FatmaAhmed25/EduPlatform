@@ -24,32 +24,6 @@
               </a>
             </li>
       
-            <!-- Courses Link -->
-            <li class="nav-link">
-              <a [routerLink]="['/student-courses']" [ngClass]="{'active': isActive('/student-courses')}">
-                <i class='bx bx-book-open icon'></i>
-                <span class="text nav-text">Courses</span>
-              </a>
-            </li>
-      
-            <!-- Enroll by Code (Only for Students) -->
-            <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
-              <a (click)="openEnrollModal()" [ngClass]="{'active': isActive('/enroll-by-code')}">
-                <i class='bx bx-book icon'></i>
-                <span class="text nav-text">Enroll by Code</span>
-              </a>
-            </li>
-      
-            <!-- Wallets (Only for Admins) -->
-            <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
-              <a href="#">
-                <i class='bx bx-wallet icon'></i>
-                <span class="text nav-text">Wallets</span>
-              </a>
-            </li>
-      
-    
-      
             <!-- Profile Link (Only for Admins) -->
             <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
               <a [routerLink]="['/admin-profile']" [ngClass]="{'active': isActive('/admin-profile')}">
@@ -64,6 +38,22 @@
                 <span class="text nav-text">Users</span>
               </a>
             </li>
+                        <!-- Courses Link -->
+                        <li class="nav-link">
+                          <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
+                          <a [routerLink]="['/student-courses']" [ngClass]="{'active': isActive('/student-courses')}">
+                            <i class='bx bx-book-open icon'></i>
+                            <span class="text nav-text">Courses</span>
+                          </a>
+                        </li>
+                  
+                        <!-- Enroll by Code (Only for Students) -->
+                        <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
+                          <a (click)="openEnrollModal()" [ngClass]="{'active': isActive('/enroll-by-code')}">
+                            <i class='bx bx-book icon'></i>
+                            <span class="text nav-text">Enroll by Code</span>
+                          </a>
+                        </li>
        
           </ul>
         </div>

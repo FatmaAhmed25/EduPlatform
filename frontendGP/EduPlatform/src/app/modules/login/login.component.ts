@@ -24,12 +24,16 @@ export class LoginComponent {
         // Save the token in local storage
         localStorage.setItem('authToken', response.token);
         localStorage.setItem('userID', response.userID);
+        localStorage.setItem('userType',response.userType)
         
         // Check the user role and navigate accordingly
         if (response.userType === 'ROLE_STUDENT') {
           this.router.navigate(['/student-courses']);
         } else if (response.userType === 'ROLE_INSTRUCTOR') {
           this.router.navigate(['/instructor-dashboard']);
+        }
+        else if (response.userType === 'ROLE_ADMIN') {
+          this.router.navigate(['/admin']);
         }
       },
       error => {

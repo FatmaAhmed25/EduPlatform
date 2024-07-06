@@ -50,7 +50,7 @@ export class CreateQuizComponent {
       numOfQuestions: this.quizForm.get('numOfQuestions')?.value,
       courseName: 'Sarsour quiz',
       courseId: '1',
-      instructorId:'7' 
+      instructorId:'2' 
     };
 
     this.quizService.setQuiz(quiz);
