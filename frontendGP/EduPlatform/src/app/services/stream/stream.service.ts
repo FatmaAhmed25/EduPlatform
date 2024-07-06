@@ -30,4 +30,7 @@ export class StreamService {
   getVideos(courseId: number,instructorId:string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/announcment/${instructorId}/${courseId}/videos/instructor`);
   }
+  getLabs(courseId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/announcment/${courseId}/labs`);
+  }
 }

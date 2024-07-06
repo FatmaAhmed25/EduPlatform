@@ -16,7 +16,7 @@ import { Instructor } from 'src/app/models/instructor.model';
 import { Courses } from 'src/app/models/course.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LecturesComponent } from '../lectures/lectures.component';
-
+import { LabsComponent } from '../labs/labs.component';
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
@@ -26,14 +26,15 @@ export class StreamComponent implements OnInit, OnDestroy {
   students: Student[] = [];
   announcements: any[] = [];
   lectures: any[] = [];
-  videos: any[] = []; // Added for videos
+  videos: any[] = [];
   newComment: { [key: number]: string } = {};
   commentSubscriptions: Map<number, StompSubscription> = new Map();
-  userCache: Map<string, string> = new Map(); // Cache for user data
+  userCache: Map<string, string> = new Map(); 
   courseId: number | undefined;
   instructor: Instructor | undefined; 
   course: Courses | undefined; 
   link2:string='';
+  labs: any[] = [];
   constructor(
     private route: ActivatedRoute,
     private announcementService: AnnouncementService,
@@ -51,7 +52,8 @@ export class StreamComponent implements OnInit, OnDestroy {
         this.loadStudents();
         this.loadAnnouncements();
         this.loadCourseAndInstructorDetails();
-        this.loadLecturesAndVideos(); // Modified to load both lectures and videos
+        this.loadLecturesAndVideos();
+        this.loadLabs();
       }
     });
 
@@ -71,7 +73,19 @@ export class StreamComponent implements OnInit, OnDestroy {
       this.showCopyMessage();
     }
   }
-
+  loadLabs(): void {
+    if (this.courseId) {
+      this.stream.getLabs(this.courseId).subscribe(
+        (labs) => {
+          this.labs = labs;
+        },
+        (error) => {
+          console.error('Error loading labs:', error);
+        }
+      );
+    }
+  }
+  
   loadLecturesAndVideos(): void {
     const instructorId = localStorage.getItem('userID');
     if (this.courseId && instructorId) {
@@ -149,7 +163,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       console.log('Fetching announcements for course ID:', this.courseId);
       this.stream.getAnnouncementsByCourseId(this.courseId).subscribe(
         (data => {
-          this.announcements = data;
+          this.announcements = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
           console.log('Announcements retrieved:', this.announcements);
           this.announcements.forEach(announcement => {
             this.subscribeToCommentUpdates(announcement.id);
@@ -219,7 +233,22 @@ export class StreamComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Material Added:', result);
-        this.loadLecturesAndVideos(); // Reload lectures and videos
+        this.loadLecturesAndVideos();
+      }
+    });
+  }
+  
+  openAddMaterialDialogLabs(): void {
+    const instructorId = localStorage.getItem('userID');
+    const dialogRef = this.dialog.open(LabsComponent, {
+      width: '600px',
+      data: { courseId: this.courseId, instructorId: instructorId }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Material Added:', result);
+        this.loadLabs();
       }
     });
   }

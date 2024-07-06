@@ -64,9 +64,6 @@ public class AnnouncementService {
         return modelMapper.map(assignment, AssignmentResponseDTO.class);
     }
 
-
-
-
     public List<Announcement> getLectureAnnouncements(Long courseId) {
         return getAnnouncementsByFileNamePattern(courseId, "lectures/");
     }
