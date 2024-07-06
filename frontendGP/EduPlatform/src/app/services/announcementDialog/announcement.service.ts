@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Instructor } from 'src/app/models/instructor.model';
@@ -35,5 +35,10 @@ export class AnnouncementService {
   }
   getCourseById(courseId: number): Observable<Courses> {
     return this.http.get<Courses>(`${this.apiUrl}/courses/instructor/courses/details/${courseId}`);
+  }
+  getCommentsByAnnouncementId(announcementId: number): Observable<any> {
+    const token = localStorage.getItem('authToken');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.apiUrl}/announcment/getComments/${announcementId}`, { headers });
   }
 }

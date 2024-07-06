@@ -52,12 +52,26 @@
             </button>
 
             <div *ngIf="announcement.showComments" class="comments-section">
+              <ul [id]="'comments-' + announcement.id" class="comments-list">
+                <li *ngFor="let comment of announcement.comments" class="comment-item">
+                  <div class="comment-avatar">
+                    <img src="assets/images/avatar1.png" alt="User Avatar">
+                  </div>
+                  <div class="comment-content">
+                    <div class="comment-header">
+                      <span class="comment-user">
+                        {{ comment.userCommentDTO?.userName || 'Unknown User' }}
+                      </span>
+                      <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                    </div>
+                    <p>{{ comment.content }}</p>
+                  </div>
+                </li>
+              </ul>
+          
               <div class="comment-input-section">
-                <mat-form-field appearance="fill">
-                  <mat-label>Add a comment...</mat-label>
-                  <textarea matInput [(ngModel)]="newComment[announcement.id]" placeholder="Type your comment here..."></textarea>
-                </mat-form-field>
-                <button class="comment-send-btn" (click)="sendComment(announcement.id)">Send</button>
+                <input type="text" [id]="'content-' + announcement.id" placeholder="Add a class comment..." [(ngModel)]="newComment[announcement.id]" class="comment-input">
+                <button (click)="sendComment(announcement.id)" class="comment-send-btn">Send</button>
               </div>
             </div>
           </div>
