@@ -1,4 +1,5 @@
-<div class="containerr">
+<!-- Sidebar Component -->
+<div class="container">
   <nav class="sidebar close">
     <div class="main-content">
       <header>
@@ -10,45 +11,80 @@
             <span class="name">GradesUP</span>
           </div>
         </div>
-        <i class='bx bx-chevron-right toggle'></i>
+        <i class='bx bx-chevron-right toggle' (click)="toggleSidebar()"></i>
       </header>
       <div class="menu-bar">
         <div class="menu">
-          <li class="search-box">
-            <i class='bx bx-search icon'></i>
-            <input type="text" placeholder="Search...">
-          </li>
           <ul class="menu-links">
+            <!-- Dashboard Link -->
             <li class="nav-link">
-              <a [routerLink]="['/dashboard']" [ngClass]="{'active': isActive('/dashboard')}">
+              <a [routerLink]="['/admin']" [ngClass]="{'active': isActive('/admin')}">
                 <i class='bx bx-home-alt icon'></i>
                 <span class="text nav-text">Dashboard</span>
               </a>
             </li>
+      
+            <!-- Courses Link -->
             <li class="nav-link">
               <a [routerLink]="['/student-courses']" [ngClass]="{'active': isActive('/student-courses')}">
                 <i class='bx bx-book-open icon'></i>
                 <span class="text nav-text">Courses</span>
               </a>
             </li>
-            <li class="nav-link">
-              <a href="#">
-                <i class='bx bx-bell icon'></i>
-                <span class="text nav-text">Notifications</span>
-              </a>
-            </li>
-            <li class="nav-link">
+      
+            <!-- Enroll by Code (Only for Students) -->
+            <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
               <a (click)="openEnrollModal()" [ngClass]="{'active': isActive('/enroll-by-code')}">
                 <i class='bx bx-book icon'></i>
                 <span class="text nav-text">Enroll by Code</span>
               </a>
             </li>
-            <li class="nav-link">
+
+            <!-- Quizzes (Only for Instructors) -->
+            <li class="nav-link" *ngIf="userType === 'ROLE_INSTRUCTOR'">
+              <a [routerLink]="['/instructor-quizzes']" [ngClass]="{'active': isActive('/instructor-quizzes')}">
+                <i class='bx bx-file icon'></i>
+                <span class="text nav-text">Quiz Submissions</span>
+              </a>
+            </li>
+
+            <!-- Quizzes and Upcoming Quizzes (Only for Students) -->
+            <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
+              <a [routerLink]="['/student-quizzes']" [ngClass]="{'active': isActive('/student-quizzes')}">
+                <i class='bx bx-file icon'></i>
+                <span class="text nav-text">Quiz Submissions</span>
+              </a>
+            </li>
+            <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
+              <a [routerLink]="['/student-upcoming-quizzes']" [ngClass]="{'active': isActive('/student-upcoming-quizzes')}">
+                <i class='bx bx-calendar icon'></i>
+                <span class="text nav-text">Upcoming Quizzes</span>
+              </a>
+            </li>
+
+            <!-- Wallets (Only for Admins) -->
+            <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
               <a href="#">
                 <i class='bx bx-wallet icon'></i>
                 <span class="text nav-text">Wallets</span>
               </a>
             </li>
+
+            <!-- Profile Link (Only for Admins) -->
+            <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
+              <a [routerLink]="['/admin-profile']" [ngClass]="{'active': isActive('/admin-profile')}">
+                <i class='bx bx-user icon'></i>
+                <span class="text nav-text">Profile</span>
+              </a>
+            </li>
+
+            <li class="nav-link" *ngIf="userType === 'ROLE_ADMIN'">
+              <a [routerLink]="['/users-profile']" [ngClass]="{'active': isActive('/users-profile')}">
+                <i class='bx bx-book icon'></i>
+                <span class="text nav-text">Users</span>
+              </a>
+            </li>
+       
           </ul>
         </div>
         <div class="bottom-content">
@@ -72,22 +108,4 @@
       </div>
     </div>
   </nav>
-</div>
-<div id="enrollModal" class="modal" [ngClass]="{ 'show': showModal }">
-  <div class="modal-content">
-    <span class="close" (click)="closeEnrollModal()">&times;</span>
-    
-    <h2>Enroll in Course</h2>
-    <div>
-      <label class="labelCode">
-        Enter Course's Code:
-        <input type="text" [(ngModel)]="enrollCode" class="inputCode">
-      </label>
-      <label class="labelPass">
-        Enter Password:
-        <input type="text" [(ngModel)]="enrollPassword" class="input">
-      </label>
-      <button type="button" class="btn2" (click)="enrollCourse()">Enroll</button>
-    </div>
-  </div>
 </div>

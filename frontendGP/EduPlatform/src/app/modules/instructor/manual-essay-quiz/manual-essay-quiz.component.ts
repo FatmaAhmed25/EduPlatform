@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ManualQuizService } from 'src/app/services/manual-quizService/manual-quiz.service';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
+import { LoginComponent } from '../../login/login.component';
 
 @Component({
   selector: 'app-manual-essay-quiz',
@@ -18,7 +19,8 @@ export class ManualEssayQuizComponent implements OnInit {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private quizService: CreateQuizService
+    private quizService: CreateQuizService,
+    private auth: LoginComponent,
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +35,7 @@ export class ManualEssayQuizComponent implements OnInit {
   }
 
   addQuestion(): void {
+    // this.auth.isLoggedIn();
     this.questions.push(this.fb.group({
       text: ['', Validators.required],
       points: ['', Validators.required],

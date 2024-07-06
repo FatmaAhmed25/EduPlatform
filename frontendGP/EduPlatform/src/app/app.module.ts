@@ -51,6 +51,7 @@ import { ManualQuizService } from 'src/app/services/manual-quizService/manual-qu
 import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
 import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
 import {ProctoredVideoService} from './services/proctored-service/proctored-video.service';
+import { AuthGuard } from './modules/login/auth.guard';
 
 
 
@@ -92,7 +93,7 @@ import {ProctoredVideoService} from './services/proctored-service/proctored-vide
     MatSnackBarModule,
     MatSelectModule,
   ],
-  providers: [EnrolledCoursesService,AuthService,
+  providers: [EnrolledCoursesService,AuthService,AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     WebSocketService,LectureService,LabService,QuizService,SearchService,AssignmentService,ManualQuizService,ProctoredVideoService
   ],
