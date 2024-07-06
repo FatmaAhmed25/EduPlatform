@@ -13,10 +13,13 @@ import { ProctoredVideoService } from '../services/proctored-service/proctored-v
 export class ProctoredVideoComponent implements OnInit, OnDestroy {
   @ViewChild('videoEl') videoEl!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasEl') canvasEl!: ElementRef<HTMLCanvasElement>;
+  
   displayText: string = '';
   private socket!: Socket;
   private detectionInterval: any;
   private lastFrameTime: number = 0;
+  isVideoVisible: boolean = false;
+  mediaStream: MediaStream | null = null;
 
   constructor(private proctoredVideoService: ProctoredVideoService) {}
 
@@ -32,6 +35,17 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
       this.socket.disconnect();
     }
     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+  toggleVideoVisibility(): void {
+    console.log(this.isVideoVisible)
+    // If video becomes visible, start capturing video
+    if (this.isVideoVisible) {
+      this.isVideoVisible =false;
+    
+    } else {
+      this.isVideoVisible = true;
+      // If video is hidden, stop video capture
+    }
   }
 
   private handleVisibilityChange = () => {

@@ -3,14 +3,16 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
+import { Quiz } from 'src/app/models/Quiz';
 
 @Component({
-  selector: 'app-manual-MCQ-quiz',
-  templateUrl: './manual-MCQ-quiz.component.html',
-  styleUrls: ['./manual-MCQ-quiz.component.css']
+  selector: 'app-manual-mcq-quiz',
+  templateUrl: './manual-mcq-quiz.component.html',
+  styleUrls: ['./manual-mcq-quiz.component.css']
 })
 export class ManualMcqQuizComponent implements OnInit {
-  quizForm!: FormGroup; // Use non-null assertion operator
+  quizForm!: FormGroup;
+  quiz: Quiz | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -20,6 +22,11 @@ export class ManualMcqQuizComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.quiz = this.quizService.getQuiz();
+    if (!this.quiz) {
+      console.error('No quiz data found!');
+      this.router.navigate(['/create-quiz']);
+    }
     this.quizForm = this.fb.group({
       totalGrade: ['', Validators.required],
       questions: this.fb.array([])
@@ -42,8 +49,7 @@ export class ManualMcqQuizComponent implements OnInit {
       answers: this.fb.array([
         this.fb.group({
           text: ['', Validators.required],
-          correct: [false],
-          questionType:['MCQ']
+          correct: [false]
         })
       ])
     }));
@@ -82,12 +88,12 @@ export class ManualMcqQuizComponent implements OnInit {
         startDate: this.quizService.getQuiz()?.startDate,
         endDate: this.quizService.getQuiz()?.endDate,
       };
-      
-      this.quizService.createManualQuiz(quizData).subscribe(
+
+      this.quizService.createManualMCQQuiz(quizData).subscribe(
         response => {
-          const quizId=response.quizId;
+          const quizId = response.quizId;
           console.log(quizId);
-          // this.router.navigate(['/mcq-quiz-viewer',quizId]);
+          this.router.navigate(['/instructor/quiz-viewer', quizId]);
         },
         error => {
           console.error('Error submitting quiz:', error);
@@ -97,5 +103,4 @@ export class ManualMcqQuizComponent implements OnInit {
       console.error('Form is invalid');
     }
   }
-  
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { StudentQuizService } from 'src/app/services/Student-quiz-service/student-quiz.service';
 import { interval, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
@@ -43,11 +43,13 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   countdown: string = '';
   timerSubscription: Subscription | null = null;
   errorMessage: string | null = null;
+  initialWindowWidth: any;
 
 
   constructor(private quizService: StudentQuizService, private datePipe: DatePipe,private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    // window.addEventListener('blur', this.onWindowBlur);
     this.quizService.getQuiz().subscribe(
       (data: any) => {
         this.quiz = data;
@@ -63,9 +65,13 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('blur', this.onWindowBlur);
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+  }
+  onWindowBlur = (): void => {
+    alert('Please do not switch tabs or applications during the quiz.');
   }
 
   initializeAnsweredQuestions(): void {
@@ -90,6 +96,18 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
       this.selectedAnswers[this.currentQuestionIndex] = selectedAnswer;
     }
   }
+
+  // Detect when full-screen mode changes
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
+  @HostListener('document:mozfullscreenchange')
+  @HostListener('document:MSFullscreenChange')
+  onFullScreenChange(): void {
+    if (!document.fullscreenElement) {
+      alert('Please stay in full-screen mode during the quiz.');
+    }
+  }
+
 
   goToNextQuestion(): void {
     if (this.quiz && this.currentQuestionIndex < this.quiz.questions.length - 1) {
@@ -124,6 +142,27 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
       });
     }
   }
+  saveEssayAnswer(answer: string, index: number): void {
+    if (this.quiz) {
+      this.answeredQuestions[index] = true;
+      this.selectedAnswers[index] = answer;
+    }
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    // const currentWidth = event.target.innerWidth;
+    // if (currentWidth !== this.initialWindowWidth) {
+    //   alert('Changing window size is not allowed during the quiz!');
+    //   window.close();  // Optional: Close the window to prevent further actions.
+    // }
+  }
+
+
+hasNextQuestion(): boolean {
+  return this.currentQuestionIndex < ((this.quiz?.questions?.length ?? 0) - 1);
+}
+
+  
 
   confirmSubmition(){
     const dialogRef = this.dialog.open(ConfirmQuizSubmissionDialogComponent);
@@ -139,7 +178,7 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  submitQuiz(): void {
+  submitMcqQuiz(): void {
     if (this.quiz) {
       const studentId = localStorage.getItem('userID')
       const quizId = 2; 
@@ -154,7 +193,7 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
             answerId: this.selectedAnswers[index]
           }))
         };
-        this.quizService.submitQuiz(payload).subscribe(
+        this.quizService.submitMCQQuiz(payload).subscribe(
         (response) => {
           console.log('Quiz submitted successfully:', response);
         },
@@ -163,9 +202,43 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
         }
       );
     }
-    }
-
-    
+  }}
+    submitEssayQuiz(): void {
+      if (this.quiz) {
+        const studentId = Number(localStorage.getItem('userID'))
+        const quizId = 20; 
+        console.log('student id: ' + studentId);
+        console.log('quiz id: ' + quizId);
+        if(studentId && quizId) {
+          const payload = {
+            studentId: studentId,
+            quizId: quizId,
+            answers: this.quiz.questions.map((question, index) => ({
+              questionId: question.questionId,
+              answer: this.selectedAnswers[index]
+            }))
+          };
+          console.log(payload);
+          this.quizService.submitEssayQuiz(payload).subscribe(
+          (response) => {
+            console.log('Quiz submitted successfully:', response);
+          },
+          (error) => {
+            console.error('Error submitting quiz:', error);
+          }
+        );
+      }
+          
+      } 
       
   }
+  submitQuiz(): void {
+    if (this.quiz) {
+      const firstQuestion = this.quiz.questions[0];
+      if (firstQuestion.questionType === 'MCQ') {
+        this.submitMcqQuiz();
+      } else {
+        this.submitEssayQuiz();
+      }
+    }}
 }

@@ -1,50 +1,67 @@
+<!-- quiz-details.component.html -->
+
 <div class="error-message" *ngIf="errorMessage">
   <p>{{ errorMessage }}</p>
-  <button >Go Back</button>
+  <button>Go Back</button>
 </div>
 
 <div class="navbar">
-    <div class="navbar-title">{{ quiz?.title }}</div>
-    <div class="navbar-info">
-      <span>Answered: {{ getAnsweredQuestionsCount() }} / {{ quiz?.questions?.length ?? 0 }}</span>
-      <span class="countdown-timer">{{ countdown }}</span>
-    </div>
+  <div class="navbar-title">{{ quiz?.title }}</div>
+  <div class="navbar-info">
+    <span>Answered: {{ getAnsweredQuestionsCount() }} / {{ quiz?.questions?.length ?? 0 }}</span>
+    <span class="countdown-timer">{{ countdown }}</span>
   </div>
-  
-  <div class="quiz-container">
-    <div class="sidebar">
-      <ul>
-        <li *ngFor="let question of quiz?.questions ?? []; let i = index"
-            [class.completed]="answeredQuestions[i]"
-            [class.selected]="selectedQuestionIndex === i"
-            (click)="selectQuestion(i)">
-          <span class="question-index">{{ i + 1 }}</span>
-          <span class="points">Points: {{ question.points }}</span>
-        </li>
-      </ul>
-    </div>
-    <div class="main-content">
-      <div *ngIf="currentQuestion">
-        <div class="question">
-          <h2>Question {{ currentQuestionIndex + 1 }}</h2>
-          <p>{{ currentQuestion.text }}</p>
-        </div>
-        <div class="answer-options" *ngIf="currentQuestion?.questionType === 'MCQ'">
-          <div class="answer-option" *ngFor="let answer of currentQuestion?.answers ?? []">
-            <input type="radio"
-                   name="answer"
-                   [value]="answer.text"
-                   [checked]="selectedAnswers[currentQuestionIndex] === answer.text"
-                   (click)="markQuestionAsCompleted(answer.answerId)">
-            <label>{{ answer.text }}</label>
-          </div>
-        </div>
-        <button (click)="goToNextQuestion()">Next Question</button>
-        <div class="submit-button-container">
-            <button class="submitQuizButton" (click)="confirmSubmition()">Submit Quiz</button>
-          </div>
+</div>
+
+<div class="quiz-container">
+  <div class="sidebar">
+    <ul>
+      <li *ngFor="let question of quiz?.questions ?? []; let i = index"
+          [class.completed]="answeredQuestions[i]"
+          [class.selected]="selectedQuestionIndex === i"
+          (click)="selectQuestion(i)">
+        <span class="question-index">{{ i + 1 }}</span>
+        <span class="points">Points: {{ question.points }}</span>
+      </li>
+    </ul>
+  </div>
+ 
+  <div class="main-content">
+    <div *ngIf="currentQuestion">
+      <div class="question">
+        <h2>Question {{ currentQuestionIndex + 1 }}</h2>
+       
+        <p>{{ currentQuestion.text }}</p>
       </div>
+      <!-- Conditional check for MCQ -->
+      <div class="answer-options" *ngIf="currentQuestion?.questionType === 'MCQ'">
+        <div class="answer-option" *ngFor="let answer of currentQuestion?.answers ?? []">
+          <input type="radio"
+                 name="answer"
+                 [value]="answer.text"
+                 [checked]="selectedAnswers[currentQuestionIndex] === answer.text"
+                 (click)="markQuestionAsCompleted(answer.answerId)">
+          <label>{{ answer.text }}</label>
+        </div>
+      </div>
+
+      <!-- Conditional check for ESSAY -->
+      <div *ngIf="currentQuestion?.questionType === 'ESSAY'">
+        <textarea (input)="saveEssayAnswer($any($event.target).value, currentQuestionIndex)"
+                  [value]="selectedAnswers[currentQuestionIndex] ?? ''"
+                  placeholder="Write your answer here..."></textarea>
+      </div>
+      
+      <!-- Conditional display for Next Question button -->
+      <button *ngIf="hasNextQuestion()" 
+              (click)="goToNextQuestion()">Next Question</button>
+      
+      <div class="submit-button-container">
+        <button class="submitQuizButton" (click)="confirmSubmition()">Submit Quiz</button>
+      </div>
+      
     </div>
   </div>
   
-  
+  <!-- <app-proctored-video></app-proctored-video> Proctoring Component -->
+</div>

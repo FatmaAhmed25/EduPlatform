@@ -85,33 +85,48 @@ export class AiGenerateQuizComponent {
     }
   }
   submitQuiz() {
-
     this.loading = true;
-  
-    this.quizService.submitQuiz(this.selectedFiles).subscribe(response => {
-      
-      console.log('Quiz submitted successfully:', response);
-      console
-      this.quizService.setQuizId(response.quizId);
-      this.getQuiz();
-      // Handle the response here
-    }, error => {
-      console.error('Error submitting quiz:', error);
-
-    });
-  }
-  getQuiz() {
-  //   this.quizService.getQuizForInstructor().subscribe(response => {
-  //     console.log(response)
-  //     this.questions=response.questions;
-  //     this.loading = false;
-
-  //   },error => {
-  //     console.error('Error getting quiz:', error);
-  //   }
-  // )
     
+    if (this.quiz?.typeOfAssessment === 'ai-generated-mcq') {
+      this.quizService.GenerateMCQQuiz(this.selectedFiles).subscribe(response => {
+        console.log('MCQ Quiz submitted successfully:', response);
+        this.quizService.setQuizId(response.quizId);
+        this.loading = false;
+        this.router.navigate(['/instructor/quiz-viewer',response.quizId]);
+      }, error => {
+        console.error('Error submitting MCQ quiz:', error);
+        this.loading = false;
+      });
+    } else if (this.quiz?.typeOfAssessment === 'ai-generated-essay') {
+      this.quizService.GenerateEssayQuiz(this.selectedFiles).subscribe(response => {
+        console.log('Essay Quiz submitted successfully:', response);
+        this.quizService.setQuizId(response.quizId);
+        this.loading = false;
+      }, error => {
+        console.error('Error submitting Essay quiz:', error);
+        this.loading = false;
+      });
+    }
   }
+
+  getAssessmentTitle(): string {
+    if (!this.quiz) {
+      return 'Questions Generator'; 
+    }
+    switch (this.quiz.typeOfAssessment) {
+      case 'ai-generated-mcq':
+        return 'MCQ Questions Generator';
+      case 'ai-generated-essay':
+        return 'Essay Questions Generator';
+      case 'manual-mcq':
+        return 'Manual MCQ Questions Generator';
+      case 'manual-essay':
+        return 'Manual Essay Questions Generator';
+      default:
+        return 'Questions Generator';
+    }
+  }
+  
 
   toggleQuestion(index: number) {
     this.questions[index].expanded = !this.questions[index].expanded;
@@ -124,7 +139,6 @@ export class AiGenerateQuizComponent {
           this.editQuizService.updateQuiz(this.quiz.quizId,instructorId,this.quiz).subscribe({
             next: (updatedQuiz) => {
               console.log('Quiz updated successfully:', updatedQuiz);
-              this.getQuiz();
             },
             error: (err) => {
               console.error('Error updating quiz:', err);
