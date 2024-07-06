@@ -17,25 +17,27 @@ import {ProctoredVideoComponent} from './proctored-video/proctored-video.compone
 import { McqQuizViewerInstructorComponent } from './modules/instructor/mcq-quiz-viewer-instructor/mcq-quiz-viewer-instructor.component';
 import { SearchResultInstructorComponent } from './modules/instructor/search-result-instructor/search-result-instructor.component';
 import { StreamComponent } from './modules/instructor/stream/stream.component';
+import { AuthGuard } from './modules/login/auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent},
-  { path: 'ai-generate-quiz', component: AiGenerateQuizComponent },
-  { path: 'create-quiz', component: CreateQuizComponent},
-  { path: 'student-courses', component: StudentCoursesComponent },
+  { path: 'ai-generate-quiz', component: AiGenerateQuizComponent,canActivate: [AuthGuard] },
+  { path: 'create-quiz', component: CreateQuizComponent, canActivate: [AuthGuard]},
+  { path: 'student-courses', component: StudentCoursesComponent , canActivate: [AuthGuard]},
   { path: 'login', component:LoginComponent},
-  { path: 'instructor-dashboard', component:InstructorDashboardComponent},
-  { path: 'course-details/:id', component: CourseDetailsComponent },
-  { path: 'searchResult', component: SearchResultComponent },
-  { path: 'create-course', component: CreateCourseComponent },
-  { path: 'instructor-courses', component: CoursesComponent },
-  { path: 'searchResult-Instructor', component: SearchResultInstructorComponent },
-  { path: 'stream/:id', component: StreamComponent },
-  { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent },
-  { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
-  { path: 'take-quiz', component: QuizDetailsComponent },
-  { path: 'video-player', component: ProctoredVideoComponent },
-  { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent }
+  { path: 'instructor-dashboard', component:InstructorDashboardComponent, canActivate: [AuthGuard]},
+  { path: 'course-details/:id', component: CourseDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'searchResult', component: SearchResultComponent , canActivate: [AuthGuard]},
+  { path: 'create-course', component: CreateCourseComponent, canActivate: [AuthGuard] },
+  { path: 'instructor-courses', component: CoursesComponent, canActivate: [AuthGuard] },
+  { path: 'searchResult-Instructor', component: SearchResultInstructorComponent, canActivate: [AuthGuard] },
+  { path: 'stream/:id', component: StreamComponent , canActivate: [AuthGuard]},
+  { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent , canActivate: [AuthGuard]},
+  { path: 'manual-essay-quiz', component: ManualEssayQuizComponent , canActivate: [AuthGuard]} ,
+  { path: 'take-quiz', component: QuizDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'video-player', component: ProctoredVideoComponent, canActivate: [AuthGuard] },
+  { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: 'homepage', pathMatch: 'full' }
 
 
 
