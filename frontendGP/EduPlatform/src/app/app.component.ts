@@ -15,8 +15,13 @@ export class AppComponent {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.showSidebar = !(event.url === '/' || event.url === '/login'|| event.url === '/take-quiz' ||event.url === '/#features');
-        this.showNavbar = !(event.url === '/' || event.url === '/login'|| event.url === '/take-quiz' ||event.url === '/#features');
+
+        const isTakeQuizRoute = /\/take-quiz\/\d+/.test(event.url);
+        const isRootOrLogin = event.url === '/' || event.url === '/login';
+        const isFeatureSection = event.url === '/#features';
+
+        this.showSidebar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
+        this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
       }
     });
   }

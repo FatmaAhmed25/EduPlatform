@@ -70,7 +70,7 @@
                </a> 
             </li>
             <li class="nav-link" *ngIf="userType === 'ROLE_STUDENT'">
-              <a (click)="openEnrollModal()" [ngClass]="{'active': isActive('/enroll-by-code')}">
+              <a [routerLink]="['/upcoming-quizzes']" [ngClass]="{'active': isActive('/upcoming-quizzes')}">
                 <i class='bx bxs-calendar icon'></i>
                 <span class="text nav-text">Upcomming Quizzes</span>
                 <span class="tooltip">Upcomming Quizzes</span>

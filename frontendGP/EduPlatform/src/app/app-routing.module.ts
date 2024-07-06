@@ -22,6 +22,8 @@ import { SearchResultInstructorComponent } from './modules/instructor/search-res
 import { StreamComponent } from './modules/instructor/stream/stream.component';
 import { AuthGuard } from './modules/login/auth.guard';
 import { SubmittedQuizzesComponent } from './modules/student/submitted-quizzes/submitted-quizzes.component';
+import { UpcommingQuizzesComponent } from './modules/student/upcomming-quizzes/upcomming-quizzes.component';
+import { TakeQuizErrorComponent } from './modules/student/quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent},
@@ -38,7 +40,7 @@ const routes: Routes = [
   { path: 'stream/:id', component: StreamComponent , canActivate: [AuthGuard]},
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent , canActivate: [AuthGuard]},
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent , canActivate: [AuthGuard]} ,
-  { path: 'take-quiz', component: QuizDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'take-quiz/:courseId/:quizId', component: QuizDetailsComponent, canActivate: [AuthGuard] },
   { path: 'video-player', component: ProctoredVideoComponent, canActivate: [AuthGuard] },
   { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'homepage', pathMatch: 'full' },
@@ -49,13 +51,14 @@ const routes: Routes = [
   { path: 'instructor-courses', component: CoursesComponent },
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent },
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent } ,
-  { path: 'take-quiz', component: QuizDetailsComponent },
   { path: 'video-player', component: ProctoredVideoComponent },
   { path: 'instructor/quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent },
   {path:'admin-dashboard',component:AdminDashboardComponent},
   {path:'admin-profile',component:AdminProfileComponent},
   {path:'users-profile',component:UsersProfileComponent},
   {path:'submitted-quizzes',component:SubmittedQuizzesComponent},
+  {path: 'upcoming-quizzes',component:UpcommingQuizzesComponent},
+  { path: 'take-quiz-error', component: TakeQuizErrorComponent}
 
 ];
 

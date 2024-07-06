@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class CourseDetailsComponent implements OnInit {
   courseId: number | undefined;
-  studentId: string = localStorage.getItem("userID")!; // Example student ID
+  studentId: string = localStorage.getItem("userID")!;
 
   constructor(private route: ActivatedRoute) { }
 

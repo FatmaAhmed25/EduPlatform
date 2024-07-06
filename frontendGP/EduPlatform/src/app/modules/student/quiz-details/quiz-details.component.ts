@@ -4,6 +4,7 @@ import { interval, Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmQuizSubmissionDialogComponent } from 'src/app/dialogs/confirm-quiz-submition-dialog/confirm-quiz-submission-dialog/confirm-quiz-submission-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Answer {
   answerId: string;
@@ -44,13 +45,19 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   timerSubscription: Subscription | null = null;
   errorMessage: string | null = null;
   initialWindowWidth: any;
+  quizId: any;
+  courseId:any;
 
 
-  constructor(private quizService: StudentQuizService, private datePipe: DatePipe,private dialog: MatDialog) {}
+  constructor(private router: Router,private quizService: StudentQuizService, private datePipe: DatePipe,private dialog: MatDialog,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.quizId = +params['quizId']; 
+      this.courseId = +params['courseId'];
+    });
     // window.addEventListener('blur', this.onWindowBlur);
-    this.quizService.getQuiz().subscribe(
+    this.quizService.getQuiz(this.courseId,this.quizId).subscribe(
       (data: any) => {
         this.quiz = data;
         this.initializeAnsweredQuestions();
@@ -132,6 +139,8 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
         if (distance <= 0) {
           this.countdown = 'Time is up!';
           this.timerSubscription?.unsubscribe();
+          this.submitQuiz();
+          this.router.navigate(['/take-quiz-error']);
         } else {
           const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -179,15 +188,13 @@ hasNextQuestion(): boolean {
   }
 
   submitMcqQuiz(): void {
-    if (this.quiz) {
-      const studentId = localStorage.getItem('userID')
-      const quizId = 10; 
+    if (this.quiz && this.quizId) {
+      const studentId = localStorage.getItem('userID') 
       console.log('student id: ' + studentId);
-      console.log('quiz id: ' + quizId);
-      if(studentId && quizId) {
+      if(studentId) {
         const payload = {
           studentId: studentId,
-          quizId: quizId,
+          quizId: this.quizId,
           answers: this.quiz.questions.map((question, index) => ({
             questionId: question.questionId,
             answerId: this.selectedAnswers[index]
@@ -204,15 +211,14 @@ hasNextQuestion(): boolean {
     }
   }}
     submitEssayQuiz(): void {
-      if (this.quiz) {
+      if (this.quiz && this.quizId) {
         const studentId = Number(localStorage.getItem('userID'))
-        const quizId = 10; 
         console.log('student id: ' + studentId);
-        console.log('quiz id: ' + quizId);
-        if(studentId && quizId) {
+        console.log('quiz id: ' + this.quizId);
+        if(studentId) {
           const payload = {
             studentId: studentId,
-            quizId: quizId,
+            quizId: this.quizId,
             answers: this.quiz.questions.map((question, index) => ({
               questionId: question.questionId,
               answer: this.selectedAnswers[index]
@@ -233,7 +239,7 @@ hasNextQuestion(): boolean {
       
   }
   submitQuiz(): void {
-    if (this.quiz) {
+    if (this.quiz ) {
       const firstQuestion = this.quiz.questions[0];
       if (firstQuestion.questionType === 'MCQ') {
         this.submitMcqQuiz();

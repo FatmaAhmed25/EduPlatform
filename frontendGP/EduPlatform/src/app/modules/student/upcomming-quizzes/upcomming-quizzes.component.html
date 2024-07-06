@@ -1,0 +1,110 @@
+<!-- src/app/components/upcoming-quizzes/upcoming-quizzes.component.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Upcoming Quizzes</title>
+</head>
+<body>
+    <div class="md:ml-64 py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30" style="padding-right:100px">
+        <ul class="flex items-center text-sm ml-4">
+            <li class="mr-2">
+                <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Upcoming Quizzes</a>
+            </li>
+        </ul>
+    </div>
+
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64  min-h-screen transition-all main" style="width: 93.2%;">
+    
+    <div class="p-6" style="margin-left:50px; justify-content: center;">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md" style="width:200%">
+                <div class="flex justify-between mb-4 items-start">
+                    <div class="font-medium">Upcoming Quizzes</div>
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600">
+                            <i class="ri-more-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[650px]" data-tab-for="order" data-page="active">
+                        <thead>
+                            <tr>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Course TITLE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">QUIZ TITLE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">TOTAL GRADE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">START TIME</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">END TIME</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">DURATION</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">AVAILABILITY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let quiz of quizzes">
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <div class="flex items-center">
+                                        <span class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">{{ quiz.title }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-400">{{ quiz.title }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none" style="color:#5E5DF0">{{ quiz.totalGrade }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-400">
+                                        <td class="start-time">
+                                            <span class="date">{{ displayTime(quiz.startTime) }}</span>
+                                          </td>
+                                      
+                                    </span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-400">
+                                        <td class="end-time">
+                                            <span class="date">{{ displayTime(quiz.endTime) }}</span>
+                                          </td>
+                                    </span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-400">
+                                        {{ getDuration(quiz.startTime, quiz.endTime) }}
+                                    </span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <ng-container *ngIf="quiz.canTakeQuiz">
+                                      <button class="take-quiz-btn" (click)="takeQuiz(quiz.courseId, quiz.quizId)">
+                                        Take Quiz
+                                      </button>
+                                    </ng-container>
+                                    <ng-container *ngIf="!quiz.canTakeQuiz">
+                                      <span class="not-available-text">
+                                        <ng-container *ngIf="countdownText(quiz.startTime) !== 'Available'">
+                                          {{ countdownText(quiz.startTime) }}
+                                        </ng-container>
+                                        <ng-container *ngIf="countdownText(quiz.startTime) === 'Available'">
+                                          Not Available
+                                        </ng-container>
+                                      </span>
+                                    </ng-container>
+                                  </td>
+                                  
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
+         </div>
+    </div>
+</main>
+
+</body>
+</html>

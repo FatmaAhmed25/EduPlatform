@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import '../../../../styles.scss';
 
 
 
@@ -12,7 +13,7 @@
   /* 2 */
   border-style: solid;
   /* 2 */
-  border-color: #e5e7eb;
+  border-color: #000000;
   /* 2 */
 }
 
@@ -689,7 +690,7 @@ video {
 }
 
 .gap-6{
-  gap: 1.5rem;
+  gap: rem;
 }
 
 .overflow-x-auto{
@@ -1222,3 +1223,28 @@ video {
   }
 }
 
+.take-quiz-btn {
+    display: inline-block;
+    padding: 5px 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, $primary-color, #6c5cfb); // Gradient from blue to cyan
+    border: none;
+    border-radius: 0.5rem; // Rounded corners
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Soft shadow
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s; // Smooth transitions
+  
+    &:hover {
+      background: linear-gradient(90deg, #2563eb, #003898); // Darker gradient on hover
+      transform: translateY(-2px); // Slight upward movement on hover
+    }
+  
+    &:active {
+      transform: translateY(0); // Reset transform on active click
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // More intense shadow on click
+    }
+  }
+  
+  
