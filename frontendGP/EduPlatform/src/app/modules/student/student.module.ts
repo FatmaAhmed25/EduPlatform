@@ -16,6 +16,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchResultComponent } from './search-result/search-result.component';
 import { QuizDetailsComponent } from './quiz-details/quiz-details.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { SubmittedQuizzesComponent } from './submitted-quizzes/submitted-quizzes.component';
+import { UpcommingQuizzesComponent } from './upcomming-quizzes/upcomming-quizzes.component';
+import { TakeQuizErrorComponent } from './quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
 @NgModule({
   declarations: [
     StudentDashboardComponent,
@@ -24,7 +27,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     // AssignmentComponent,
     SearchResultComponent,
     QuizDetailsComponent,
-    
+    SubmittedQuizzesComponent,
+    UpcommingQuizzesComponent,
+    TakeQuizErrorComponent,
   ],
   imports: [
     CommonModule,
@@ -33,7 +38,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ToastrModule.forRoot({
       positionClass: 'toast-top-right', // Position of the toast
       timeOut: 3000, // Duration in milliseconds
-      preventDuplicates: true, // Prevent duplicate toasts
+      preventDuplicates: true, // Prevent duplicate toastss
     }),
     MatSnackBarModule,
     SharedModule

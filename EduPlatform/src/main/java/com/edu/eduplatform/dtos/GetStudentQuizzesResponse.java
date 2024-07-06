@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class GetStudentQuizzesResponse {
+    private Long courseId;
     private Long quizId;
     private String title;
     private LocalDateTime startTime;

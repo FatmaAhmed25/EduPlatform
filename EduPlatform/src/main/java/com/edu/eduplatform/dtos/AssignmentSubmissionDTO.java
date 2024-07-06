@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class AssignmentSubmissionDTO {
     private Long id;
-    private String submissionText;
+    private String fileName;
     private UserDTO student;
 }

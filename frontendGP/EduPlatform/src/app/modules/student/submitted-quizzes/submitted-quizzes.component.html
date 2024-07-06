@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Submiited</title>
+</head>
+<body>
+<div class="md:ml-64 py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30" style="padding-right:100px">
+    <ul class="flex items-center text-sm ml-4">
+        <li class="mr-2">
+            <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Submitted Quizzes</a>
+        </li>
+    </ul>
+</div>
+
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 min-h-screen transition-all main" style="width: 93.2%;">
+
+    <div class="p-6 "style="margin-left:150px;">
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md"style="width:180%">
+                <div class="flex justify-between mb-4 items-start">
+                    <div class="font-medium">Submitted Quizzes</div>
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600"><i class="ri-more-fill"></i></button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[650px]" data-tab-for="order" data-page="active">
+                        <thead>
+                            <tr>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Course TITLE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">QUIZ TITLE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">GRADE</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STATUS</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">SUBMISSION TIME</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">QUIZ SUBMISSION</th>
+  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let quiz of quizzes">
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                  <div class="flex items-center">
+                                    <span class="text-gray-600 text-sm font-medium hover:text-blue-500 ml-2 truncate">{{ quiz.courseName }}</span>
+                                  </div>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                  <span class="text-[13px] font-medium text-gray-400">{{ quiz.quizTitle }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                  <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none "style="color:#5E5DF0">{{ quiz.quizSubmission.totalGrade }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <a *ngIf="quiz.quizSubmission?.cheatingStatus === 'SUSPISIOUS' || quiz.quizSubmission?.cheatingStatus === 'CHEATING'"
+                                       href="javascript:void(0)"
+                                       (click)="downloadCheatingReport(quiz.quizSubmission.id)">
+                                      {{ quiz.quizSubmission.cheatingStatus }}
+                                    </a>
+                                    <a *ngIf="quiz.quizSubmission?.cheatingStatus === 'PASSED' ">
+            
+                                      {{ quiz.quizSubmission.cheatingStatus }}
+                                    </a>
+                                  </td>
+                                
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                  <span class="text-[13px] font-medium text-gray-400">{{ quiz.quizSubmission.submissionTime | date }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <button class="quiz-submission-btn" (click)="downloadQuizSubmissionPdf(quiz.quizSubmission.id, quiz.quizId)">
+                                      Quiz Submission
+                                    </button>
+                                  </td>
+                              </tr>
+                              
+                              
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                
+             
+         </div>
+
+ 
+
+    </div>
+</main>
+
+
+</body>
+</html>

@@ -34,7 +34,7 @@ export class LoginComponent {
           this.router.navigate(['/instructor-dashboard']);
         }
         else if (response.userType === 'ROLE_ADMIN') {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin-dashboard']);
         }
       },
       error => {

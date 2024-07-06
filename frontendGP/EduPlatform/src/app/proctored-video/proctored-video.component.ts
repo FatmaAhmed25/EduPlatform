@@ -52,7 +52,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
     if (document.visibilityState === 'visible') {
       console.log('Tab is active');
     } else {
-      alert('AFSHTK YA CHEATER');
+      alert('Warning: Dont switch tabs');
       console.log('Tab is inactive');
     }
   };

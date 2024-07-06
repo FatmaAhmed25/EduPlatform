@@ -21,6 +21,10 @@ import { McqQuizViewerInstructorComponent } from './modules/instructor/mcq-quiz-
 import { SearchResultInstructorComponent } from './modules/instructor/search-result-instructor/search-result-instructor.component';
 import { StreamComponent } from './modules/instructor/stream/stream.component';
 import { AuthGuard } from './modules/login/auth.guard';
+import { SubmittedQuizzesComponent } from './modules/student/submitted-quizzes/submitted-quizzes.component';
+import { UpcommingQuizzesComponent } from './modules/student/upcomming-quizzes/upcomming-quizzes.component';
+import { TakeQuizErrorComponent } from './modules/student/quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
+
 import { AssignmentSubmissionsComponent } from './modules/instructor/assignment-submissions/assignment-submissions.component';
 const routes: Routes = [
   { path: '', component: HomepageComponent},
@@ -37,15 +41,19 @@ const routes: Routes = [
   { path: 'stream/:id', component: StreamComponent , canActivate: [AuthGuard]},
   { path: 'manual-mcq-quiz', component: ManualMcqQuizComponent , canActivate: [AuthGuard]},
   { path: 'manual-essay-quiz', component: ManualEssayQuizComponent , canActivate: [AuthGuard]} ,
-  { path: 'take-quiz', component: QuizDetailsComponent, canActivate: [AuthGuard] },
+  { path: 'take-quiz/:courseId/:quizId', component: QuizDetailsComponent, canActivate: [AuthGuard] },
   { path: 'video-player', component: ProctoredVideoComponent, canActivate: [AuthGuard] },
   { path: 'mcq-quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'homepage', pathMatch: 'full' },
   { path: 'instructor/quiz-viewer/:quizId', component: McqQuizViewerInstructorComponent,canActivate: [AuthGuard] },
-  {path:'admin',component:AdminDashboardComponent,canActivate: [AuthGuard]},
+  { path: 'instructor-dashboard', component:InstructorDashboardComponent},
+  {path:'admin-dashboard',component:AdminDashboardComponent},
   {path:'admin-profile',component:AdminProfileComponent,canActivate: [AuthGuard]},
   {path:'users-profile',component:UsersProfileComponent,canActivate: [AuthGuard]},
-  {path:'assignment-submissions-instructor/:id',component:AssignmentSubmissionsComponent,canActivate: [AuthGuard]}
+  {path:'assignment-submissions-instructor/:id',component:AssignmentSubmissionsComponent,canActivate: [AuthGuard]},
+  {path:'submitted-quizzes',component:SubmittedQuizzesComponent},
+  {path: 'upcoming-quizzes',component:UpcommingQuizzesComponent},
+  { path: 'take-quiz-error', component: TakeQuizErrorComponent}
 ];
 
 @NgModule({

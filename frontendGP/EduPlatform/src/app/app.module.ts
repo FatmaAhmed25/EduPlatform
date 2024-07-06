@@ -52,7 +52,6 @@ import { ConfirmQuizSubmissionDialogComponent } from './dialogs/confirm-quiz-sub
 // import { ProctoredVideoComponent } from './proctored-video/proctored-video.component';
 import {ProctoredVideoService} from './services/proctored-service/proctored-video.service';
 import { AuthGuard } from './modules/login/auth.guard';
-import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { UsersProfileComponent } from './users-profile/users-profile.component';
 import { UserPopupComponent } from './user-popup/user-popup.component';
@@ -65,7 +64,6 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     FooterComponent,
     SidebarComponent,
     LoginComponent,
-    AdminDashboardComponent,
     CourseDetailsComponent,
     SpinnerComponent,
     FileViewerDialogComponent,  

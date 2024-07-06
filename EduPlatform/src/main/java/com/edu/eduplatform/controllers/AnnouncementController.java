@@ -34,13 +34,10 @@ public class AnnouncementController {
     @Autowired
     AnnouncementService announcementService;
 
-
-
-
     @SecurityRequirement(name="BearerAuth")
-    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT')")
-    @GetMapping("/get-announcement/{studentId}/{announcementId}")
-    public ResponseEntity<Object> getAnnouncementById(@PathVariable @ValidateStudent Long StudentId, @PathVariable Long announcementId) {
+    @PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_INSTRUCTOR')")
+    @GetMapping("/get-announcement/{announcementId}")
+    public ResponseEntity<Object> getAnnouncementById(@PathVariable Long announcementId) {
         try {
             Object announcementObject = announcementService.getAnnouncementById(announcementId);
 

@@ -273,6 +273,7 @@ public class QuizService {
         return quizRepository.findByCourse_Students_UserID(studentId).stream()
                 .filter(quiz -> quiz.getEndTime().isAfter(now))
                 .map(quiz -> new GetStudentQuizzesResponse(
+                        quiz.getCourse().getCourseId(),
                         quiz.getQuizId(),
                         quiz.getTitle(),
                         quiz.getStartTime(),
