@@ -14,7 +14,6 @@ import { SearchService } from 'src/app/services/search/search.service';
 import { ToastrModule } from 'ngx-toastr';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchResultComponent } from './search-result/search-result.component';
-import { CourseDetailsComponent } from './course-details/course-details.component';
 import { QuizDetailsComponent } from './quiz-details/quiz-details.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
@@ -25,6 +24,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     // AssignmentComponent,
     SearchResultComponent,
     QuizDetailsComponent,
+    
   ],
   imports: [
     CommonModule,
