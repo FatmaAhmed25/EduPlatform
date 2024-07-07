@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { UserDTO } from '../models/dtos/usersdto';
@@ -15,38 +15,28 @@ export class AdminService {
   constructor(private http: HttpClient) { }
 
 
-  importStudents(file: File): Observable<any> {
+  importStudents(file: File): Observable<HttpResponse<void>> {
     const formData = new FormData();
     formData.append('file', file);
+    return this.http.post<void>(`${this.baseUrl}/import/students`, formData, { observe: 'response' }); 
 
-    return this.http.post(`${this.baseUrl}/import/students`, formData)
-      .pipe(
-        catchError(this.handleError)
-      );
   }
 
-  importInstructors(file: File): Observable<any> {
+  importInstructors(file: File):Observable<HttpResponse<void>> {
     const formData = new FormData();
     formData.append('file', file);
-
-    return this.http.post(`${this.baseUrl}/import/instructors`, formData)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post<void>(`${this.baseUrl}/import/instructors`, formData, { observe: 'response' }); 
   }
 
-  createStudent(userDTO: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/create/student`, userDTO)
-      .pipe(
-        catchError(this.handleError)
-      );
+  createStudent(userDTO: any): Observable<HttpResponse<void>> {
+  
+    return this.http.post<void>(`${this.baseUrl}/create/student`, userDTO, { observe: 'response' }); 
+
   }
 
-  createInstructor(userDTO: any): Observable<any> {
-    return this.http.post(`${this.baseUrl}/create/instructor`, userDTO)
-      .pipe(
-        catchError(this.handleError)
-      );
+  createInstructor(userDTO: any): Observable<HttpResponse<void>> {
+    return this.http.post<void>(`${this.baseUrl}/create/instructor`, userDTO, { observe: 'response' }); 
+  
   }
 
   resetPassword(userId: number, newPassword: string): Observable<any> {
@@ -56,18 +46,14 @@ export class AdminService {
       );
   }
 
-  updateAdminProfile(userDTO: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update-my-profile`, userDTO,{ observe: 'response' })
-      .pipe(
-        catchError(this.handleError)
-      );
+  updateAdminProfile(userDTO: any): Observable<HttpResponse<void>> {
+    return this.http.put<void>(`${this.baseUrl}/update-my-profile`, userDTO, { observe: 'response' }); 
+   
   }
 
-  updateOtherUserProfile(userDTO: any): Observable<any> {
-    return this.http.put(`${this.baseUrl}/update-profile`, userDTO,{ responseType: 'text' })
-      .pipe(
-        catchError(this.handleError)
-      );
+  updateOtherUserProfile(userDTO: any):Observable<HttpResponse<void>> {
+    return this.http.put<void>(`${this.baseUrl}/update-profile`, userDTO, { observe: 'response' });
+ 
   }
 
   getNumberOfUsers(): Observable<number> {

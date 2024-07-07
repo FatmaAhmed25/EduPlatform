@@ -20,6 +20,8 @@ import { SubmittedQuizzesComponent } from './submitted-quizzes/submitted-quizzes
 import { UpcommingQuizzesComponent } from './upcomming-quizzes/upcomming-quizzes.component';
 import { TakeQuizErrorComponent } from './quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
 import { StudentProfileComponent } from 'src/app/modules/student/student-profile/student-profile.component';
+import { InstructionModalComponent } from '../../components/instruction-modal/instruction-modal.component';
+
 @NgModule({
   declarations: [
     StudentDashboardComponent,
@@ -32,6 +34,7 @@ import { StudentProfileComponent } from 'src/app/modules/student/student-profile
     UpcommingQuizzesComponent,
     TakeQuizErrorComponent,
     StudentProfileComponent,
+    InstructionModalComponent
   ],
   imports: [
     CommonModule,

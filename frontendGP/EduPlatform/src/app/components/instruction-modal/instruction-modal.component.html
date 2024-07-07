@@ -1,0 +1,13 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="close()"></div>
+<div class="modal" *ngIf="isVisible">
+  <div class="modal-content">
+    <h2>Quiz Instructions</h2>
+    <ul>
+      <li>1 - Don't Exit fullscreen mode or you will be considered cheating</li>
+      <li>2 - If any phone is detected you will be considered cheating</li>
+      <li>3 - If any other person appeared you will be considered cheating</li>
+      <li>4 - Looking sideways will have you marked for review</li>
+    </ul>
+    <button class="btn-confirm" (click)="confirm()">OK</button>
+  </div>
+</div>

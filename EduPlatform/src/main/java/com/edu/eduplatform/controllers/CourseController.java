@@ -189,4 +189,19 @@ public class CourseController {
     public CourseDetailsDTO getCourseDetails(@PathVariable Long courseId) {
         return courseService.getCourseDetailsById(courseId);
     }
+
+
+
+//    @SecurityRequirement(name="BearerAuth")
+//    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+//    @GetMapping("/{courseId}/pdf-files")
+//    public ResponseEntity<List<MultipartFile>> getPdfFiles(
+//            @PathVariable String courseId) {
+//        try {
+//            List<MultipartFile> pdfFiles = contentService.getPdfFiles(courseId, "creation-pdfs/quizId-17");
+//            return new ResponseEntity<>(pdfFiles, HttpStatus.OK);
+//        } catch (IOException e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

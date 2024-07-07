@@ -47,6 +47,7 @@ export class StreamComponent implements OnInit, OnDestroy {
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
     private router: Router 
+
   ) {}
 
   ngOnInit(): void {
@@ -511,5 +512,8 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
   viewQuizSubmissions(quizId: string): void {
     this.router.navigate(['/quiz-submissions', quizId]);
+  }
+  navigateToUngradedQuizzes(){
+    this.router.navigate(['/ungraded-quizzes',this.courseId]);
   }
 }

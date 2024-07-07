@@ -178,7 +178,14 @@
       </mat-tab>
 
       <mat-tab label="Quizzes">
+        
         <div class="quizzes">
+          <div class="assignment-header">
+            <button class="add-announcement-btn" (click)="navigateToUngradedQuizzes()">
+              <i class="fa fa-file-alt add-assignment-icon"></i>
+              Grade assignments
+            </button>
+          </div><br>
           <h2>Quizzes</h2>
           <div *ngIf="quizzes.length === 0">
             <p>No quizzes available.</p>

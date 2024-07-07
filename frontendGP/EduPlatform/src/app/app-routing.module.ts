@@ -26,7 +26,8 @@ import { UpcommingQuizzesComponent } from './modules/student/upcomming-quizzes/u
 import { TakeQuizErrorComponent } from './modules/student/quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
 import { AssignmentSubmissionsComponent } from './modules/instructor/assignment-submissions/assignment-submissions.component';
 import { QuizSubmissionsComponent } from './modules/instructor/quiz-submissions/quiz-submissions.component';
-import {StudentProfileComponent} from   'src/app/modules/student/student-profile/student-profile.component';
+import {StudentProfileComponent} from   'src/app/modules/student/student-profile/student-profile.component';import { UngradedQuizzesComponent } from './modules/instructor/ungraded-quizzes/ungraded-quizzes.component';
+
 const routes: Routes = [
   { path: '', component: HomepageComponent },
   { path: 'ai-generate-quiz', component: AiGenerateQuizComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' } },
@@ -57,6 +58,7 @@ const routes: Routes = [
   { path: 'take-quiz-error', component: TakeQuizErrorComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_STUDENT' } },
   { path: 'quiz-submissions/:quizId', component: QuizSubmissionsComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' }  },
   { path: 'student-profile', component: StudentProfileComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_STUDENT' }  },
+  { path: 'ungraded-quizzes/:courseId', component: UngradedQuizzesComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' }  },
 
 ];
 
