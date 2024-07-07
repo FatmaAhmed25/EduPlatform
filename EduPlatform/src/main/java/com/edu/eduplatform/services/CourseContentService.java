@@ -1,11 +1,14 @@
 package com.edu.eduplatform.services;
 
+import com.edu.eduplatform.dtos.MultipartFileDTO;
+import com.edu.eduplatform.utils.CustomMultipartFile;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 
 @Service
 public class CourseContentService {
@@ -65,6 +69,21 @@ public class CourseContentService {
             throw new IOException("Failed to delete file from Google Cloud Storage", e);
         }
     }
+
+//    public List<MultipartFileDTO> getPdfFiles(String courseId, String folderName) throws IOException {
+//        List<MultipartFileDTO> pdfFiles = new ArrayList<>();
+//        String prefix = "courses/courseId-" + courseId + "/" + folderName + "/";
+//
+//        storage.list(bucketName, Storage.BlobListOption.prefix(prefix)).iterateAll().forEach(blob -> {
+//            if ("application/pdf".equals(blob.getContentType())) {
+//                byte[] content = blob.getContent();
+//                MultipartFile multipartFile = new CustomMultipartFile(blob.getName(), blob.getName(), "application/pdf", content);
+//                MultipartFileDTO dto = new MultipartFileDTO(multipartFile.getName(), multipartFile.getOriginalFilename(), multipartFile.getContentType(), multipartFile.getSize());
+//                pdfFiles.add(dto);
+//            }
+//        });
+//        return pdfFiles;
+//    }
     public List<String> listFiles(String courseId, String folderName) {
         List<String> fileList = new ArrayList<>();
         String prefix = "courses/courseId-" + courseId + "/" + folderName + "/";

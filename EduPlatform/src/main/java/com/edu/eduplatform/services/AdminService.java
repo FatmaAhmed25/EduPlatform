@@ -100,7 +100,8 @@ public class AdminService {
     public ResponseEntity<?>  createStudent(UserDTO userDTO) {
         try {
             if (userRepository.existsByEmail(userDTO.getEmail())) {
-              return ResponseEntity.badRequest().body("Email already exists!");
+                //email already exists
+              return ResponseEntity.badRequest().build();
             }
 
             Student student = modelMapper.map(userDTO, Student.class);
@@ -108,12 +109,12 @@ public class AdminService {
             student.setPassword(encoder.encode(userDTO.getPassword()));
             userRepository.save(student);
 
-            return ResponseEntity.ok().body("student created successfully");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
 
             e.printStackTrace();
 
-            return ResponseEntity.internalServerError().body("Request failed!");
+            return ResponseEntity.internalServerError().build();
         }
     }
 

@@ -10,7 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +43,11 @@ public class EssaySubmissionService
     @Autowired
     private ModelMapper modelMapper;
 
-    public  ResponseEntity<String>  saveQuizSubmission(EssaySubmissionDTO essaySubmissionDTO) {
+    @Autowired
+    private AutoGradeService autoGradeService;
+
+
+    public  ResponseEntity<String>  saveQuizSubmission(EssaySubmissionDTO essaySubmissionDTO) throws IOException {
         Quiz quiz = quizRepository.findById(essaySubmissionDTO.getQuizId())
                 .orElseThrow(() -> new IllegalArgumentException("Quiz not found"));
         Student student = studentRepo.findById(essaySubmissionDTO.getStudentId())
@@ -73,13 +79,14 @@ public class EssaySubmissionService
             studentEssayAnswers.add(studentEssayAnswer);
         }
         essaySubmission.setAnswers(studentEssayAnswers);
-
+        essaySubmission.setTotalGrade(null);
         EssaySubmission savedSubmission = essaySubmissionRepository.save(essaySubmission);
 
         CheatingReport cheatingReport = new CheatingReport();
         cheatingReport.setQuizSubmission(savedSubmission);
         cheatingReport.setFolderName();
         cheatingReportRepo.save(cheatingReport);
+        //autoGradeService.autoGradeGeneratedEssays(savedSubmission.getQuiz().getCourse().getCourseId(),savedSubmission.getQuiz().getQuizId(),savedSubmission.getStudent().getUserID(),"creation-pdfs/quizId-"+savedSubmission.getQuiz().getQuizId());
 
         return ResponseEntity.ok("Quiz submission saved successfully");
     }
@@ -105,6 +112,24 @@ public class EssaySubmissionService
         }
         return List.of();
     }
+
+
+
+
+    public List<EssaySubmissionDTO> getStudentSubmissions(long quizId) {
+        List<EssaySubmission> submissions = essaySubmissionRepository.findByQuizQuizIdAndTotalGradeIsNull(quizId);
+        return submissions.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private EssaySubmissionDTO convertToDto(EssaySubmission submission) {
+        EssaySubmissionDTO dto = modelMapper.map(submission, EssaySubmissionDTO.class);
+        dto.setStudentId(submission.getStudent().getUserID());
+        dto.setQuizId(submission.getQuiz().getQuizId());
+        return dto;
+    }
+
 
 
 

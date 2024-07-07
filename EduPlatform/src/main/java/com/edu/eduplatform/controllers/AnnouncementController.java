@@ -252,4 +252,10 @@ public class AnnouncementController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+    @GetMapping("/announcement/{id}/is-assignment")
+    public boolean isAssignment(@PathVariable("id") Long id)
+    {
+        return announcementService.isAssignment(id);
+
+    }
 }

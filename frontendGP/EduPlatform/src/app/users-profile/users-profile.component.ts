@@ -4,6 +4,8 @@ import { UserDTO } from '../models/dtos/usersdto';
 import { UserPopupComponent } from '../user-popup/user-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ImportDialogComponent } from '../import-dialog/import-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-users-profile',
@@ -31,7 +33,7 @@ export class UsersProfileComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   importUserType: 'student' | 'instructor' | null = null;
 
-  constructor(private adminService: AdminService, private dialog: MatDialog) {}
+  constructor(private adminService: AdminService, private dialog: MatDialog,private snackBar:MatSnackBar) {}
 
   ngOnInit(): void {
     this.getAllStudents();
@@ -56,16 +58,31 @@ export class UsersProfileComponent implements OnInit {
     });
   }
 
+
   importStudents(file: File): void {
     this.adminService.importStudents(file).subscribe(
-      response => {
+      (response: HttpResponse<void> )=> {
+        if(response.status===200){
+    
+          this.snackBar.open('Student Added Successfully!', 'Close', {
+             duration: 5000,
+             verticalPosition: 'top',
+             horizontalPosition: 'right'
+         });}
         console.log('Students imported:', response);
         this.getAllStudents();
       },
       error => {
-        console.error('Importing students failed:', error);
+        if(error.status===500)
+          {
+            this.snackBar.open('Email Already exists', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+          });
+        console.error('Creating student failed:', error);
       }
-    );
+  });
   }
 
   importInstructors(file: File): void {
@@ -75,9 +92,16 @@ export class UsersProfileComponent implements OnInit {
         this.getAllInstructors();
       },
       error => {
-        console.error('Importing instructors failed:', error);
+        if(error.status===500)
+          {
+            this.snackBar.open('Email Already exists', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+          });
+        console.error('Creating student failed:', error);
       }
-    );
+  });
   }
 
   getAllStudents(): void {
@@ -202,14 +226,31 @@ export class UsersProfileComponent implements OnInit {
 
   createStudent(newStudent: UserDTO) {
     this.adminService.createStudent(newStudent).subscribe(
-      response => {
+      (response: HttpResponse<void> )=>{
+        if(response.status===200){
+        
+         this.snackBar.open('Student Added Successfully!', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right'
+        });}
+        
+        
         console.log('Student created:', response);
         this.getAllStudents();
       },
+      
       error => {
+        if(error.status===400)
+          {
+            this.snackBar.open('Email Already exists', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+          });
         console.error('Creating student failed:', error);
       }
-    );
+  });
   }
 
   createInstructor(newInstructor: UserDTO) {

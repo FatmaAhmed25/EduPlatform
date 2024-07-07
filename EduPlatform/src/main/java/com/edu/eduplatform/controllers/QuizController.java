@@ -156,7 +156,7 @@ public class QuizController {
                                           @RequestParam String startTime,
                                           @RequestParam String endTime,
                                           @RequestParam int numOfQuestions,
-                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
+                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) throws IOException {
         GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
         Quiz createdQuiz = quizService.generateAndCreateMcqQuiz(requestDTO);
         return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
@@ -172,7 +172,7 @@ public class QuizController {
                                           @RequestParam String startTime,
                                           @RequestParam String endTime,
                                           @RequestParam int numOfQuestions,
-                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) {
+                                          @RequestParam("pdfFiles") List<MultipartFile> pdfFiles) throws IOException {
         GenerateQuizDTO requestDTO = new GenerateQuizDTO(courseId,quizTitle,startTime,endTime,numOfQuestions,pdfFiles);
         Quiz createdQuiz = quizService.generateEssayQuiz(requestDTO);
         return new ResponseEntity<>(createdQuiz, HttpStatus.CREATED);
@@ -192,6 +192,14 @@ public class QuizController {
     @GetMapping("get-course-quizzes/{instructorId}/{courseId}")
     public List<GetCourseQuizzesResponse> getQuizzesForCourse(@PathVariable Long instructorId,@PathVariable Long courseId) {
         return quizService.getQuizzesForCourse(courseId);
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/course/{courseId}/null-essay-submissions")
+    public ResponseEntity<List<Quiz>> getQuizzesWithNullEssaySubmissions(@PathVariable Long courseId) {
+        List<Quiz> quizzes = quizService.getQuizzesWithNullEssaySubmissions(courseId);
+        return ResponseEntity.ok(quizzes);
     }
 
 

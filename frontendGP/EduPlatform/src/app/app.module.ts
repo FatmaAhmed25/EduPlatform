@@ -56,6 +56,7 @@ import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { UsersProfileComponent } from './users-profile/users-profile.component';
 import { UserPopupComponent } from './user-popup/user-popup.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
+import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     AdminProfileComponent,
     UsersProfileComponent,
     UserPopupComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    AdminDashboardComponent
   ],
   imports: [
     MatSelectModule,
