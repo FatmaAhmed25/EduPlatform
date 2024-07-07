@@ -19,6 +19,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { SubmittedQuizzesComponent } from './submitted-quizzes/submitted-quizzes.component';
 import { UpcommingQuizzesComponent } from './upcomming-quizzes/upcomming-quizzes.component';
 import { TakeQuizErrorComponent } from './quiz-already-submitted-error/take-quiz-error/take-quiz-error.component';
+import { InstructionModalComponent } from '../../components/instruction-modal/instruction-modal.component';
+
 @NgModule({
   declarations: [
     StudentDashboardComponent,
@@ -30,6 +32,7 @@ import { TakeQuizErrorComponent } from './quiz-already-submitted-error/take-quiz
     SubmittedQuizzesComponent,
     UpcommingQuizzesComponent,
     TakeQuizErrorComponent,
+    InstructionModalComponent
   ],
   imports: [
     CommonModule,
