@@ -22,7 +22,7 @@ export class AppComponent {
         const isFeatureSection = event.url === '/#features';
         const isSubmissionSection = event.url === '/upcoming-quizzes';
         const isUpComingSubmissionSection = event.url === '/submitted-quizzes';
-
+        const isProfileSection = event.url === '/student-profile';  
         console.log('isRootOrLogin:', isRootOrLogin);
         console.log('isTakeQuizRoute:', isTakeQuizRoute);
         console.log('isFeatureSection:', isFeatureSection);
@@ -30,7 +30,7 @@ export class AppComponent {
         console.log('isUpComingSubmissionSection:', isUpComingSubmissionSection);
 
         this.showSidebar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
-        this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection || isSubmissionSection || isUpComingSubmissionSection);
+        this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection || isSubmissionSection || isUpComingSubmissionSection || isProfileSection);
 
         console.log('showSidebar:', this.showSidebar);
         console.log('showNavbar:', this.showNavbar);
