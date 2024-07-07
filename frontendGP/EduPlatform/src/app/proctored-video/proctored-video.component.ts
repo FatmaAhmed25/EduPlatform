@@ -30,7 +30,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.startDetection();
     this.handleSocket();
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    // document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   ngOnDestroy(): void {
@@ -38,18 +38,18 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
     if (this.socket && this.socket.connected) {
       this.socket.disconnect();
     }
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    // document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   toggleVideoVisibility(): void {
     this.isVideoVisible = !this.isVideoVisible;
   }
 
-  private handleVisibilityChange = () => {
-    if (document.visibilityState !== 'visible') {
-      this.cheatingDetected.emit('CHEATING');
-    }
-  };
+  // private handleVisibilityChange = () => {
+  //   if (document.visibilityState !== 'visible') {
+  //     this.cheatingDetected.emit('CHEATING');
+  //   }
+  // };
 
   private async startDetection() {
     await Promise.all([

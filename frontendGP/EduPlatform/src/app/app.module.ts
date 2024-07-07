@@ -75,7 +75,7 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     AdminProfileComponent,
     UsersProfileComponent,
     UserPopupComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
   ],
   imports: [
     MatSelectModule,
