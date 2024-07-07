@@ -4,6 +4,7 @@ package com.edu.eduplatform.controllers;
 import com.edu.eduplatform.dtos.EssaySubmissionDTO;
 import com.edu.eduplatform.dtos.QuestionAnswerDTO;
 import com.edu.eduplatform.dtos.StudentAnswerDTO;
+import com.edu.eduplatform.models.EssaySubmission;
 import com.edu.eduplatform.services.AutoGradeService;
 import com.edu.eduplatform.services.EssaySubmissionService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,8 +30,7 @@ public class EssaySubmissionController {
     @SecurityRequirement(name="BearerAuth")
     @PreAuthorize("hasAuthority('ROLE_STUDENT')")
     @PostMapping("/submit/essay-quiz")
-    public ResponseEntity<Void> saveQuizSubmission(@RequestBody EssaySubmissionDTO essaySubmissionDTO)
-    {
+    public ResponseEntity<Void> saveQuizSubmission(@RequestBody EssaySubmissionDTO essaySubmissionDTO) throws IOException {
         essaySubmissionService.saveQuizSubmission(essaySubmissionDTO);
         return ResponseEntity.ok().build();
     }
@@ -74,6 +76,14 @@ public class EssaySubmissionController {
     public ResponseEntity<?> updateAnswerGrade(@RequestParam Long answerId, @RequestParam double grade) {
         autoGradeService.updateAnswerGrade(answerId, grade);
         return ResponseEntity.ok("Grade updated successfully.");
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @PreAuthorize("hasAuthority('ROLE_INSTRUCTOR')")
+    @GetMapping("/getStudentSubmissions")
+    public ResponseEntity<List<EssaySubmissionDTO>> getStudentSubmissions(@RequestParam Long quizId) {
+        List<EssaySubmissionDTO> submissions = essaySubmissionService.getStudentSubmissions(quizId);
+        return ResponseEntity.ok(submissions);
     }
 
 

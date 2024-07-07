@@ -33,7 +33,7 @@ public class QuizSubmission
     private LocalDateTime submissionTime=LocalDateTime.now();
 
     @Column(name = "totalGrade")
-    private double totalGrade;
+    private Double totalGrade;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Status")

@@ -21,4 +21,11 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     Collection<Quiz> findByCourse_Students_UserID(Long studentId);
 
     Collection<Quiz> findByCourse_CourseId(Long courseId);
+    @Query("SELECT DISTINCT q FROM Quiz q " +
+            "JOIN q.questions ques " +
+            "JOIN QuizSubmission sub ON sub.quiz = q " +
+            "JOIN EssaySubmission es ON es.id = sub.id " +
+            "WHERE q.course.courseId = :courseId AND es.totalGrade IS NULL")
+    List<Quiz> findQuizzesWithNullEssaySubmissions(@Param("courseId") Long courseId);
+
 }

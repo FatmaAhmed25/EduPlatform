@@ -55,6 +55,9 @@ public class QuizService {
     @Autowired
     private QuizSubmissionRepo quizSubmissionRepository;
 
+    @Autowired
+    private CourseContentService courseContentService;
+
     public Quiz createQuiz(QuizDTO quizDTO) {
         Course course = courseRepository.findById(quizDTO.getCourseId()).orElseThrow(() -> new RuntimeException("Course not found"));
 
@@ -204,8 +207,7 @@ public class QuizService {
         return modelMapper.map(quiz, QuizForStudentDTO.class);
     }
 
-    public Quiz generateQuiz(GenerateQuizDTO requestDTO,String url)
-    {
+    public Quiz generateQuiz(GenerateQuizDTO requestDTO,String url) throws IOException {
         String flaskUrl = flaskBaseUrl + url;
         System.out.println(flaskUrl);
         // Prepare headers and request body
@@ -244,19 +246,29 @@ public class QuizService {
         } catch (IOException e) {
             throw new RuntimeException("Error parsing response", e);
         }
+        Quiz quiz=createQuiz(quizDTO);
 
-        // Convert QuizDTO to Quiz entity and save the quiz
-        return createQuiz(quizDTO);
+        List<Question> questions = questionRepository.findAnyQuestionByQuizId(quiz.getQuizId());
+        boolean hasEssayQuestion = questions.stream().anyMatch(question -> question.getQuestionType() == QuestionType.ESSAY);
+
+        System.out.println(hasEssayQuestion);
+        if(hasEssayQuestion)
+        {
+            for (MultipartFile file : requestDTO.getPdfFiles()) {
+                courseContentService.uploadFile(requestDTO.getCourseId().toString(), "creation-pdfs/" + "quizId-" + quiz.getQuizId(), file);
+            }
+        }
+
+
+        return quiz;
     }
 
-    public Quiz generateAndCreateMcqQuiz(GenerateQuizDTO requestDTO)
-    {
+    public Quiz generateAndCreateMcqQuiz(GenerateQuizDTO requestDTO) throws IOException {
        return generateQuiz(requestDTO,"/mcq");
 
     }
 
-    public Quiz generateEssayQuiz(GenerateQuizDTO requestDTO)
-    {
+    public Quiz generateEssayQuiz(GenerateQuizDTO requestDTO) throws IOException {
         return generateQuiz(requestDTO,"/essay");
 
     }
@@ -293,6 +305,12 @@ public class QuizService {
                         quiz.getEndTime(),
                         quiz.getTotalGrade()))
                 .collect(Collectors.toList());
+    }
+
+
+
+    public List<Quiz> getQuizzesWithNullEssaySubmissions(Long courseId) {
+        return quizRepository.findQuizzesWithNullEssaySubmissions(courseId);
     }
 
 }
