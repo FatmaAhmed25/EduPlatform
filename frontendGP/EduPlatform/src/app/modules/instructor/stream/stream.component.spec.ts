@@ -38,6 +38,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   labs: any[] = [];
   assignments: any[]=[];
   quizzes: any[]=[];
+navigateToUngradedQuizzes: any;
   constructor(
     private route: ActivatedRoute,
     private announcementService: AnnouncementService,
