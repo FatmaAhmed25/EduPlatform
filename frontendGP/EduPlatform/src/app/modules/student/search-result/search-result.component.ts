@@ -4,7 +4,7 @@ import { SearchService } from 'src/app/services/search/search.service';
 import { EnrollmentService } from 'src/app/services/enrollment/enrollment.service';
 import { HttpResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Router } from '@angular/router';
 interface Courses extends Course {
   password: string;
   assignments: any[];
@@ -34,7 +34,7 @@ export class SearchResultComponent implements OnInit {
   enrollCode: string = '';
   enrollPassword: string = '';
   selectedCourse: Courses | null = null;
-  constructor(private searchService: SearchService,private enrollmentService:EnrollmentService,private snackBar: MatSnackBar) { }
+  constructor(private searchService: SearchService,private enrollmentService:EnrollmentService,private snackBar: MatSnackBar,private route:Router) { }
 
   ngOnInit(): void {
     this.searchService.searchResults$.subscribe(results => {
@@ -80,7 +80,9 @@ export class SearchResultComponent implements OnInit {
                             horizontalPosition: 'right'
                         });
                         this.closeEnrollModal();
+                        this.route.navigate(['/student-courses'])
                     }
+
                 },
                 error => {
                     if (error.status === 401) {

@@ -1,24 +1,13 @@
 <div class="container">
   <!-- Left side panel -->
-  <div class="left-panel">
-    <div class="course-info">
-      <mat-form-field appearance="fill" class="course-code-field">
-        <h3>Course Code</h3>
-        <div class="course-code-wrapper">
-          <input matInput [value]="course?.courseCode" readonly>
-          <mat-icon class="copy-icon" (click)="copyCourseCode()">content_copy</mat-icon>
-        </div>
-      </mat-form-field>
-    </div>
-  </div>
-
+  
   <!-- Main Content -->
   <div class="main-content">
     <div class="header">
       <h1>{{ course?.title }}</h1>
       <p>{{ instructor?.username }}</p>
     </div>
-
+    
     <mat-tab-group>
       <mat-tab label="Stream">
         <div class="announcements">
@@ -28,7 +17,7 @@
               Announce Something!
             </button>
           </div>
-
+          
           <div *ngFor="let announcement of announcements" class="announcement-card">
             <div class="announcement-actions">
               <div class="settings-dropdown">
@@ -44,18 +33,18 @@
               <h3>{{ announcement.title }}</h3>
               <p class="announcement-content">{{ announcement.content }}</p>
             </div>
-          
+            
             <div *ngIf="announcement.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(announcement)">
               <a (click)="openFileLink(announcement)" class="announcement-file-link">
                 {{ getFileName(announcement.fileName) }}
               </a>
             </div>
-          
+            
             <button class="view-comments-btn" (click)="toggleComments(announcement.id)">
               {{ announcement.showComments ? 'Hide Comments' : 'View Comments' }}
             </button>
-          
+            
             <div *ngIf="announcement.showComments" class="comments-section">
               <ul [id]="'comments-' + announcement.id" class="comments-list">
                 <li *ngFor="let comment of announcement.comments" class="comment-item">
@@ -73,7 +62,7 @@
                   </div>
                 </li>
               </ul>
-          
+              
               <div class="comment-input-section">
                 <input type="text" [id]="'content-' + announcement.id" placeholder="Add a class comment..." [(ngModel)]="newComment[announcement.id]" class="comment-input">
                 <button (click)="sendComment(announcement.id)" class="comment-send-btn">Send</button>
@@ -82,7 +71,7 @@
           </div>
         </div>
       </mat-tab>
-
+      
       <mat-tab label="Lectures & Videos">
         <div class="lectures">
           <div class="lecture-header">
@@ -95,13 +84,13 @@
           <div *ngIf="lectures.length === 0 && videos.length === 0" class="no-lectures">
             <p>No lectures or videos available.</p>
           </div>
-
+          
           <div *ngFor="let lecture of lectures" class="lecture-card announcement-card">
             <div class="announcement-header">
               <h3>{{ lecture.title }}</h3>
               <p class="announcement-content">{{ lecture.content }}</p>
             </div>
-
+            
             <div *ngIf="lecture.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lecture)">
               <a (click)="openFileLink(lecture)" class="announcement-file-link">
@@ -109,7 +98,7 @@
               </a>
             </div>
           </div>
-
+          
           <div class="video-panel" *ngIf="videos.length > 0">
             <h2>Videos</h2>
             <div *ngFor="let video of videos" class="video-card announcement-card">
@@ -119,15 +108,15 @@
           </div>
         </div>
       </mat-tab>
-
+      
       <mat-tab label="Labs">
         <div class="lectures">
           <div class="lecture-header">
-              <button class="add-announcement-btn" (click)="openAddMaterialDialogLabs()">
-                <i class="fa fa-book add-announcement-icon"></i>
-                Add Labs
-              </button>
-            </div><br>
+            <button class="add-announcement-btn" (click)="openAddMaterialDialogLabs()">
+              <i class="fa fa-book add-announcement-icon"></i>
+              Add Labs
+            </button>
+          </div><br>
           <h2>Labs</h2>
           <div *ngIf="labs.length === 0" class="no-lectures">
             <p>No labs available.</p>
@@ -137,7 +126,7 @@
               <h3>{{ lab.title }}</h3>
               <p class="announcement-content">{{ lab.content }}</p>
             </div>
-      
+            
             <div *ngIf="lab.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(lab)">
               <a (click)="openFileLink(lab)" class="announcement-file-link">
@@ -147,7 +136,7 @@
           </div>
         </div>
       </mat-tab>
-
+      
       <mat-tab label="Assignments">
         <div class="assignments">
           <div class="assignment-header">
@@ -165,7 +154,7 @@
               <h3>{{ assignment.title }}</h3>
               <p class="announcement-content">{{ assignment.content }}</p>
             </div>
-      
+            
             <div *ngIf="assignment.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(assignment)">
               <a (click)="openFileLink(assignment)" class="announcement-file-link">
@@ -175,7 +164,7 @@
           </div>
         </div>
       </mat-tab>
-
+      
       <mat-tab label="Quizzes">
         
         <div class="quizzes">
@@ -208,7 +197,27 @@
       
     </mat-tab-group>
   </div>
-
+  
+  <div class="left-panel">
+    <div class="course-info">
+      <mat-form-field appearance="fill" class="course-code-field">
+        <h3>Course Code</h3>
+        <div class="course-code-wrapper">
+          <input matInput [value]="course?.courseCode" readonly>
+          <mat-icon class="copy-icon" (click)="copyCourseCode()">content_copy</mat-icon>
+        </div>
+      </mat-form-field>
+    </div>
+    <div class="course-info">
+      <mat-form-field appearance="fill" class="course-code-field">
+        <h3>Course password</h3>
+        <div class="course-code-wrapper">
+          <input matInput [value]="course?.password" readonly>
+          <mat-icon class="copy-icon" (click)="copyCoursePassword()">content_copy</mat-icon>
+        </div>
+      </mat-form-field>
+    </div>
+  </div>
   <!-- Right side panel -->
   <div class="side-panel">
     <h3>Enrolled Students</h3>

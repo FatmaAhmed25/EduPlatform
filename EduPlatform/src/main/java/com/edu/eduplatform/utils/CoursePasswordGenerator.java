@@ -8,7 +8,7 @@ import java.security.SecureRandom;
 @Component
 public class CoursePasswordGenerator implements ICoursePasswordGenerator{
 
-    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int PASSWORD_LENGTH = 12;
     private static final SecureRandom RANDOM = new SecureRandom();
 

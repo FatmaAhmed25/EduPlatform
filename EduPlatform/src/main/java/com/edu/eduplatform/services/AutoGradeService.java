@@ -42,7 +42,7 @@ public class AutoGradeService
     private QuizRepository quizRepository;
 
 
-    @Value("${model.flask.url}")
+    @Value("${model.flask.autograde.url}")
     private String flaskBaseUrl;
 
 

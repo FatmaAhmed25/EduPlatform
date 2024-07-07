@@ -181,12 +181,19 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   copyCoursePassword(): void {
     if (this.course?.courseCode) {
-      this.clipboard.copy(this.course.courseCode);
-      console.log('Course Password copied to clipboard:', this.course.courseCode);
-      this.showCopyMessage();
+      this.clipboard.copy(this.course.password);
+      console.log('Course Password copied to clipboard:', this.course.password);
+      this.showCopyMessagePass();
     }
   }
-
+  showCopyMessagePass(): void {
+    this.snackBar.open('Course password copied to clipboard', 'Close', {
+      duration: 2000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      panelClass: ['snackbar-success']
+    });
+  }
   showCopyMessage(): void {
     this.snackBar.open('Course code copied to clipboard', 'Close', {
       duration: 2000,

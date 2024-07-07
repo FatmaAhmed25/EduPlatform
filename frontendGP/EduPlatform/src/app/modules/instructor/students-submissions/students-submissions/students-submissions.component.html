@@ -45,12 +45,14 @@
                                         Auto Grade
                                     </button>
                                     
-                                    <div *ngIf="loading" class="loading-container">
-                                        <mat-spinner></mat-spinner>
-                                    </div>
+                                    
                                 </td>
+                                
                             </tr>
                         </tbody>
+                        <div *ngIf="loading" class="loading-container">
+                            <mat-spinner></mat-spinner>
+                        </div>
                     </table>
                 </div>
             </div>

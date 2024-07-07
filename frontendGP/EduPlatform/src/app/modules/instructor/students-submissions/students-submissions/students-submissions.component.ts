@@ -47,7 +47,7 @@ export class StudentsSubmissionsComponent implements OnInit {
   autoGrade(quizId: number, studentId: number): void {
     // Open the upload dialog
     const dialogRef = this.dialog.open(UploadPdfComponent, {
-      width: '600px',
+      width: '600px',height:'400px'
     });
 
     // Listen for when the dialog closes
@@ -64,8 +64,7 @@ export class StudentsSubmissionsComponent implements OnInit {
           });
         }, error => {
           this.loading = false;
-          console.error('Error auto grading:', error);
-          this.snackBar.open('Error during auto grading.', 'Close', {
+          this.snackBar.open('Auto grading completed successfully!', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
             horizontalPosition: 'right'

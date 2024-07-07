@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  width: calc(100% - 280px);
+  width: calc(100% - 190px);
   margin-left: 108px;
   overflow-x: hidden;
 }
@@ -9,6 +9,7 @@
   flex-grow: 1;
   padding: 20px;
   margin-right: 76px;
+  margin-left: 50px;
 }
 
 .header {
@@ -77,7 +78,7 @@
 
 .side-panel {
   width: 252px;
-  background: #f4f4f4;
+  background: #fff;
   border-left: 1px solid #ddd;
   padding: 20px;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
@@ -85,8 +86,8 @@
   margin-top: 245px;
   height: 333px;
   position: absolute;
-  top: 0;
-  right: 7px;
+  top: 16px;
+  right: 65px;
 }
 .materials-header, .materials-list, .material-card, .material-header, .material-details {
   display: flex;
