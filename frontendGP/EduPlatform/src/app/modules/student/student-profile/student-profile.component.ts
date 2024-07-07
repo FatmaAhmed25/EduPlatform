@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../services/admin.service';
+import { StudentDetailsService } from 'src/app/services/student-details/student-details.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserDTO } from '../models/dtos/usersdto';
+import { UserDTO } from 'src/app/models/dtos/usersdto';
 
 @Component({
-  selector: 'app-admin-profile',
-  templateUrl: './admin-profile.component.html',
-  styleUrls: ['./admin-profile.component.scss']
+  selector: 'app-student-profile',
+  templateUrl: './student-profile.component.html',
+  styleUrls: ['./student-profile.component.scss']
 })
 
-export class AdminProfileComponent implements OnInit {
+export class StudentProfileComponent implements OnInit {
 
   userId: number | null = null;
-  adminProfile: any = {};
+  studentProfile: any = {};
   userInfo: UserDTO | null = null;
 
-  constructor(private adminService: AdminService) {}
+  constructor(private studentDetailsService: StudentDetailsService) {}
 
   ngOnInit(): void {
     this.userId = this.getUserIdFromLocalStorage();
@@ -31,9 +31,9 @@ export class AdminProfileComponent implements OnInit {
   }
 
   updateAdminProfile(): void {
-    this.adminProfile.userId =this.getUserIdFromLocalStorage();
+    this.studentProfile.userId =this.getUserIdFromLocalStorage();
 
-    this.adminService.updateAdminProfile(this.adminProfile).subscribe(
+    this.studentDetailsService.updateStudentProfile(this.studentProfile).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
        
@@ -49,10 +49,10 @@ export class AdminProfileComponent implements OnInit {
 
   getUserById(): void {
     if (this.userId !== null) {
-      this.adminService.getUserById(this.userId).subscribe(
+      this.studentDetailsService.getStudentDetails(this.userId).subscribe(
         userInfo => {
           this.userInfo = userInfo; // Store fetched userInfo
-          this.adminProfile = { ...userInfo }; // Populate adminProfile for editing
+          this.studentProfile = { ...userInfo }; // Populate adminProfile for editing
         },
         error => console.error('Error fetching user info:', error)
       );

@@ -1,0 +1,41 @@
+<nav class="navbar">
+    <a _ngcontent-ng-c3481420427="" href="#" class="text-gray-400 hover:text-gray-600 font-medium title">Profile</a>
+</nav>
+<div class="container">
+
+    
+    <div class="profile-container">
+        <h2 class="h22">Edit Profile <i class="fas fa-edit"></i></h2>
+      <form (ngSubmit)="updateAdminProfile()">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control" [(ngModel)]="studentProfile.email" required>
+        </div>
+        
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" class="form-control" [(ngModel)]="studentProfile.username" required>
+        </div>
+        
+        <!-- Password  -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control" [(ngModel)]="studentProfile.password">
+        </div>
+        
+        <!-- Bio -->
+        <div class="form-group">
+          <label for="bio">Bio</label>
+          <textarea id="bio" name="bio" class="form-control" [(ngModel)]="studentProfile.bio" rows="4"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </form>
+    </div>
+  </div>
+  
+
+  
+
