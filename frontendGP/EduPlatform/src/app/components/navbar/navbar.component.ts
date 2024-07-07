@@ -3,16 +3,14 @@ import { WebSocketService } from 'src/app/services/websocket-service/websocket.s
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SearchService } from 'src/app/services/search/search.service';
 import { Router } from '@angular/router';
+import { catchError, Observable, of, switchMap } from 'rxjs';
+import { AnnouncementService } from 'src/app/services/announcement/announcement.service';
+import { Course } from 'src/app/services/search/search.service';
+import { SearchInstructorService } from 'src/app/services/searchInstructor/search-instructor.service';
+import { Courses } from 'src/app/models/course.model';
 interface Notification {
   id: number;
   notificationMessage: string;
-}
-
-interface Course {
-  courseId: number;
-  courseCode: string;
-  title: string;
-  description: string;
 }
 
 @Component({
@@ -21,23 +19,35 @@ interface Course {
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  courseIds: number[] = []; // Array to store enrolled course IDs
-  notifications: Notification[] = []; // Array to store notifications
-  notificationCount: number = 0; // Notification count property
-  showNotificationPanel = false; // Toggle for showing notification panel
+  courseIds: number[] = [];
+  notifications: Notification[] = []; 
+  notificationCount: number = 0;
+  showNotificationPanel = false; 
   showDropdown = false;
   showSearchPanel = false;
   searchQuery: string = '';
   searchResults: Course[] = [];
+  userCache: Map<string, string> = new Map();
+  userName$: Observable<string>|null=null;
+  showFilterOptions = false;
+  searchType: 'code' | 'title' = 'code'; 
+  userTypee = localStorage.getItem('userType');
+
   constructor(
     private webSocketService: WebSocketService,
     private searchService: SearchService,
     private http: HttpClient,
-    private router:Router
+    private router: Router,
+    private announcementService: AnnouncementService,
+    private searchInstructorService: SearchInstructorService
   ) {}
 
   ngOnInit(): void {
     this.fetchEnrolledCourseIds();
+    const userID = localStorage.getItem('userID');
+    if(userID){
+      this.userName$ = this.getUsername(userID);
+    }
   }
 
   fetchEnrolledCourseIds(): void {
@@ -60,6 +70,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  toggleFilterOptions(): void {
+    this.showFilterOptions = !this.showFilterOptions;
+  }
+
   subscribeToNotifications(): void {
     const token = localStorage.getItem('authToken');
     
@@ -70,16 +84,14 @@ export class NavbarComponent implements OnInit {
         this.courseIds.forEach(courseId => {
           this.webSocketService.subscribeToNotificationsForCourse(courseId, (message) => {
             console.log(`Received notification for course ${courseId}:`, message);
-            // Add new notification to the beginning of the array
             this.notifications.unshift(message);
-            // Increment notification count
             this.notificationCount++;
-            // this.showNotificationPanel = true;
           });
         });
       });
     }
   }
+
   toggleNotificationPanel(): void {
     this.showNotificationPanel = !this.showNotificationPanel;
     if (this.showNotificationPanel) {
@@ -100,42 +112,63 @@ export class NavbarComponent implements OnInit {
     this.showDropdown = false;
     this.showNotificationPanel = false;
   }
+  searchCourses(): void {
+    const userType = localStorage.getItem('userType');
+    console.log('User Type:', userType); // Check user type
+    console.log('Search Query:', this.searchQuery); // Check search query
+    console.log('Search Type:', this.searchType); // Check search type
   
-  searchCoursesByCode(): void {
-    const userType = localStorage.getItem('userType');
-    console.log(userType +" navbar")
-    this.searchService.searchByCode(this.searchQuery).subscribe(
-      () => {
-        if(userType==='ROLE_STUDENT'){
-        this.router.navigate(['/searchResult']);
-        }else{
-          this.router.navigate(['/searchResult-Instructor'])
-        }
-      },
-      error => console.error('Error searching courses by code:', error)
-    );
+    if (userType === 'ROLE_STUDENT') {
+      if (this.searchType === 'code') {
+        console.log('Searching by code:', this.searchQuery);
+        this.searchService.searchByCode(this.searchQuery).subscribe(
+          () => {
+            this.router.navigate(['/searchResult']);
+          },
+          error => console.error('Error searching courses by code:', error)
+        );
+      } else if (this.searchType === 'title') {
+        console.log('Searching by title:', this.searchQuery);
+        this.searchService.searchByTitle(this.searchQuery).subscribe(
+          () => {
+            this.router.navigate(['/searchResult']);
+          },
+          error => console.error('Error searching courses by title:', error)
+        );
+      }
+    } else if (userType === 'ROLE_INSTRUCTOR') {
+      const userID = localStorage.getItem('userID');
+      if (userID) {
+        this.searchInstructorService.getCoursesForInstructor(userID).subscribe(
+          (courses: Courses[]) => {
+            console.log('Instructor courses:', courses);
+            this.searchInstructorService.getCoursesForInstructor(userID);
+      });
+      }
+    }
   }
-
-  searchCoursesByTitle(): void {
-    const userType = localStorage.getItem('userType');
-    console.log(userType +" navbar")
-    this.searchService.searchByTitle(this.searchQuery).subscribe(
-      () => {
-        if(userType==='ROLE_STUDENT'){
-          this.router.navigate(['/searchResult']);
-          }else{
-            this.router.navigate(['/searchResult-Instructor'])
-          }
-      },
-      error => console.error('Error searching courses by title:', error)
-    );
+  
+  
+  getUsername(userId2: string): Observable<string> {
+    if (this.userCache.has(userId2)) {
+      return of(this.userCache.get(userId2) as string);
+    } else {
+      return this.announcementService.getUserDetails(userId2).pipe(
+        switchMap((user) => {
+          this.userCache.set(userId2, user.username);
+          return of(user.username);
+        }),
+        catchError(() => of('Unknown User'))
+      );
+    }
   }
 
   goToProfile() {
+    // Implement your profile navigation logic here
     this.router.navigate(['/student-profile']);
   }
 
   goToSettings() {
-    // Logic to navigate to settings
+    // Implement your settings navigation logic here
   }
 }

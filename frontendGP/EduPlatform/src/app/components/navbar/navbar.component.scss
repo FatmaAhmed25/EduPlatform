@@ -1,248 +1,163 @@
 .navbar {
-  background-color: #fff;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 10px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  border-radius: 15px;
-  width: 220px;
-  float: right;
-  height: 45px;
-
-  .navbar-container {
-    display: flex;
-    align-items: center;
-  }
-
-  .navbar-icon {
-    margin-right: 8px;
-    cursor: pointer;
-
-    .bell {
-      margin-top: 5px;
-      width: 22px;
-      height: 24px;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .notification-badge {
-      background-color: #2273f1;
-      color: white;
-      border-radius: 50%;
-      padding: 1px 7px;
-      font-size: 0.66rem;
-      position: absolute;
-      top: 20px;
-      right: 196px;
-      width: 12px;
-      height: 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      font-family: 'DM Sans';
-    }
-
-    &:hover {
-      .bell {
-        transform: scale(1.1);
-      }
-    }
-  }
-
-  .navbar-search {
-    margin-left: 10px;
-
-    .search-icon {
-      width: 26px;
-      height: 27px;
-      cursor: pointer;
-
-      &:hover {
-        transform: scale(1.1);
-      }
-      transition: transform 0.3s ease-in-out;
-    }
-  }
-
-  .navbar-user {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    transform: scale(1.1);
-
-    .student-name {
-      margin-right: 8px;
-      font-size: 1rem;
-      font-family: 'DM Sans';
-    }
-
-    .user-image {
-      border-radius: 50%;
-      width: 27px;
-      height: 27px;
-    }
-
-    .dropdown-menu {
-      position: absolute;
-      top: 40px;
-      right: 0;
-      width: 150px;
-      background-color: #fff;
-      box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
-      border-radius: 7px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-
-      ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-
-        li {
-          padding: 10px;
-          border-bottom: 1px solid #e0e0e0;
-          cursor: pointer;
-
-          &:hover {
-            background-color: #f0f0f0;
-          }
-
-          &:last-child {
-            border-bottom: none;
-          }
-        }
-      }
-    }
-  }
-
-  .notification-panel {
-    position: absolute;
-    top: 70px;
-    right: 150px;
-    width: 250px;
-    background-color: #fff;
-    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 7px;
-    padding: 10px;
-    z-index: 1000;
-    max-height: 300px;
-    overflow-y: auto;
-    transition: all 0.3s ease;
-
-    .no-notifications {
-      text-align: center;
-      padding: 20px;
-
-      .no-noti-icon {
-        width: 30px;
-        height: 30px;
-        margin-bottom: 10px;
-      }
-    }
-  }
-
-  .notification-panel.open {
-    display: block;
-  }
-
-  .notification-panel ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .notification-panel li {
-    padding: 10px;
-    border-bottom: 1px solid #e0e0e0;
-  }
+  padding: 10px 20px;
+  background-color: #e4e9f7;
 }
 
-.search-icon {
-  width: 26px;
-  height: 27px;
-  margin-right: 20px;
-  cursor: pointer;
-  margin-top: 3px;
+.search {
+  display: flex;
+  align-items: center;
+  margin-left: 161px; /* Adjust margin as needed */
+}
 
-  &:hover {
-    transform: scale(1.1);
-  }
+.search input {
+  padding: 8px;
+  margin-right: 10px; /* Adjust margin as needed */
+  border: 1px solid #ccc; /* Example border */
+  border-radius: 4px; /* Example border radius */
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+}
+
+.filters label {
+  margin-right: 5px; /* Adjust margin as needed */
+}
+
+.notifications {
+  margin-left: 665px;
+}
+
+.notification-icon {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.bell {
+  width: 22px;
+  height: 24px;
   transition: transform 0.3s ease-in-out;
 }
 
-.search-panel {
+.notification-badge {
+  background-color: #5e7394;
+  color: white;
+  border-radius: 50%;
+  padding: 0px 7px;
+  font-size: 0.66rem;
   position: absolute;
-  top: 70px;
-  right: 120px;
-  width: 262px;
+  top: 3px;
+  right: 228px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "DM Sans";
+  z-index: 1;
+}
+
+.notification-icon:hover .bell {
+  transform: scale(1.1);
+}
+
+.notification-panel {
+  position: absolute;
+  top: 42px;
+  right: 200px;
+  width: 250px;
   background-color: #fff;
   box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
   border-radius: 7px;
   padding: 10px;
   z-index: 1000;
-  display: none;
+  max-height: 300px;
+  overflow-y: auto;
   transition: all 0.3s ease;
 
-  &.open {
-    display: block; /* Show when .open is added */
-  }
+  .no-notifications {
+    text-align: center;
+    padding: 20px;
 
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      padding: 10px;
-      border-bottom: 1px solid #e0e0e0;
-
-      &:last-child {
-        border-bottom: none;
-      }
+    .no-noti-icon {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 10px;
     }
   }
 }
 
-.search-panel input {
-  width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
-  border-radius: 7px;
+.notification-panel.open {
+  display: block;
 }
 
-.search-panel button {
-  margin-right: 0.5rem;
+.notification-panel ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
-.btn{
-  background: #5E5DF0;
-  border-radius: 11px;
-  box-shadow: #5E5DF0 0 10px 20px -10px;
-  box-sizing: border-box;
-  color: #FFFFFF;
+
+.notification-panel li {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-panel {
+  position: absolute;
+  top: 100%; /* Align below the navbar */
+  left: 0;
+  background-color: #fff;
+  padding: 10px;
+  display: none; /* Initially hide panels */
+  z-index: 100; /* Ensure panels appear above other content */
+}
+
+.search-panel.open {
+  display: block; /* Show panels when open */
+}
+
+.user-panel {
+  display: flex;
+  align-items: center;
+  position: relative;
   cursor: pointer;
-  font-family: Inter, Helvetica, "Apple Color Emoji", "Segoe UI Emoji", NotoColorEmoji, "Noto Color Emoji", "Segoe UI Symbol", "Android Emoji", EmojiSymbols, -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", sans-serif;
-  font-size: 10px;
-  font-weight: 400;
-  line-height: 14px;
-  opacity: 1;
-  outline: 0 solid transparent;
-  padding: 8px 18px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  width: 113px;
-  word-break: break-word;
-  border: 0;
-  margin-top: auto;
-  height: 29px;
-  transition: all 0.3s ease;
-
 }
-.btn:hover {
-  background-color: #222295;
+
+.user-name {
+  display: flex;
+  align-items: center;
+}
+
+.profile-icon {
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 37px;
+  right: 0;
+  background-color: #fff;
+  box-shadow: 0 7px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 7px;
+  padding: 9px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  height: 78px;
+}
+
+.dropdown-menu div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-menu div:hover {
+  background-color: #e4e9f7;
 }

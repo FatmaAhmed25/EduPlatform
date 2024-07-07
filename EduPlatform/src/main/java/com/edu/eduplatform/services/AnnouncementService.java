@@ -303,5 +303,14 @@ public class AnnouncementService {
             return modelMapper.map(announcement, AnnouncementDTO.class);
         }
     }
+    public boolean isAssignment(long id) {
+        Optional<Announcement> announcementOptional = announcementRepo.findById(id);
 
+        if (announcementOptional.isPresent()) {
+            Announcement announcement = announcementOptional.get();
+            return announcement instanceof Assignment;
+        }
+
+        return false; // Handle case where announcement with given id doesn't exist
+    }
 }

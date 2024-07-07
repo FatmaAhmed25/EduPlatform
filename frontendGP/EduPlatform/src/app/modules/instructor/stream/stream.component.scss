@@ -62,7 +62,7 @@
 
 .announcements p {
   font-family: 'Arial', sans-serif;
-  font-size: 1.2rem;
+  font-size: 0.87rem;
   line-height: 1.5;
 }
 
@@ -176,6 +176,7 @@
 
 .dropdown-menu button:hover {
   background-color: #f5f5f5;
+  color: black;
 }
 .btn-settings {
     background: none;
@@ -290,21 +291,16 @@ button:hover {
   margin-top: 10px;
 }
 
-.comments-section {
-  margin-top: 16px;
-}
-
 .comments-list {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin-top: 6px;
 }
 
 .comment-item {
   display: flex;
   align-items: flex-start;
   padding: 8px 0;
-  border-top: 1px solid #e0e0e0;
 }
 
 .comment-avatar {
@@ -312,8 +308,8 @@ button:hover {
 }
 
 .comment-avatar img {
-  width: 40px;
-  height: 40px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
 }
 
@@ -341,35 +337,23 @@ button:hover {
 
 .comment-date {
   color: #757575;
-  font-size: 0.9em;
+  font-size: 0.6rem;
 }
 
 .comment-input-section {
   display: flex;
   align-items: center;
-  margin-top: 16px;
 }
 .comment-input {
   flex-grow: 1;
-  padding: 8px;
+  padding: 4px;
   border-radius: 4px;
   border: 1px solid #ccc;
   margin-right: 8px;
 }
-.comment-send-btn {
-  padding: 8px 16px;
-  border-radius: 4px;
-  background-color: #3f51b5;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+
 .mat-form-field {
   width: 100%;
-}
-
-.comment-send-btn {
-  align-self: flex-end;
 }
 
 .no-announcements {
@@ -418,6 +402,7 @@ button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 
@@ -452,27 +437,28 @@ button:hover {
 }
 
 .view-comments-btn {
-  width: 100%;
+  width: 164px;
   background-color: #5E5DF0;
   color: white;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   padding: 10px;
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s;
   cursor: pointer;
+  margin-left: 522px;
 }
 
 .view-comments-btn:hover {
-  background-color: #4a4abf;
+  background-color: #222295;
 }
 
 .comment-send-btn {
   align-self: flex-end;
   background-color: #5E5DF0;
   color: white;
-  font-size: 0.9rem;
-  padding: 10px 20px;
+  font-size: 0.75rem;
+  padding: 6px 20px;
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s;
@@ -480,7 +466,7 @@ button:hover {
 }
 
 .comment-send-btn:hover {
-  background-color: #4a4abf;
+  background-color: #000000;
 }
 
 .no-announcements {
@@ -512,31 +498,22 @@ button:hover {
   font-size: 0.84rem; 
 }
 
-.view-comments-btn {
-  width: 100%;
-  background-color: #5E5DF0;
+.submit-btn {
+  background-color: #3f51b5;
   color: white;
-  font-size: 0.9rem;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.view-comments-btn:hover {
-  background-color: #4a4abf;
+.submit-btn:hover {
+  background-color: #001486;
 }
-
-.comment-send-btn {
-  align-self: flex-end;
-  background-color: #5E5DF0;
-  color: white;
-  font-size: 0.9rem;
-  padding: 10px 20px;
+.btn {
+  margin-left: 566px;
+  min-width: 80px;
+  padding: 6px 12px;
   border: none;
   border-radius: 8px;
-  transition: background-color 0.3s;
+  font-size: 13px;
   cursor: pointer;
 }
 
