@@ -1,39 +1,49 @@
-<nav class="navbar">
-  <div class="navbar-container">
-    <div class="navbar-icon" (click)="toggleNotificationPanel()">
-      <img src="../../../assets/images/notification-bell.png" alt="notification bell" class="bell" height="30px">
-      <span *ngIf="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span>
-    </div>
-    <div class="navbar-search" (click)="toggleSearchPanel()">
-      <img src="../../../assets/images/search.png" alt="Search Icon" class="search-icon">
-    </div>
-    <div class="navbar-user">
-      <span class="student-name">John Doe</span>
-      <img src="../../../assets/images/profile.png" alt="User Image" class="user-image" (click)="toggleDropdown()">
-      <div *ngIf="showDropdown" class="dropdown-menu">
-        <ul>
-          <li (click)="goToProfile()">Profile</li>
-          <li (click)="goToSettings()">Settings</li>
-        </ul>
-      </div>
+<nav *ngIf="userTypee === 'ROLE_STUDENT'" class="navbar">
+  <!-- Center: Search Panel with Filters -->
+  <div class="search">
+    <input type="text" placeholder="Search..." [(ngModel)]="searchQuery" (keyup.enter)="searchCourses()">
+    <i class="fas fa-filter filter-icon" (click)="toggleFilterOptions()"></i> <!-- Filter icon -->
+
+    <div class="filters" *ngIf="showFilterOptions">
+      <label>Filter by:</label>
+      <select [(ngModel)]="searchType">
+        <option value="code">Code</option>
+        <option value="title">Title</option>
+      </select>
     </div>
   </div>
-  <div *ngIf="showNotificationPanel" class="notification-panel">
-    <ul *ngIf="notifications.length > 0; else noNotifications">
-      <li *ngFor="let notification of notifications">
-        {{ notification.notificationMessage }}
-      </li>
-    </ul>
-    <ng-template #noNotifications>
-      <div class="no-notifications">
-        <img src="../../../assets/images/no-noti.png" alt="No notifications icon" class="no-noti-icon">
-        <p>No recent updates!</p>
-      </div>
-    </ng-template>
+
+  <!-- Notification Bell with Badge -->
+  <div class="notifications">
+    <img src="../../../assets/images/notification-bell.png" alt="notification bell" class="bell" height="30px" (click)="toggleNotificationPanel()">
+    <span *ngIf="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span>
+
+    <!-- Notification Panel -->
+    <div *ngIf="showNotificationPanel" class="notification-panel">
+      <ul *ngIf="notifications.length > 0; else noNotifications">
+        <li *ngFor="let notification of notifications">
+          {{ notification.notificationMessage }}
+        </li>
+      </ul>
+      <ng-template #noNotifications>
+        <div class="no-notifications">
+          <img src="../../../assets/images/no-noti.png" alt="No notifications icon" class="no-noti-icon">
+          <p>No recent updates!</p>
+        </div>
+      </ng-template>
+    </div>
   </div>
-  <div [ngClass]="{'search-panel': true, 'open': showSearchPanel}" class="search-panel">
-    <input type="text" placeholder="Search by code or title" [(ngModel)]="searchQuery">
-    <button (click)="searchCoursesByCode()" class="btn">Search by Code</button>
-    <button (click)="searchCoursesByTitle()" class="btn">Search by Title</button>
+
+  <!-- Right side: User Panel -->
+  <div class="user-panel">
+    <div class="user-name" (click)="toggleDropdown()">
+      {{ userName$ | async }}
+      <img src="../../../assets/images/profile.png" alt="Profile" class="profile-icon">
+    </div>
+    <div *ngIf="showDropdown" class="dropdown-menu">
+      <div class="user-details">
+        <div (click)="goToProfile()">Profile</div>
+      </div>
+    </div>
   </div>
 </nav>

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" @pageAnimations>
   <!-- Left side panel -->
   <div class="left-panel">
     <div class="course-info">
@@ -12,7 +12,6 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main-content">
     <div class="header">
       <h1>{{ course?.title }}</h1>
@@ -34,7 +33,8 @@
               <div class="settings-dropdown">
                 <i class="bx bx-dots-horizontal-rounded" (click)="toggleDropdown(announcement)"></i>
                 <div class="dropdown-menu" *ngIf="announcement.showDropdown">
-                  <button class="dropdown-item">Update</button>
+                  
+                  <button class="dropdown-item" >Update</button>
                   <button class="dropdown-item" (click)="Delete(announcement.id)">Delete</button>
                 </div>
               </div>
@@ -170,12 +170,17 @@
             <div *ngIf="assignment.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(assignment)">
               <a (click)="openFileLink(assignment)" class="announcement-file-link">
-                {{ getFileName(assignment.fileName)  }}
+                {{ getFileName(assignment.fileName) }}
               </a>
             </div>
+      
+            <button class="btn submit-btn" (click)="viewSubmissions(assignment.id)">
+              View Submissions
+            </button>
           </div>
         </div>
       </mat-tab>
+      
 
       <mat-tab label="Quizzes">
         
@@ -223,4 +228,27 @@
     </div>
     <button mat-raised-button color="primary" (click)="openStudentDetails()">See All</button>
   </div>
-</div>
+<!-- </div>
+<div id="updateCourseModal" class="modal" [ngClass]="{ 'show': isModalOpen }">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h3>Update Announcement</h3>
+    <form (submit)="updateAnnouncement()">
+      <div class="form-group">
+        <label for="course-title" class="labelCourse">Announcement Title</label>
+        <input type="text" id="course-title" [(ngModel)]="selectedAnnouncement.title" name="title" class="input" required>
+      </div>
+      <div class="form-group">
+        <label for="course-description">AnnouncementDescription</label>
+        <textarea id="course-description" [(ngModel)]="selectedAnnouncement.description" name="description" class="input" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="course-code" class="labelCourse">Announcement File</label>
+        <input type="text" id="course-code" [(ngModel)]="selectedAnnouncement.courseCode" name="courseCode" class="input" readonly>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn2">Update</button>
+      </div>
+    </form>
+  </div>
+</div> -->

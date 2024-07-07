@@ -50,6 +50,7 @@ export class StreamService {
   }
   getQuizzes(instructorId:string,courseId:number){
     return this.http.get<any[]>(`${this.apiUrl}/quizzes/get-course-quizzes/${instructorId}/${courseId}`)
+  
   }
 
   downloadQuiz(quizId: number): Observable<Blob> {
