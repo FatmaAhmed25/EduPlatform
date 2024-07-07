@@ -30,6 +30,8 @@ import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submi
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
 import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.component';
+import { StudentsSubmissionsComponent } from './students-submissions/students-submissions/students-submissions.component';
+import { UploadPdfComponent } from './upload-pdfs/upload-pdf/upload-pdf.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,9 @@ import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.co
     QuizSubmissionsListComponent,
     AssignmentsComponent,
     AssignmentSubmissionsComponent,
-    UngradedQuizzesComponent
+    UngradedQuizzesComponent,
+    StudentsSubmissionsComponent,
+    UploadPdfComponent
   ],
   imports: [
     CommonModule,

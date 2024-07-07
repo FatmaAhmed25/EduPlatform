@@ -27,6 +27,7 @@ import { TakeQuizErrorComponent } from './modules/student/quiz-already-submitted
 import { AssignmentSubmissionsComponent } from './modules/instructor/assignment-submissions/assignment-submissions.component';
 import { QuizSubmissionsComponent } from './modules/instructor/quiz-submissions/quiz-submissions.component';
 import { UngradedQuizzesComponent } from './modules/instructor/ungraded-quizzes/ungraded-quizzes.component';
+import { StudentsSubmissionsComponent } from './modules/instructor/students-submissions/students-submissions/students-submissions.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -58,7 +59,7 @@ const routes: Routes = [
   { path: 'take-quiz-error', component: TakeQuizErrorComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_STUDENT' } },
   { path: 'quiz-submissions/:quizId', component: QuizSubmissionsComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' }  },
   { path: 'ungraded-quizzes/:courseId', component: UngradedQuizzesComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' }  },
-
+  { path: 'students-submissions/:quizId', component: StudentsSubmissionsComponent , canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' }  },
 ];
 
 
