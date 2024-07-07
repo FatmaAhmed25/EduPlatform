@@ -1,0 +1,22 @@
+<div class="container">
+  <label for="pdf-upload">Upload PDF</label>
+  <div class="file-upload-container">
+    <input type="file" id="pdf-upload" accept=".pdf,application/pdf" multiple (change)="onFilesSelected($event)">
+    <span class="upload-instruction">You can upload multiple PDF files</span>
+    <i class="fas fa-info-circle tooltip">
+      <span class="tooltiptext">Hold Ctrl (or Command) to select multiple files. Only PDF files are allowed.</span>
+    </i>
+  </div>
+
+  <div *ngIf="selectedFiles.length > 0">
+    <h4>Selected Files</h4>
+    <ul class="selected-files-list">
+      <li *ngFor="let file of selectedFiles; let i = index" class="selected-file-item">
+        <i class="fas fa-file"></i> {{ file.name }}
+        <i class="fas fa-trash-alt delete-icon" (click)="removeFile(i)"></i>
+      </li>
+    </ul>
+  </div>
+
+  <button class="save-button" (click)="saveFiles()">Save Files</button>
+</div>

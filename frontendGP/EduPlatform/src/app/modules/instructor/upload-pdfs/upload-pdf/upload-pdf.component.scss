@@ -1,0 +1,116 @@
+@import '../../../../../styles.scss';
+/* Mixins for reusable styles */
+@mixin box-shadow($color) {
+  box-shadow: 0 2px 4px rgba($color, 0.1), 0 4px 8px rgba($color, 0.1);
+}
+
+@mixin transition($properties...) {
+  @each $property in $properties {
+    transition: $property 0.3s ease;
+  }}
+.file-upload-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .file-upload-container input[type="file"] {
+    flex-grow: 1;
+  }
+  
+  .upload-instruction {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: $primary-color;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the icon */
+    left: 50%;
+    margin-left: -100px; /* Center the tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 15px;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .selected-files-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #ffffff;
+  }
+  
+  .selected-file-item {
+    display: flex;
+    justify-content: space-between;
+    // align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .selected-file-item:last-child {
+    border-bottom: none;
+  }
+  
+  .selected-file-item i.fas.fa-file {
+    color: $primary-color; /* Icon color */
+    margin-right: 15px;
+  }
+  
+  .remove-file-btn {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .container {
+    max-width: 70%;
+    margin-left: 15%;
+    margin-top: 30px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 2px;
+    @include box-shadow(#000);
+  }  
+  /* Button styles */
+button {
+  background-color: $primary-color;
+  color: #fff;
+  border: none;
+  padding: 5px 5px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  @include transition(background-color);
+
+  // &:hover {
+  //   background-color: darken($primary-color, 10%);
+  // }
+
+}

@@ -1,0 +1,59 @@
+<div class="md:ml-64 py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30" style="padding-right:100px">
+    <ul class="flex items-center text-sm ml-4">
+        <li class="mr-2">
+            <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Student Submissions</a>
+        </li>
+    </ul>
+</div>
+
+<main class="w-full md:w-[calc(100%-256px)] md:ml-64 min-h-screen transition-all main" style="width: 93.2%;">
+
+    <div class="p-6" style="margin-left:150px;">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md" style="width:180%">
+                <div class="flex justify-between mb-4 items-start">
+                    <div class="font-medium">Student Submissions</div>
+                    <div class="dropdown">
+                        <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600">
+                            <i class="ri-more-fill"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[650px]" data-tab-for="order" data-page="active">
+                        <thead>
+                            <tr>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">STUDENT ID</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">CHEATING STATUS</th>
+                                <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let submission of studentSubmissions">
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-600">{{ submission.studentId }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <span class="text-[13px] font-medium text-gray-600">{{ submission.cheatingStatus }}</span>
+                                </td>
+                                <td class="py-2 px-4 border-b border-b-gray-50">
+                                    <!-- <button (click)="openUploadPdfDialog()" class="blue-link">
+                                        Upload PDFs
+                                    </button> -->
+                                    <button (click)="autoGrade(submission.quizId, submission.studentId)" class="blue-link" *ngIf="!loading">
+                                        Auto Grade
+                                    </button>
+                                    
+                                    <div *ngIf="loading" class="loading-container">
+                                        <mat-spinner></mat-spinner>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
