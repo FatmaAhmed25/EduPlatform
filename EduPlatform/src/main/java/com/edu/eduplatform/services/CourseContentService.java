@@ -1,7 +1,7 @@
 package com.edu.eduplatform.services;
 
 import com.edu.eduplatform.dtos.MultipartFileDTO;
-import com.edu.eduplatform.utils.CustomMultipartFile;
+//import com.edu.eduplatform.utils.CustomMultipartFile;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;

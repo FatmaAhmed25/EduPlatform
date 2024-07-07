@@ -516,4 +516,23 @@ export class StreamComponent implements OnInit, OnDestroy {
   navigateToUngradedQuizzes(){
     this.router.navigate(['/ungraded-quizzes',this.courseId]);
   }
+  downloadQuiz(quizId: number): void {
+    this.stream.downloadQuiz(quizId).subscribe(
+      (data: Blob) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url); 
+      },
+      error => {
+        console.error('Error downloading quiz:', error);
+        this.snackBar.open('Error downloading quiz', 'Close', {
+          duration: 5000,
+          verticalPosition: 'top',
+          horizontalPosition: 'right'
+        });
+      }
+    );
+  }
+
+
 }

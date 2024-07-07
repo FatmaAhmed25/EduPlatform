@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { generate, Observable } from 'rxjs';
 import { Announcement } from 'src/app/models/announcement.model';
 import { Comment } from 'src/app/models/comment.model';
 import { data } from 'autoprefixer';
@@ -51,4 +51,10 @@ export class StreamService {
   getQuizzes(instructorId:string,courseId:number){
     return this.http.get<any[]>(`${this.apiUrl}/quizzes/get-course-quizzes/${instructorId}/${courseId}`)
   }
+
+  downloadQuiz(quizId: number): Observable<Blob> {
+    const url = `${this.apiUrl}/quizzes/generate-pdf/${quizId}`;
+    return this.http.get(url,{ responseType: 'blob' });
+  }
+
 }

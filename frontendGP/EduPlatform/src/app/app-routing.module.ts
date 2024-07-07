@@ -51,7 +51,7 @@ const routes: Routes = [
   { path: 'instructor-dashboard', component: InstructorDashboardComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' } },
   { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_ADMIN' } },
   { path: 'admin-profile', component: AdminProfileComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_ADMIN' } },
-  { path: 'users-profile', component: UsersProfileComponent, canActivate: [AuthGuard], },
+  { path: 'users-profile', component: UsersProfileComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_ADMIN' }},
   { path: 'assignment-submissions-instructor/:id', component: AssignmentSubmissionsComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_INSTRUCTOR' } },
   { path: 'submitted-quizzes', component: SubmittedQuizzesComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_STUDENT' } },
   { path: 'upcoming-quizzes', component: UpcommingQuizzesComponent, canActivate: [AuthGuard], data: { expectedRole: 'ROLE_STUDENT' } },
