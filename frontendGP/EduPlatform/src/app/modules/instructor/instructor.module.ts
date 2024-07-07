@@ -27,14 +27,13 @@ import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/m
 import { QuizSubmissionsComponent } from './quiz-submissions/quiz-submissions.component';
 import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submissions-list.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
-import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
-import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.component';
-<<<<<<< HEAD
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-=======
 import { StudentsSubmissionsComponent } from './students-submissions/students-submissions/students-submissions.component';
 import { UploadPdfComponent } from './upload-pdfs/upload-pdf/upload-pdf.component';
->>>>>>> 219a7927e101c478e320be6fc66cf8c8fcf64624
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.component';
+import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
+
+
 
 @NgModule({
   declarations: [
@@ -55,9 +54,9 @@ import { UploadPdfComponent } from './upload-pdfs/upload-pdf/upload-pdf.componen
     QuizSubmissionsComponent,
     QuizSubmissionsListComponent,
     AssignmentsComponent,
-    AssignmentSubmissionsComponent,
     UngradedQuizzesComponent,
     StudentsSubmissionsComponent,
+    AssignmentSubmissionsComponent,
     UploadPdfComponent
   ],
   imports: [
