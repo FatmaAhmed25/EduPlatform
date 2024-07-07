@@ -56,7 +56,8 @@ import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { UsersProfileComponent } from './users-profile/users-profile.component';
 import { UserPopupComponent } from './user-popup/user-popup.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
-
+import { AnnouncementUpdateDialogComponent } from './modules/instructor/announcement-update-dialog/announcement-update-dialog.component';
+import { CommonModule } from '@angular/common';import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     AdminProfileComponent,
     UsersProfileComponent,
     UserPopupComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    AnnouncementUpdateDialogComponent,AdminDashboardComponent
   ],
   imports: [
     MatSelectModule,
@@ -93,12 +95,13 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     MatIconModule,
     RouterModule,MatFormFieldModule,MatInputModule,MatButtonModule,MatProgressSpinnerModule,
     ToastrModule.forRoot({
-      positionClass: 'toast-top-right', // Position of the toast
-      timeOut: 3000, // Duration in milliseconds
-      preventDuplicates: true, // Prevent duplicate toasts
+      positionClass: 'toast-top-right',
+      timeOut: 3000, 
+      preventDuplicates: true,
     }),
     MatSnackBarModule,
     MatSelectModule,
+    CommonModule
   ],
   providers: [EnrolledCoursesService,AuthService,AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

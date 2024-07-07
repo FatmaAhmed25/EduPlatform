@@ -18,10 +18,27 @@ import { LecturesComponent } from '../lectures/lectures.component';
 import { LabsComponent } from '../labs/labs.component';
 import { AssignmentsComponent } from '../assignments/assignments.component';
 import { Router } from '@angular/router';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { AssignmentSubmissionsService } from 'src/app/services/assignmentSubmission/assignment-submissions.service';
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
-  styleUrls: ['./stream.component.scss']
+  styleUrls: ['./stream.component.scss'],
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        query('.container, .left-panel, .main-content, .side-panel', [
+          style({ opacity: 0, transform: 'translateY(-100px)' }),
+          stagger(100, [
+            animate(
+              '500ms ease-out',
+              style({ opacity: 1, transform: 'translateY(0)' })
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
+  ],
 })
 export class StreamComponent implements OnInit, OnDestroy {
   students: Student[] = [];
@@ -30,14 +47,16 @@ export class StreamComponent implements OnInit, OnDestroy {
   videos: any[] = [];
   newComment: { [key: number]: string } = {};
   commentSubscriptions: Map<number, any> = new Map();
-  userCache: Map<string, string> = new Map(); 
+  userCache: Map<string, string> = new Map();
   courseId: number | undefined;
-  instructor: Instructor | undefined; 
-  course: Courses | undefined; 
-  link2:string='';
+  instructor: Instructor | undefined;
+  course: Courses | undefined;
+  link2: string = '';
   labs: any[] = [];
-  assignments: any[]=[];
-  quizzes: any[]=[];
+  assignments: any[] = [];
+  quizzes: any[] = [];
+  isModalOpen = false;
+  selectedAnnouncement: any = {};
   constructor(
     private route: ActivatedRoute,
     private announcementService: AnnouncementService,
@@ -46,11 +65,12 @@ export class StreamComponent implements OnInit, OnDestroy {
     private stream: StreamService,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
-    private router: Router 
+    private router: Router,
+    private assignmentService: AssignmentSubmissionsService
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.courseId = +params['id'];
       if (this.courseId) {
         this.loadStudents();
@@ -73,33 +93,55 @@ export class StreamComponent implements OnInit, OnDestroy {
   }
   fetchAnnouncementsAndSetupWebSocket(): void {
     if (this.courseId) {
-      this.stream.getAnnouncementsByCourseId(this.courseId).subscribe(data => {
-        this.announcements = data;
-        this.setupWebSocket();
-      });
+      this.stream
+        .getAnnouncementsByCourseId(this.courseId)
+        .subscribe((data) => {
+          this.announcements = data;
+          this.setupWebSocket();
+        });
     }
   }
-  
+  // openUpdateModal(announcement: number): void {
+  //   this.announcementService.getCourseDetails(courseId).subscribe(
+  //     (course) => {
+  //       this.selectedCourse = { ...course, courseId };
+  //       this.isModalOpen = true;
+  //       this.toggleDropdown(course);
+
+  //     },
+  //     (error) => {
+  //       console.error('Failed to load course details', error);
+  //       this.snackBar.open('Failed to load course details. Please try again later.', 'Close', {
+  //         duration: 5000,
+  //         verticalPosition: 'top',
+  //         horizontalPosition: 'right'
+  //     });
+  //     }
+  //   );
+  // }
+
   toggleDropdown(announcement: any): void {
-    this.announcements.forEach(c => {
+    this.announcements.forEach((c) => {
       if (c !== announcement) {
         c.showDropdown = false;
       }
     });
     announcement.showDropdown = !announcement.showDropdown;
   }
-  Delete(announcementId : number):void{
+  Delete(announcementId: number): void {
     const instructorId = localStorage.getItem('userID');
-    if(this.courseId && announcementId && instructorId){
-    this.announcementService.deleteAnnouncement(this.courseId,instructorId,announcementId).subscribe(data => {
-      this.snackBar.open('Announcement Deleted Successfully.', 'Close', {
-        duration: 3000,
-        verticalPosition: 'top',
-        horizontalPosition: 'right'
-      });
-      this.loadAnnouncements();
-    });
-  }
+    if (this.courseId && announcementId && instructorId) {
+      this.announcementService
+        .deleteAnnouncement(this.courseId, instructorId, announcementId)
+        .subscribe((data) => {
+          this.snackBar.open('Announcement Deleted Successfully.', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+          });
+          this.loadAnnouncements();
+        });
+    }
   }
   setupWebSocket(): void {
     const token = localStorage.getItem('authToken');
@@ -110,7 +152,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       });
     }
   }
-  
+
   copyCourseCode(): void {
     if (this.course?.courseCode) {
       this.clipboard.copy(this.course.courseCode);
@@ -128,26 +170,28 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.snackBar.open('Error loading labs', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
-            horizontalPosition: 'right'
+            horizontalPosition: 'right',
           });
         }
       );
     }
   }
-  loadAssignments():void{
-    if(this.courseId){
+  loadAssignments(): void {
+    if (this.courseId) {
       this.stream.getAssignments(this.courseId).subscribe(
         (assignments) => {
-          this.assignments=assignments;
-    },(error)=>{
-      this.snackBar.open('Error loading assignments', 'Close', {
-        duration: 5000,
-        verticalPosition: 'top',
-        horizontalPosition: 'right'
-      });
-    });
+          this.assignments = assignments;
+        },
+        (error) => {
+          this.snackBar.open('Error loading assignments', 'Close', {
+            duration: 5000,
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+          });
+        }
+      );
+    }
   }
-}
   loadLecturesAndVideos(): void {
     const instructorId = localStorage.getItem('userID');
     if (this.courseId && instructorId) {
@@ -159,7 +203,7 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.snackBar.open('Error loading lectures', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
-            horizontalPosition: 'right'
+            horizontalPosition: 'right',
           });
         }
       );
@@ -171,7 +215,7 @@ export class StreamComponent implements OnInit, OnDestroy {
           this.snackBar.open('Error loading videos', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
-            horizontalPosition: 'right'
+            horizontalPosition: 'right',
           });
         }
       );
@@ -181,7 +225,10 @@ export class StreamComponent implements OnInit, OnDestroy {
   copyCoursePassword(): void {
     if (this.course?.courseCode) {
       this.clipboard.copy(this.course.courseCode);
-      console.log('Course Password copied to clipboard:', this.course.courseCode);
+      console.log(
+        'Course Password copied to clipboard:',
+        this.course.courseCode
+      );
       this.showCopyMessage();
     }
   }
@@ -191,12 +238,12 @@ export class StreamComponent implements OnInit, OnDestroy {
       duration: 2000,
       verticalPosition: 'top',
       horizontalPosition: 'center',
-      panelClass: ['snackbar-success']
+      panelClass: ['snackbar-success'],
     });
   }
 
   ngOnDestroy(): void {
-    this.commentSubscriptions.forEach(subscription => {
+    this.commentSubscriptions.forEach((subscription) => {
       if (subscription) {
         subscription.unsubscribe();
       }
@@ -206,39 +253,49 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   loadStudents(): void {
     if (this.courseId) {
-      this.stream.getStudentsByCourseId(this.courseId).subscribe((data: Student[]) => {
-        this.students = data;
-      },(error)=>{
-        this.snackBar.open('Error loading Students enrolled in course', 'Close', {
-          duration: 5000,
-          verticalPosition: 'top',
-          horizontalPosition: 'right'
-        });
-      }
-    );
-      
+      this.stream.getStudentsByCourseId(this.courseId).subscribe(
+        (data: Student[]) => {
+          this.students = data;
+        },
+        (error) => {
+          this.snackBar.open(
+            'Error loading Students enrolled in course',
+            'Close',
+            {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right',
+            }
+          );
+        }
+      );
     }
   }
 
   loadCourseAndInstructorDetails(): void {
     if (this.courseId) {
-      this.announcementService.getCourseById(this.courseId).subscribe(course => {
-        this.course = course;
-        console.log('Course:', this.course);
-      });
+      this.announcementService
+        .getCourseById(this.courseId)
+        .subscribe((course) => {
+          this.course = course;
+          console.log('Course:', this.course);
+        });
 
       const instructorId = localStorage.getItem('userID');
       if (instructorId) {
-        this.announcementService.getInstructorDetails(instructorId).subscribe(instructor => {
-          console.log('Instructor details:', instructor);
-          this.instructor = instructor;
-        }, error => {
-          this.snackBar.open('Error Fetching your details', 'Close', {
-            duration: 5000,
-            verticalPosition: 'top',
-            horizontalPosition: 'right'
-          });
-        });
+        this.announcementService.getInstructorDetails(instructorId).subscribe(
+          (instructor) => {
+            console.log('Instructor details:', instructor);
+            this.instructor = instructor;
+          },
+          (error) => {
+            this.snackBar.open('Error Fetching your details', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right',
+            });
+          }
+        );
       }
     }
   }
@@ -247,68 +304,69 @@ export class StreamComponent implements OnInit, OnDestroy {
     if (this.courseId) {
       console.log('Fetching announcements for course ID:', this.courseId);
       this.stream.getAnnouncementsByCourseId(this.courseId).subscribe(
-        (data => {
-          this.announcements = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        (data) => {
+          this.announcements = data.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
           console.log('Announcements retrieved:', this.announcements);
-          this.announcements.forEach(announcement => {
+          this.announcements.forEach((announcement) => {
             this.subscribeToCommentUpdates(announcement.id);
           });
-        }),
-        error => {
+        },
+        (error) => {
           this.snackBar.open('Error Fetching announcements', 'Close', {
             duration: 5000,
             verticalPosition: 'top',
-            horizontalPosition: 'right'
+            horizontalPosition: 'right',
           });
         }
       );
     }
   }
-  loadQuizzes():void{
+  loadQuizzes(): void {
     const instructorId = localStorage.getItem('userID');
-    if(this.courseId && instructorId){
-      this.stream.getQuizzes(instructorId,this.courseId).subscribe(data=>{
-        this.quizzes=data;
-
-      })
+    if (this.courseId && instructorId) {
+      this.stream.getQuizzes(instructorId, this.courseId).subscribe((data) => {
+        this.quizzes = data;
+      });
     }
   }
   openAnnouncementDialog(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(AnnouncementDialogComponent, {
       width: '600px',
-      data: { instructorId: instructorId, courseId: this.courseId }
+      data: { instructorId: instructorId, courseId: this.courseId },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.snackBar.open('Announcement Posted !', 'Close', {
           duration: 5000,
           verticalPosition: 'top',
-          horizontalPosition: 'right'
+          horizontalPosition: 'right',
         });
-        this.announcements.push(result); 
+        this.announcements.push(result);
         this.loadAnnouncements();
       }
-      
     });
   }
 
-  openAssignmentsDialog():void{
+  openAssignmentsDialog(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(AssignmentsComponent, {
       width: '600px',
-      data: { instructorId: instructorId, courseId: this.courseId }
+      data: { instructorId: instructorId, courseId: this.courseId },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.snackBar.open('Assignment Posted !', 'Close', {
           duration: 5000,
           verticalPosition: 'top',
-          horizontalPosition: 'right'
+          horizontalPosition: 'right',
         });
-        this.announcements.push(result); 
+        this.announcements.push(result);
         this.loadAssignments();
       }
     });
@@ -316,20 +374,16 @@ export class StreamComponent implements OnInit, OnDestroy {
   openStudentDetails(): void {
     const dialogRef = this.dialog.open(StudentDetailsDialogComponent, {
       width: '500px',
-      data: { students: this.students }
+      data: { students: this.students },
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.snackBar.open('Error fetching student details', 'Close', {
-        duration: 5000,
-        verticalPosition: 'top',
-        horizontalPosition: 'right'
-      });
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   toggleComments(announcementId: number): void {
-    const announcement = this.announcements.find(a => a.id === announcementId);
+    const announcement = this.announcements.find(
+      (a) => a.id === announcementId
+    );
     if (announcement) {
       announcement.showComments = !announcement.showComments;
     }
@@ -337,36 +391,38 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   sendComment(announcementId: number): void {
     const content = this.newComment[announcementId];
-    const userId = localStorage.getItem("userID");
+    const userId = localStorage.getItem('userID');
 
     const comment = {
       announcementId,
       userId,
-      commentContent: content
+      commentContent: content,
     };
 
-    this.webSocketService.send(`/app/announcement/${announcementId}/comments`, comment);
+    this.webSocketService.send(
+      `/app/announcement/${announcementId}/comments`,
+      comment
+    );
     this.snackBar.open('Your Comment is UP!', 'Close', {
       duration: 5000,
       verticalPosition: 'top',
-      horizontalPosition: 'right'
+      horizontalPosition: 'right',
     });
     this.newComment[announcementId] = '';
-  
   }
   openAddMaterialDialog(): void {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(LecturesComponent, {
       width: '600px',
-      data: { courseId: this.courseId, instructorId: instructorId }
+      data: { courseId: this.courseId, instructorId: instructorId },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.snackBar.open('Lecture/Video added successfully!', 'Close', {
           duration: 5000,
           verticalPosition: 'top',
-          horizontalPosition: 'right'
+          horizontalPosition: 'right',
         });
         this.loadLecturesAndVideos();
       }
@@ -381,7 +437,7 @@ export class StreamComponent implements OnInit, OnDestroy {
   // updateAnnouncement(){
   //   const instructorId = localStorage.getItem('userID');
   //   if(this.courseId && instructorId)
-  //   this.announcementService.updateAnnouncement(  
+  //   this.announcementService.updateAnnouncement(
   //     this.courseId,
   //     instructorId,
   //     this.announcementId,
@@ -402,74 +458,102 @@ export class StreamComponent implements OnInit, OnDestroy {
     const instructorId = localStorage.getItem('userID');
     const dialogRef = this.dialog.open(LabsComponent, {
       width: '600px',
-      data: { courseId: this.courseId, instructorId: instructorId }
+      data: { courseId: this.courseId, instructorId: instructorId },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.snackBar.open('Lab added successfully !', 'Close', {
           duration: 5000,
           verticalPosition: 'top',
-          horizontalPosition: 'right'
+          horizontalPosition: 'right',
         });
         this.loadLabs();
       }
     });
   }
-  openVideoLink(announcement:any):void{
+  openVideoLink(announcement: any): void {
     if (this.courseId && announcement.fileName) {
-      this.announcementService.getFileLink(this.courseId, announcement.fileName).subscribe(link=>{
-         this.link2=link.replace(/^"(.*)"$/, '$1');
-         console.log(this.link2);
-      })
+      this.announcementService
+        .getFileLink(this.courseId, announcement.fileName)
+        .subscribe((link) => {
+          this.link2 = link.replace(/^"(.*)"$/, '$1');
+          console.log(this.link2);
+        });
+    }
   }
-}
   openFileLink(announcement: any): void {
     if (this.courseId && announcement.fileName) {
-      this.announcementService.getFileLink(this.courseId, announcement.fileName).subscribe(link => {
-        const cleanedLink = link.replace(/^"(.*)"$/, '$1');
+      this.announcementService
+        .getFileLink(this.courseId, announcement.fileName)
+        .subscribe((link) => {
+          const cleanedLink = link.replace(/^"(.*)"$/, '$1');
 
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.width = '80vw';
-        dialogConfig.height = '80vh';
-        dialogConfig.data = { fileUrl: cleanedLink, fileName: announcement.fileName };
+          const dialogConfig = new MatDialogConfig();
+          dialogConfig.width = '80vw';
+          dialogConfig.height = '80vh';
+          dialogConfig.data = {
+            fileUrl: cleanedLink,
+            fileName: announcement.fileName,
+          };
 
-        this.dialog.open(FileViewerDialogComponent, dialogConfig);
-      });
+          this.dialog.open(FileViewerDialogComponent, dialogConfig);
+        });
     }
   }
 
   subscribeToAnnouncementTopics(): void {
-    this.announcements.forEach(announcement => {
+    this.announcements.forEach((announcement) => {
       this.fetchInitialComments(announcement.id);
       this.subscribeToCommentUpdates(announcement.id);
     });
   }
 
   viewSubmissions(assignmentId: number): void {
-    this.router.navigate(['/assignment-submissions-instructor', assignmentId]);
+    this.router.navigate([
+      '/assignment-submissions-instructor',
+      assignmentId,
+      this.courseId,
+    ]);
   }
   fetchInitialComments(announcementId: number): void {
-    console.log(`Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`); // Log before API call
-    this.announcementService.getCommentsByAnnouncementId(announcementId).subscribe(comments => {
-      console.log(`Received comments for announcement ID: ${announcementId}`, comments); // Log received comments
-      const announcement = this.announcements.find(a => a.id === announcementId);
-      if (announcement) {
-        announcement.comments = comments;
-      }
-    });
+    console.log(
+      `Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`
+    );
+    this.announcementService
+      .getCommentsByAnnouncementId(announcementId)
+      .subscribe((comments) => {
+        console.log(
+          `Received comments for announcement ID: ${announcementId}`,
+          comments
+        );
+        const announcement = this.announcements.find(
+          (a) => a.id === announcementId
+        );
+        if (announcement) {
+          announcement.comments = comments;
+        }
+      });
   }
 
   subscribeToCommentUpdates(announcementId: number): void {
     const topic = `/topic/announcement/${announcementId}/comments`;
     console.log(`Subscribing to topic: ${topic}`);
-    const subscription = this.webSocketService.subscribeToComments(topic, (message: any) => {
-      console.log(`Received WebSocket message for announcement ID: ${announcementId}`, message);
-      const announcement = this.announcements.find(a => a.id === announcementId);
-      if (announcement) {
-        announcement.comments.push(message);
+    const subscription = this.webSocketService.subscribeToComments(
+      topic,
+      (message: any) => {
+        console.log(
+          `Received WebSocket message for announcement ID: ${announcementId}`,
+          message
+        );
+        const announcement = this.announcements.find(
+          (a) => a.id === announcementId
+        );
+        if (announcement) {
+          announcement.comments.push(message);
+        }
       }
-    });
+    );
     this.commentSubscriptions.set(announcementId, subscription);
   }
 
@@ -478,7 +562,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       return of(this.userCache.get(userId) as string);
     } else {
       return this.announcementService.getInstructorDetails(userId).pipe(
-        switchMap(user => {
+        switchMap((user) => {
           this.userCache.set(userId, user.username);
           return of(user.username);
         }),
@@ -504,5 +588,61 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   publishContent() {
     this.closePublishModal();
+  }
+
+  updateAnnouncement(
+    announcementId: number,
+    courseId: number,
+    instructorId: string,
+    title: string,
+    content: string,
+    dueDate: Date,
+    allowLateSubmission: boolean,
+    file: File
+  ): void {
+    if (this.announcementService.isAssignment(announcementId)) {
+      const materialType = 'ASSIGNMENTS';
+      this.assignmentService
+        .updateAssignment(
+          announcementId,
+          courseId,
+          title,
+          content,
+          materialType,
+          dueDate,
+          allowLateSubmission,
+          file
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('Assignment updated successfully', response);
+          },
+          error: (error) => {
+            console.error('Error updating assignment', error);
+          },
+        });
+    } else {
+      const materialType = 'OTHERS';
+      this.announcementService
+        .updateAnnouncement(
+          courseId,
+          instructorId,
+          announcementId,
+          title,
+          content,
+          materialType,
+          file
+        )
+        .subscribe({
+          next: (response) => {
+            // Handle success response
+            console.log('Announcement updated successfully', response);
+            // Additional logic as needed
+          },
+          error: (error) => {
+            console.error('Error updating announcement', error);
+          },
+        });
+    }
   }
 }

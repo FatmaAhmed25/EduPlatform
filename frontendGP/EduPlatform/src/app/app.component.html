@@ -1,7 +1,4 @@
-<ng-container *ngIf="showSidebar">
-    <app-sidebar></app-sidebar>
-    <app-navbar></app-navbar>
-  </ng-container>
-  <router-outlet></router-outlet>
-  
-<!-- <app-footer></app-footer> -->
+<app-navbar *ngIf="showNavbar"></app-navbar>
+<app-sidebar *ngIf="showSidebar"></app-sidebar>
+<router-outlet></router-outlet>
+

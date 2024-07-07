@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InstructorDashboardComponent } from './instructor-dashboard/instructor-dashboard.component';
@@ -29,6 +28,7 @@ import { QuizSubmissionsComponent } from './quiz-submissions/quiz-submissions.co
 import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submissions-list.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,8 @@ import { AssignmentSubmissionsComponent } from './assignment-submissions/assignm
     MatButtonModule,
     MatTabsModule,
     MatListModule,
-    MatIconModule
+    MatIconModule,
+    BrowserAnimationsModule
   ],
   exports: [
     CreateQuizComponent,

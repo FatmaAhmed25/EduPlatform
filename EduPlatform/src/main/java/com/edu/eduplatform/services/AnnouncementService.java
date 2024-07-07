@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -295,5 +292,14 @@ public class AnnouncementService {
             return modelMapper.map(announcement, AnnouncementDTO.class);
         }
     }
+    public boolean isAssignment(long id) {
+        Optional<Announcement> announcementOptional = announcementRepo.findById(id);
 
+        if (announcementOptional.isPresent()) {
+            Announcement announcement = announcementOptional.get();
+            return announcement instanceof Assignment;
+        }
+
+        return false; // Handle case where announcement with given id doesn't exist
+    }
 }

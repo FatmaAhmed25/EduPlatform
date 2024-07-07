@@ -41,7 +41,7 @@ export class AnnouncementService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/announcment/getComments/${announcementId}`, { headers });
   }
-  updateAnnouncement(courseId: number, instructorId: number, announcementId: number,
+  updateAnnouncement(courseId: number, instructorId: string, announcementId: number,
     title: string, content: string, materialType: string, file: File): Observable<any> {
       const formData = new FormData();
       formData.append('title', title);
@@ -65,4 +65,8 @@ export class AnnouncementService {
   deleteAnnouncement(courseId:number,instructorId:string,announcementId:number){
     return this.http.delete(`${this.apiUrl}/announcment/${courseId}/${instructorId}/${announcementId}`);
   }
+  isAssignment(announcementId:number){
+    return this.http.get(`${this.apiUrl}/announcment/announcement/${announcementId}/is-assignment`);
+  }
+  
 }

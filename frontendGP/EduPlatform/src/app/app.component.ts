@@ -15,13 +15,25 @@ export class AppComponent {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
+        console.log('Navigated to:', event.url);
 
         const isTakeQuizRoute = /\/take-quiz\/\d+/.test(event.url);
         const isRootOrLogin = event.url === '/' || event.url === '/login';
         const isFeatureSection = event.url === '/#features';
+        const isSubmissionSection = event.url === '/upcoming-quizzes';
+        const isUpComingSubmissionSection = event.url === '/submitted-quizzes';
+
+        console.log('isRootOrLogin:', isRootOrLogin);
+        console.log('isTakeQuizRoute:', isTakeQuizRoute);
+        console.log('isFeatureSection:', isFeatureSection);
+        console.log('isSubmissionSection:', isSubmissionSection);
+        console.log('isUpComingSubmissionSection:', isUpComingSubmissionSection);
 
         this.showSidebar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
-        this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
+        this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection || isSubmissionSection || isUpComingSubmissionSection);
+
+        console.log('showSidebar:', this.showSidebar);
+        console.log('showNavbar:', this.showNavbar);
       }
     });
   }

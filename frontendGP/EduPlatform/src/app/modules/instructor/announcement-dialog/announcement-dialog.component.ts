@@ -26,7 +26,7 @@ export class AnnouncementDialogComponent {
   }
 
   onSubmit(): void {
-    const materialType = 'OTHER';
+    const materialType = 'OTHERS';
     if (this.file) {
       // File is present, use the upload material API
       this.announcementService.uploadAnnouncementWithFile(
@@ -43,7 +43,6 @@ export class AnnouncementDialogComponent {
         console.error('Error uploading announcement with file:', error);
       });
     } else {
-      // No file, use the create announcement API
       this.announcementService.createAnnouncement(
         this.data.courseId,
         this.data.instructorId,

@@ -50,7 +50,7 @@ const routes: Routes = [
   {path:'admin-dashboard',component:AdminDashboardComponent},
   {path:'admin-profile',component:AdminProfileComponent,canActivate: [AuthGuard]},
   {path:'users-profile',component:UsersProfileComponent,canActivate: [AuthGuard]},
-  {path:'assignment-submissions-instructor/:id',component:AssignmentSubmissionsComponent,canActivate: [AuthGuard]},
+  {path:'assignment-submissions-instructor/:id/:CourseId',component:AssignmentSubmissionsComponent,canActivate: [AuthGuard]},
   {path:'submitted-quizzes',component:SubmittedQuizzesComponent},
   {path: 'upcoming-quizzes',component:UpcommingQuizzesComponent},
   { path: 'take-quiz-error', component: TakeQuizErrorComponent}
