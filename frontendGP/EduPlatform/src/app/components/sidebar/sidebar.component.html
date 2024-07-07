@@ -24,6 +24,13 @@
                 <span class="tooltip">Dashboard</span>
               </a>
             </li>
+            <!-- <li class="nav-link" *ngIf="userType === 'ROLE_INSTRUCTOR'">
+              <a [routerLink]="['/instructor-dashboard']" [ngClass]="{'active': isActive('/instructor-dashboard')}">
+                <i class='bx bx-home-alt icon'></i>
+                <span class="text nav-text">Dashboard</span>
+                <span class="tooltip">Dashboard</span>
+              </a>
+            </li> -->
            
 
             <!-- Profile Link (Only for Admins) -->
@@ -52,6 +59,28 @@
                 <span class="text nav-text">Courses</span>
                 <span class="tooltip">Courses</span>
               </a>
+            </li>
+
+            <li class="nav-link" *ngIf="userType === 'ROLE_INSTRUCTOR'">
+              <a [routerLink]="['/instructor-courses']" [ngClass]="{'active': isActive('/instrutor-courses')}">
+                <i class='bx bx-book-open icon'></i>
+                <span class="text nav-text">Courses</span>
+                <span class="tooltip">Courses</span>
+              </a>
+            </li>
+            <li class="nav-link" *ngIf="userType === 'ROLE_INSTRUCTOR'">
+              <a [routerLink]="['/create-course']" [ngClass]="{'active': isActive('/create-course')}">
+                <i class='bx bx-book-reader icon'></i>
+                <span class="text nav-text">Create Course</span>
+                <span class="tooltip">Create Course</span>
+               </a> 
+            </li>
+            <li class="nav-link" *ngIf="userType === 'ROLE_INSTRUCTOR'">
+              <a [routerLink]="['/create-quiz']" [ngClass]="{'active': isActive('/create-quiz')}">
+                <i class='bx bx-list-plus icon'></i>
+                <span class="text nav-text">Create Quiz</span>
+                <span class="tooltip">Create Quiz</span>
+               </a> 
             </li>
       
             <!-- Enroll by Code (Only for Students) -->

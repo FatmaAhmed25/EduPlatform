@@ -10,7 +10,7 @@ export class ProctoredVideoService {
 
   constructor(private http: HttpClient) {}
 
-  savePhoto(studentId: number, quizId: number, file: File): Observable<any> {
+  savePhoto(studentId: string, quizId: number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('studentId', studentId.toString());
     formData.append('quizId', quizId.toString());

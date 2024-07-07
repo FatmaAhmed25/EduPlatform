@@ -44,25 +44,24 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   countdown: string = '';
   timerSubscription: Subscription | null = null;
   errorMessage: string | null = null;
-  initialWindowWidth: any;
   quizId: any;
-  courseId:any;
+  courseId: any;
+  cheatingStatus: string = 'PASSED';
 
-
-  constructor(private router: Router,private quizService: StudentQuizService, private datePipe: DatePipe,private dialog: MatDialog,private route: ActivatedRoute) {}
+  constructor(private router: Router, private quizService: StudentQuizService, private datePipe: DatePipe, private dialog: MatDialog, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.quizId = +params['quizId']; 
+      this.quizId = +params['quizId'];
       this.courseId = +params['courseId'];
     });
-    // window.addEventListener('blur', this.onWindowBlur);
-    this.quizService.getQuiz(this.courseId,this.quizId).subscribe(
+    this.quizService.getQuiz(this.courseId, this.quizId).subscribe(
       (data: any) => {
         this.quiz = data;
         this.initializeAnsweredQuestions();
         this.startCountdown();
-        console.log(data)
+        this.requestFullscreen();
+        console.log(data);
       },
       (error) => {
         console.error('Error fetching quiz:', error);
@@ -72,13 +71,35 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    window.removeEventListener('blur', this.onWindowBlur);
+    // window.removeEventListener('blur', this.onWindowBlur);
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
   }
-  onWindowBlur = (): void => {
-    alert('Please do not switch tabs or applications during the quiz.');
+
+  requestFullscreen(): void {
+    const docElement = document.documentElement as any;
+    if (docElement.requestFullscreen) {
+      docElement.requestFullscreen();
+    } else if (docElement.webkitRequestFullscreen) {
+      docElement.webkitRequestFullscreen();
+    } else if (docElement.mozRequestFullScreen) {
+      docElement.mozRequestFullScreen();
+    } else if (docElement.msRequestFullscreen) {
+      docElement.msRequestFullscreen();
+    }
+  }
+
+  @HostListener('document:fullscreenchange')
+  @HostListener('document:webkitfullscreenchange')
+  @HostListener('document:mozfullscreenchange')
+  @HostListener('document:MSFullscreenChange')
+  onFullScreenChange(): void {
+    if (!document.fullscreenElement) {
+      this.cheatingStatus = 'CHEATING';
+      this.submitQuiz();
+      this.router.navigate(['/upcoming-quizzes']);
+    }
   }
 
   initializeAnsweredQuestions(): void {
@@ -104,17 +125,8 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Detect when full-screen mode changes
-  @HostListener('document:fullscreenchange')
-  @HostListener('document:webkitfullscreenchange')
-  @HostListener('document:mozfullscreenchange')
-  @HostListener('document:MSFullscreenChange')
-  onFullScreenChange(): void {
-    if (!document.fullscreenElement) {
-      alert('Please stay in full-screen mode during the quiz.');
-    }
-  }
-
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {}
 
   goToNextQuestion(): void {
     if (this.quiz && this.currentQuestionIndex < this.quiz.questions.length - 1) {
@@ -151,37 +163,25 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
       });
     }
   }
+
   saveEssayAnswer(answer: string, index: number): void {
     if (this.quiz) {
       this.answeredQuestions[index] = true;
       this.selectedAnswers[index] = answer;
     }
   }
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any): void {
-    // const currentWidth = event.target.innerWidth;
-    // if (currentWidth !== this.initialWindowWidth) {
-    //   alert('Changing window size is not allowed during the quiz!');
-    //   window.close();  // Optional: Close the window to prevent further actions.
-    // }
+
+  hasNextQuestion(): boolean {
+    return this.currentQuestionIndex < ((this.quiz?.questions?.length ?? 0) - 1);
   }
 
-
-hasNextQuestion(): boolean {
-  return this.currentQuestionIndex < ((this.quiz?.questions?.length ?? 0) - 1);
-}
-
-  
-
-  confirmSubmition(){
+  confirmSubmition() {
     const dialogRef = this.dialog.open(ConfirmQuizSubmissionDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.submitQuiz();
-      }
-      else {
-        // User clicked Cancel or clicked outside the dialog
+      } else {
         console.log('Quiz submission cancelled.');
       }
     });
@@ -189,43 +189,19 @@ hasNextQuestion(): boolean {
 
   submitMcqQuiz(): void {
     if (this.quiz && this.quizId) {
-      const studentId = localStorage.getItem('userID') 
+      const studentId = localStorage.getItem('userID');
       console.log('student id: ' + studentId);
-      if(studentId) {
+      if (studentId) {
         const payload = {
           studentId: studentId,
           quizId: this.quizId,
           answers: this.quiz.questions.map((question, index) => ({
             questionId: question.questionId,
             answerId: this.selectedAnswers[index]
-          }))
+          })),
+          cheatingStatus: this.cheatingStatus
         };
         this.quizService.submitMCQQuiz(payload).subscribe(
-        (response) => {
-          console.log('Quiz submitted successfully:', response);
-        },
-        (error) => {
-          console.error('Error submitting quiz:', error);
-        }
-      );
-    }
-  }}
-    submitEssayQuiz(): void {
-      if (this.quiz && this.quizId) {
-        const studentId = Number(localStorage.getItem('userID'))
-        console.log('student id: ' + studentId);
-        console.log('quiz id: ' + this.quizId);
-        if(studentId) {
-          const payload = {
-            studentId: studentId,
-            quizId: this.quizId,
-            answers: this.quiz.questions.map((question, index) => ({
-              questionId: question.questionId,
-              answer: this.selectedAnswers[index]
-            }))
-          };
-          console.log(payload);
-          this.quizService.submitEssayQuiz(payload).subscribe(
           (response) => {
             console.log('Quiz submitted successfully:', response);
           },
@@ -234,17 +210,51 @@ hasNextQuestion(): boolean {
           }
         );
       }
-          
-      } 
-      
+    }
   }
+
+  submitEssayQuiz(): void {
+    if (this.quiz && this.quizId) {
+      const studentId = Number(localStorage.getItem('userID'));
+      console.log('student id: ' + studentId);
+      console.log('quiz id: ' + this.quizId);
+      if (studentId) {
+        const payload = {
+          studentId: studentId,
+          quizId: this.quizId,
+          answers: this.quiz.questions.map((question, index) => ({
+            questionId: question.questionId,
+            answer: this.selectedAnswers[index]
+          })),
+          cheatingStatus: this.cheatingStatus
+        };
+        console.log(payload);
+        this.quizService.submitEssayQuiz(payload).subscribe(
+          (response) => {
+            console.log('Quiz submitted successfully:', response);
+          },
+          (error) => {
+            console.error('Error submitting quiz:', error);
+          }
+        );
+      }
+    }
+  }
+
+  handleCheatingDetected(event: string): void {
+    this.cheatingStatus = event;
+    console.log('Cheating status updated:', this.cheatingStatus);
+  }
+
   submitQuiz(): void {
-    if (this.quiz ) {
+    if (this.quiz) {
       const firstQuestion = this.quiz.questions[0];
       if (firstQuestion.questionType === 'MCQ') {
         this.submitMcqQuiz();
       } else {
         this.submitEssayQuiz();
       }
-    }}
+      this.router.navigate(['/upcoming-quizzes']);
+    }
+  }
 }

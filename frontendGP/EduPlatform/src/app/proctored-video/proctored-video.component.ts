@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter,Input } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import * as faceapi from '@vladmandic/face-api';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as dayjs from 'dayjs';
 import { ProctoredVideoService } from '../services/proctored-service/proctored-video.service';
+import {StudentQuizService} from '../services/Student-quiz-service/student-quiz.service';
 
 @Component({
   selector: 'app-proctored-video',
@@ -13,6 +14,9 @@ import { ProctoredVideoService } from '../services/proctored-service/proctored-v
 export class ProctoredVideoComponent implements OnInit, OnDestroy {
   @ViewChild('videoEl') videoEl!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasEl') canvasEl!: ElementRef<HTMLCanvasElement>;
+  @Output() cheatingDetected = new EventEmitter<string>();
+  @Input() quizId!: number;
+
   
   displayText: string = '';
   private socket!: Socket;
@@ -21,12 +25,12 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   isVideoVisible: boolean = false;
   mediaStream: MediaStream | null = null;
 
-  constructor(private proctoredVideoService: ProctoredVideoService) {}
+  constructor(private proctoredVideoService: ProctoredVideoService , private studentQuizService: StudentQuizService) {}
 
   ngOnInit(): void {
     this.startDetection();
     this.handleSocket();
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    // document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   ngOnDestroy(): void {
@@ -34,28 +38,18 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
     if (this.socket && this.socket.connected) {
       this.socket.disconnect();
     }
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-  }
-  toggleVideoVisibility(): void {
-    console.log(this.isVideoVisible)
-    // If video becomes visible, start capturing video
-    if (this.isVideoVisible) {
-      this.isVideoVisible =false;
-    
-    } else {
-      this.isVideoVisible = true;
-      // If video is hidden, stop video capture
-    }
+    // document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
-  private handleVisibilityChange = () => {
-    if (document.visibilityState === 'visible') {
-      console.log('Tab is active');
-    } else {
-      alert('Warning: Dont switch tabs');
-      console.log('Tab is inactive');
-    }
-  };
+  toggleVideoVisibility(): void {
+    this.isVideoVisible = !this.isVideoVisible;
+  }
+
+  // private handleVisibilityChange = () => {
+  //   if (document.visibilityState !== 'visible') {
+  //     this.cheatingDetected.emit('CHEATING');
+  //   }
+  // };
 
   private async startDetection() {
     await Promise.all([
@@ -109,7 +103,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
                   ctx.fillStyle = 'red';
                   ctx.stroke();
                   ctx.fillText('Phone detected!', prediction.bbox[0], prediction.bbox[1] > 10 ? prediction.bbox[1] - 5 : 10);
-                  alert('PUT DOWN YOUR PHONE CHEATER');
+                  this.cheatingDetected.emit('CHEATING');
                 }
               });
             } else {
@@ -119,7 +113,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
             if (detections.length === 0) {
               console.log('User is absent');
             } else if (detections.length > 1) {
-              alert('More than one person detected');
+              this.cheatingDetected.emit('SUSPICIOUS');
             }
           }, 100);
         });
@@ -148,12 +142,15 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
 
       if (data.text !== 'Forward') {
         const formattedDate = dayjs().format('YYYY-MM-DD_HH-mm-ss');
+        this.cheatingDetected.emit('SUSPICIOUS');
 
         try {
           const blob = await fetch(data.image).then(res => res.blob());
           const file = new File([blob], `processedimage_${formattedDate}.jpg`, { type: 'image/jpeg' });
-
-          this.proctoredVideoService.savePhoto(2, 12, file).subscribe(
+          const userID = localStorage.getItem("userID");
+          console.log("quiz here" + this.quizId);
+          if(userID && this.quizId){
+          this.proctoredVideoService.savePhoto(userID, this.quizId, file).subscribe(
             response => {
               console.log('Photo saved successfully', response);
             },
@@ -161,6 +158,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
               console.error('Failed to save photo', error);
             }
           );
+        }
         } catch (error) {
           console.error('Failed to fetch or process image:', error);
         }
