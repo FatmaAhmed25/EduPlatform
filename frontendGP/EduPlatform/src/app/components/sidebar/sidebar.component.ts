@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnrollmentService } from 'src/app/services/enrollment/enrollment.service';
 import { Courses } from 'src/app/models/course.model';
 import { Router, NavigationEnd } from '@angular/router';
+import { AuthService } from 'src/app/services/authService/auth.service'; // Import AuthService
 
 @Component({
   selector: 'app-sidebar',
@@ -11,7 +12,7 @@ import { Router, NavigationEnd } from '@angular/router';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  constructor(private sidebarService: SidebarService,private snackBar: MatSnackBar, private enrollmentService: EnrollmentService,private router: Router) {
+  constructor(private sidebarService: SidebarService, private snackBar: MatSnackBar, private enrollmentService: EnrollmentService, private router: Router, private authService: AuthService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.activeLink = event.urlAfterRedirects;
@@ -24,13 +25,13 @@ export class SidebarComponent implements OnInit {
   enrollCode: string = '';
   enrollPassword: string = '';
   activeLink: string | null = null;
-  userType:string| null = null;
+  userType: string | null = null;
 
   ngOnInit(): void {
-   this.userType = localStorage.getItem('userType');
-   console.log(this.userType)
-   this.userType = localStorage.getItem('userType');
-   console.log(this.userType)
+    this.userType = localStorage.getItem('userType');
+    console.log(this.userType)
+    this.userType = localStorage.getItem('userType');
+    console.log(this.userType)
     const body = document.body;
     const sidebar = document.querySelector('nav') as HTMLElement;
     const toggle = document.querySelector(".toggle") as HTMLElement;
@@ -44,7 +45,7 @@ export class SidebarComponent implements OnInit {
         body.classList.toggle("sidebar-open");
       });
     }
-    
+
     if (searchBtn) {
       searchBtn.addEventListener("click", () => {
         sidebar.classList.remove("close");
@@ -84,45 +85,48 @@ export class SidebarComponent implements OnInit {
   }
   enrollCourse(): void {
     const studentId = localStorage.getItem('userID');
-    console.log(this.enrollCode+" "+this.enrollPassword)
+    console.log(this.enrollCode + " " + this.enrollPassword)
     if (this.enrollCode && studentId && this.enrollPassword) {
       this.enrollmentService.enrollByCode(this.enrollCode, Number(studentId), this.enrollPassword).subscribe(
         (response) => {
-          if(response.status===200){
-          this.snackBar.open('Enrolled successfully by code', 'Close', {
-            duration: 5000,
-            verticalPosition: 'top',
-            horizontalPosition: 'right'
-          });
-          this.closeEnrollModal();
-        }
+          if (response.status === 200) {
+            this.snackBar.open('Enrolled successfully by code', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+            });
+            this.closeEnrollModal();
+          }
         },
         error => {
           if (error.status === 400) {
-              this.snackBar.open('Course password or Code is incorrect', 'Close', {
-                  duration: 5000,
-                  verticalPosition: 'top',
-                  horizontalPosition: 'right'
-              });
+            this.snackBar.open('Course password or Code is incorrect', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+            });
           }
           if (error.status === 401) {
-              this.snackBar.open('You are already enrolled in the course', 'Close', {
-                  duration: 5000,
-                  verticalPosition: 'top',
-                  horizontalPosition: 'right'
-              });
-      }
-  }
-  );
-}
+            this.snackBar.open('You are already enrolled in the course', 'Close', {
+              duration: 5000,
+              verticalPosition: 'top',
+              horizontalPosition: 'right'
+            });
+          }
+        }
+      );
+    }
 
     else {
       this.snackBar.open('Missing required fields: selectedCourse, studentId, or enrollPassword', 'Close', {
-          duration: 5000,
-          verticalPosition: 'top',
-          horizontalPosition: 'right'
+        duration: 5000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
       });
+    }
   }
+  // Method to handle logout
+  logout(): void {
+    this.authService.logout();
   }
-
 }

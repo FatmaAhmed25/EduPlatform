@@ -446,7 +446,7 @@ export class StreamComponent implements OnInit, OnDestroy {
     });
   }
 
-  viewSubmissions(assignmentId: number): void {
+  viewAssignSubmissions(assignmentId: number): void {
     this.router.navigate(['/assignment-submissions-instructor', assignmentId]);
   }
   fetchInitialComments(announcementId: number): void {
@@ -504,5 +504,12 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   publishContent() {
     this.closePublishModal();
+  }
+
+  viewQuiz(quizId: string): void {
+    this.router.navigate(['/mcq-quiz-viewer', quizId]);
+  }
+  viewQuizSubmissions(quizId: string): void {
+    this.router.navigate(['/quiz-submissions', quizId]);
   }
 }
