@@ -8,11 +8,9 @@ import { UserDTO } from 'src/app/models/dtos/usersdto';
   templateUrl: './student-profile.component.html',
   styleUrls: ['./student-profile.component.scss']
 })
-
 export class StudentProfileComponent implements OnInit {
-
   userId: number | null = null;
-  studentProfile: any = {};
+  studentProfile: any = { email: '', username: '', currentPassword: '', newPassword: '', bio: '' };
   userInfo: UserDTO | null = null;
 
   constructor(private studentDetailsService: StudentDetailsService) {}
@@ -20,31 +18,31 @@ export class StudentProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userId = this.getUserIdFromLocalStorage();
     this.getUserById();
-    console.log(this.getUserById())
-
   }
 
   getUserIdFromLocalStorage(): number | null {
-    console.log(localStorage.getItem('userID'))
     const userId = localStorage.getItem('userID');
     return userId ? +userId : null; // Convert to number or return null if not found
   }
 
   updateAdminProfile(): void {
-    this.studentProfile.userId =this.getUserIdFromLocalStorage();
+    if (this.userId !== null) {
+      this.studentProfile.userId = this.userId;
 
-    this.studentDetailsService.updateStudentProfile(this.studentProfile).subscribe(
-      (response) => {
-        console.log('Profile updated successfully:', response);
-       
-      },
-      (error: HttpErrorResponse) => {
-   
-        console.error('Error updating profile:', error);
-       
+      if (this.studentProfile.newPassword && !this.studentProfile.currentPassword) {
+        alert('Please provide the current password to change your password.');
+        return;
       }
-    );
 
+      this.studentDetailsService.updateStudentProfile(this.studentProfile).subscribe(
+        response => {
+          console.log('Profile updated successfully:', response);
+        },
+        (error: HttpErrorResponse) => {
+          console.error('Error updating profile:', error);
+        }
+      );
+    }
   }
 
   getUserById(): void {
@@ -52,12 +50,10 @@ export class StudentProfileComponent implements OnInit {
       this.studentDetailsService.getStudentDetails(this.userId).subscribe(
         userInfo => {
           this.userInfo = userInfo; // Store fetched userInfo
-          this.studentProfile = { ...userInfo }; // Populate adminProfile for editing
+          this.studentProfile = { ...userInfo }; // Populate studentProfile for editing
         },
         error => console.error('Error fetching user info:', error)
       );
     }
   }
-
-
 }

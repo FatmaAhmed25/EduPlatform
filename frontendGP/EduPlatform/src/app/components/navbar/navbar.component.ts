@@ -132,7 +132,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToProfile() {
-    // Logic to navigate to profile
+    this.router.navigate(['/student-profile']);
   }
 
   goToSettings() {
