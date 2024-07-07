@@ -16,6 +16,16 @@
   /* 2 */
 }
 
+.blue-link {
+  color: #5E5DF0;
+  text-decoration: none;
+}
+
+.blue-link:hover {
+  color: #1D4ED8;
+}
+
+
 ::before,
 ::after {
   --tw-content: '';

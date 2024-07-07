@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Quiz } from 'src/app/models/Quiz';
+import { BehaviorSubject ,tap} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +29,12 @@ export class StudentQuizService {
       })
     );
   }
-  submitMCQQuiz(payload: { studentId: any; quizId: any; answers: { questionId: any; answerId: any; }[]; }) { 
+  submitMCQQuiz(payload: any) { 
     console.log(payload);
     const url = `${this.baseUrl}/api/quiz/submit/mcq-quiz`;
     return this.http.post<any>(url, payload);
   }
-  submitEssayQuiz(payload: { studentId: number; quizId: any; answers: { questionId: any; answer: any; }[]; }) { 
+  submitEssayQuiz(payload: any) { 
     console.log(payload);
     const url = `${this.baseUrl}/api/quiz/submit/essay-quiz`;
     return this.http.post<any>(url, payload);

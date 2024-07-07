@@ -63,5 +63,5 @@
     </div>
   </div>
   
-  <app-proctored-video></app-proctored-video>
+  <app-proctored-video [quizId]="quizId" (cheatingDetected)="handleCheatingDetected($event)"></app-proctored-video>
 </div>

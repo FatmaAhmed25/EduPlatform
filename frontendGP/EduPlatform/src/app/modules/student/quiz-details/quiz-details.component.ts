@@ -47,6 +47,7 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   initialWindowWidth: any;
   quizId: any;
   courseId:any;
+  cheatingStatus: string = 'PASSED';
 
 
   constructor(private router: Router,private quizService: StudentQuizService, private datePipe: DatePipe,private dialog: MatDialog,private route: ActivatedRoute) {}
@@ -198,7 +199,8 @@ hasNextQuestion(): boolean {
           answers: this.quiz.questions.map((question, index) => ({
             questionId: question.questionId,
             answerId: this.selectedAnswers[index]
-          }))
+          })),
+          cheatingStatus: this.cheatingStatus
         };
         this.quizService.submitMCQQuiz(payload).subscribe(
         (response) => {
@@ -222,7 +224,8 @@ hasNextQuestion(): boolean {
             answers: this.quiz.questions.map((question, index) => ({
               questionId: question.questionId,
               answer: this.selectedAnswers[index]
-            }))
+            })),
+            cheatingStatus: this.cheatingStatus
           };
           console.log(payload);
           this.quizService.submitEssayQuiz(payload).subscribe(
@@ -238,6 +241,13 @@ hasNextQuestion(): boolean {
       } 
       
   }
+
+  
+  handleCheatingDetected(event: string): void {
+    this.cheatingStatus = event;
+    console.log('Cheating status updated:', this.cheatingStatus);
+  }
+
   submitQuiz(): void {
     if (this.quiz ) {
       const firstQuestion = this.quiz.questions[0];
