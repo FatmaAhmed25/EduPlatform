@@ -18,9 +18,26 @@ import { LecturesComponent } from '../lectures/lectures.component';
 import { LabsComponent } from '../labs/labs.component';
 import { AssignmentsComponent } from '../assignments/assignments.component';
 import { Router } from '@angular/router';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { AssignmentSubmissionsService } from 'src/app/services/assignmentSubmission/assignment-submissions.service';
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        query('.container, .left-panel, .main-content, .side-panel', [
+          style({ opacity: 0, transform: 'translateY(-100px)' }),
+          stagger(100, [
+            animate(
+              '500ms ease-out',
+              style({ opacity: 1, transform: 'translateY(0)' })
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
+  ],
   styleUrls: ['./stream.component.scss']
 })
 export class StreamComponent implements OnInit, OnDestroy {

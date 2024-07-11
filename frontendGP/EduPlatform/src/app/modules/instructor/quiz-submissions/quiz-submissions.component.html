@@ -69,7 +69,7 @@
                                   <span class="text-[13px] font-medium text-gray-400">{{ submission.quizSubmission.submissionTime | date }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <button class="quiz-submission-btn" (click)="downloadQuizSubmissionPdf(submission.quizSubmission.id, submission.quizId)">
+                                    <button class="quiz-submission-btn" (click)="downloadQuizSubmissionPdf(submission.studentId, submission.quizId)">
                                       Quiz Submission
                                     </button>
                                   </td>
