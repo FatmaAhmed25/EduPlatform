@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  width: calc(100% - 190px);
+  width: calc(100% - 140px);
   margin-left: 108px;
   overflow-x: hidden;
 }
@@ -8,8 +8,8 @@
 .main-content {
   flex-grow: 1;
   padding: 20px;
-  margin-right: 76px;
-  margin-left: 50px;
+  margin-left: 112px;
+
 }
 
 .header {
@@ -86,8 +86,8 @@
   margin-top: 245px;
   height: 333px;
   position: absolute;
-  top: 16px;
-  right: 65px;
+  top: 38px;
+  right: 21px;
 }
 .materials-header, .materials-list, .material-card, .material-header, .material-details {
   display: flex;
@@ -285,7 +285,9 @@ button:hover {
 }
 
 .left-panel{
-  margin-top: 20px;
+  margin-top: 28px;
+  margin-right: 25px;
+  margin-left: 28px;
 }
 
 .view-comments-btn {
@@ -447,7 +449,7 @@ button:hover {
   border-radius: 8px;
   transition: background-color 0.3s;
   cursor: pointer;
-  margin-left: 522px;
+  margin-left: 600px;
 }
 
 .view-comments-btn:hover {
@@ -509,7 +511,7 @@ button:hover {
   background-color: #001486;
 }
 .btn {
-  margin-left: 566px;
+  margin-left: 606px;
   min-width: 80px;
   padding: 6px 12px;
   border: none;

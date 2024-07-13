@@ -3,10 +3,27 @@ import { GetCoursesService } from 'src/app/services/instructor-courses/get-cours
 import { Router } from '@angular/router';
 import { SidebarService } from 'src/app/services/sidebar-Service/sidebar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  stagger,
+} from '@angular/animations';
+
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.scss']
+  styleUrls: ['./courses.component.scss'],
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-20px)' }),
+        animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+      ]),
+    ]),
+  ],
 })
 export class CoursesComponent implements OnInit {
   isSidebarOpen = false;
