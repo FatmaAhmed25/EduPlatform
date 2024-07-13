@@ -3,15 +3,21 @@
     <h3>Create New Assessment</h3>
     <div class="form-group">
       <label for="type-of-assessment">Type of assessment</label>
-      <select id="type-of-assessment" formControlName="typeOfAssessment" class="form-control">
-        <option *ngFor="let type of assessmentTypes" [value]="type.value">{{ type.label }}</option>
-      </select>
+      <div class="dropdown toggle">
+        <input id="t1" type="checkbox">
+        <label for="t1">{{ quizForm.controls['typeOfAssessment'].value || 'Select Type of Assessment' }}</label>
+        <ul>
+          <li *ngFor="let type of assessmentTypes" (click)="setTypeOfAssessment(type)">
+            <a href="javascript:void(0)">{{ type.label }}</a>
+          </li>
+        </ul>
+      </div>
       <div *ngIf="quizForm.controls['typeOfAssessment'].invalid && quizForm.controls['typeOfAssessment'].touched">
         <small class="text-danger">Type of assessment is required.</small>
       </div>
     </div>
     <div class="form-group">
-      <label for="assessment-name">Assessment Name <span class="info-tooltip"></span></label>
+      <label for="assessment-name">Assessment Name</label>
       <input type="text" id="assessment-name" formControlName="assessmentName" placeholder="Assessment - Computer Science" class="form-control">
       <div *ngIf="quizForm.controls['assessmentName'].invalid && quizForm.controls['assessmentName'].touched">
         <small class="text-danger">Assessment Name is required.</small>
@@ -46,12 +52,21 @@
         <small class="text-danger">Number of questions must be more than 1.</small>
       </div>
     </div>
-    <button type="submit" class="btn-next" (click)="navigateToGenerateQuiz()">Next</button>
+    <div class="form-group">
+      <label for="selected-course">Select Course</label>
+      <div class="dropdown toggle">
+        <input id="t2" type="checkbox">
+        <label for="t2">{{ quizForm.controls['selectedCourse'].value?.title || 'Select Course' }}</label>
+        <ul>
+          <li *ngFor="let course of courses" (click)="setSelectedCourse(course)">
+            <a href="javascript:void(0)">{{ course.title }} ({{ course.courseCode }})</a>
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="quizForm.controls['selectedCourse'].invalid && quizForm.controls['selectedCourse'].touched">
+        <small class="text-danger">Course selection is required.</small>
+      </div>
+    </div>
+    <button type="submit" class="btn-next">Next</button>
   </form>
-</div>
-<div class="container" @formAnimations>
-  <div class="advanced-menu">
-    <i class='bx bxs-plus-square'></i>
-    <button>Advanced menu</button>
-  </div>
 </div>

@@ -124,6 +124,16 @@ export class CreateQuizService {
       })
     );
   }
+
+  getCoursesForInstructor(userId: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.get<any>(`http://localhost:8080/courses/${userId}/get-courses/instructor`, { headers }).pipe(
+      catchError(error => {
+        console.error('Error fetching courses:', error);
+        return of({ error: 'Error fetching courses. Please try again later.' });
+      })
+    );
+  }
   
 
 
