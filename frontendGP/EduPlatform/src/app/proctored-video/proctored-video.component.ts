@@ -30,7 +30,6 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.startDetection();
     this.handleSocket();
-    // document.addEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   ngOnDestroy(): void {
@@ -38,18 +37,12 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
     if (this.socket && this.socket.connected) {
       this.socket.disconnect();
     }
-    // document.removeEventListener('visibilitychange', this.handleVisibilityChange);
   }
 
   toggleVideoVisibility(): void {
     this.isVideoVisible = !this.isVideoVisible;
   }
 
-  // private handleVisibilityChange = () => {
-  //   if (document.visibilityState !== 'visible') {
-  //     this.cheatingDetected.emit('CHEATING');
-  //   }
-  // };
 
   private async startDetection() {
     await Promise.all([
@@ -112,7 +105,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
 
             if (detections.length === 0) {
               console.log('User is absent');
-            } else if (detections.length > 1) {
+            } else if (detections.length > 1) { // More than one person
               this.cheatingDetected.emit('SUSPICIOUS');
             }
           }, 100);
@@ -134,7 +127,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   }
 
   private handleSocket() {
-    this.socket = io('http://localhost:5000'); // Replace with your server URL
+    this.socket = io('http://localhost:5000'); 
 
     this.socket.on('response_back', async (data: any) => {
       this.displayText = data.text;

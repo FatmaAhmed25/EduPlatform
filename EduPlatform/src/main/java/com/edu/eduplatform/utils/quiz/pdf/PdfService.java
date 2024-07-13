@@ -8,9 +8,8 @@ import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -155,17 +154,37 @@ public class PdfService {
             Document document = new Document();
             PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream);
 
-            // Path to your logo file
+            // Path to your logo and background files
             String logoPath = "src/main/resources/logo.png";
+            String backgroundPath = "src/main/resources/bg2.png";
+//            writer.setPageEvent(new BackgroundImagePageEvent(backgroundPath));
+
             FooterPageEvent event = new FooterPageEvent(logoPath);
             writer.setPageEvent(event);
 
             document.open();
 
-            // Add quiz title centered at the top
+            // Add header with logo and title
+            PdfPTable header = new PdfPTable(2);
+            header.setWidthPercentage(100);
+            header.setWidths(new int[]{1, 4});
 
+//            Image logo = Image.getInstance(logoPath);
+//            logo.scaleToFit(100, 100);
+//            PdfPCell logoCell = new PdfPCell(logo);
+//            logoCell.setBorder(PdfPCell.NO_BORDER);
+//            header.addCell(logoCell);
 
-            // Add some spacing after the quiz title
+            PdfPCell titleCell = new PdfPCell(new Phrase("Quiz Submission Report",
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, new BaseColor(0, 102, 204))));
+            titleCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            titleCell.setBorder(PdfPCell.NO_BORDER);
+            header.addCell(titleCell);
+
+            document.add(header);
+
+            // Add some spacing after the header
             document.add(new Paragraph("\n"));
 
             // Add student name and submission time
@@ -180,15 +199,13 @@ public class PdfService {
             if (quiz.getQuestions().stream().anyMatch(q -> q instanceof MCQQuestion)) {
                 // MCQ Quiz
                 MCQSubmission mcqSubmission = mcqSubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
-                       // .orElseThrow(() -> new IllegalArgumentException("MCQ Submission not found"));
                 submissionTimeLabel = "Submission Time: " + mcqSubmission.getSubmissionTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 gradeLabel = "Grade: " + mcqSubmission.getTotalGrade() + " out of " + quiz.getTotalGrade();
             } else {
                 // Essay Quiz
                 EssaySubmission essaySubmission = essaySubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
-                       // .orElseThrow(() -> new IllegalArgumentException("Essay Submission not found"));
                 submissionTimeLabel = "Submission Time: " + essaySubmission.getSubmissionTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                gradeLabel = "Grade: " + essaySubmission.getTotalGrade()+ " out of " + quiz.getTotalGrade();
+                gradeLabel = "Grade: " + essaySubmission.getTotalGrade() + " out of " + quiz.getTotalGrade();
             }
 
             studentInfo.add(new Chunk(submissionTimeLabel, FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK)));
@@ -198,20 +215,21 @@ public class PdfService {
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("\n"));
 
+            // Add grade label in a colored cell
+            PdfPTable gradeTable = new PdfPTable(1);
+            PdfPCell gradeCell = new PdfPCell(new Phrase(gradeLabel, FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)));
+            gradeCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            gradeCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            gradeCell.setBackgroundColor(new BaseColor(0, 102, 204)); // Light blue color
+            gradeCell.setFixedHeight(30);
+            gradeCell.setBorder(PdfPCell.NO_BORDER);
+            gradeTable.addCell(gradeCell);
+            document.add(gradeTable);
 
-            // Add grade label in a circle
-            PdfPTable table = new PdfPTable(1);
-            PdfPCell cell = new PdfPCell(new Phrase(gradeLabel, FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.WHITE)));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-            cell.setBackgroundColor(BaseColor.BLUE);
-            cell.setFixedHeight(30);
-            table.addCell(cell);
-            document.add(table);
-
-            // Add some spacing after the grade circle
+            // Add some spacing after the grade label
             document.add(new Paragraph("\n"));
 
+            // Add quiz title centered at the top
             Paragraph quizTitle = new Paragraph(quiz.getTitle(),
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK));
             quizTitle.setAlignment(Element.ALIGN_CENTER);
@@ -219,19 +237,14 @@ public class PdfService {
             document.add(new Paragraph("\n"));
             document.add(new Paragraph("\n"));
 
-
             // Determine quiz type
             if (quiz.getQuestions().stream().anyMatch(q -> q instanceof MCQQuestion)) {
                 // MCQ Quiz
                 MCQSubmission mcqSubmission = mcqSubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
-                    //    .orElseThrow(() -> new IllegalArgumentException("MCQ Submission not found"));
-
                 addMCQSubmissionDetails(document, mcqSubmission);
             } else {
                 // Essay Quiz
                 EssaySubmission essaySubmission = essaySubmissionRepo.findByQuizQuizIdAndStudentUserID(quizId, studentId);
-                       // .orElseThrow(() -> new IllegalArgumentException("Essay Submission not found"));
-
                 addEssaySubmissionDetails(document, essaySubmission);
             }
 
@@ -243,11 +256,6 @@ public class PdfService {
     }
 
     private void addMCQSubmissionDetails(Document document, MCQSubmission mcqSubmission) throws DocumentException {
-        // Add total score
-//        Paragraph totalScoreParagraph = new Paragraph("Total Score: " + mcqSubmission.getTotalScore(),
-//                FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK));
-//        document.add(totalScoreParagraph);
-
         // Add answers
         for (StudentMCQAnswer answer : mcqSubmission.getAnswers()) {
             Paragraph questionParagraph = new Paragraph("Question: " + answer.getQuestion().getText() + " (Points: " + answer.getQuestion().getPoints() + ")",
@@ -255,7 +263,7 @@ public class PdfService {
             document.add(questionParagraph);
 
             // Check if the answer is correct to set color
-            BaseColor answerColor = answer.isCorrect() ? BaseColor.GREEN : BaseColor.RED;
+            BaseColor answerColor = answer.isCorrect() ? new BaseColor(0, 128, 0) : BaseColor.RED; // Darker green for correct answers
 
             Paragraph answerParagraph = new Paragraph("Answer: " + answer.getAnswer().getText(),
                     FontFactory.getFont(FontFactory.HELVETICA, 12, answerColor));
@@ -267,17 +275,11 @@ public class PdfService {
     }
 
     private void addEssaySubmissionDetails(Document document, EssaySubmission essaySubmission) throws DocumentException {
-//        // Add overall grade
-//        Paragraph overallGradeParagraph = new Paragraph("Overall Grade: " + essaySubmission.getOverallGrade(),
-//                FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK));
-//        document.add(overallGradeParagraph);
-
         // Add answers
         for (StudentEssayAnswer answer : essaySubmission.getAnswers()) {
             Paragraph questionParagraph = new Paragraph("Question: " + answer.getQuestion().getText() + " (Points: " + answer.getQuestion().getPoints() + ")",
                     FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLACK));
             document.add(questionParagraph);
-
 
             Paragraph answerParagraph = new Paragraph("Answer: " + answer.getAnswer(),
                     FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.BLACK));
@@ -287,6 +289,28 @@ public class PdfService {
             document.add(new Paragraph("\n"));
         }
     }
+
+    // Inner class for adding background image
+    class BackgroundImagePageEvent extends PdfPageEventHelper {
+        private final Image backgroundImage;
+
+        public BackgroundImagePageEvent(String imagePath) throws IOException, DocumentException {
+            backgroundImage = Image.getInstance(imagePath);
+            backgroundImage.setAbsolutePosition(0, 0);
+//            backgroundImage.scaleToFit(PageSize.A4.getWidth(), PageSize.A4.getHeight());
+        }
+
+        @Override
+        public void onEndPage(PdfWriter writer, Document document) {
+            PdfContentByte canvas = writer.getDirectContentUnder();
+            try {
+                canvas.addImage(backgroundImage);
+            } catch (DocumentException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     public byte[] generateQuizPdf(Long quizId) throws IOException, DocumentException {
         Optional<Quiz> quizOptional = quizRepository.findById(quizId);
@@ -299,6 +323,8 @@ public class PdfService {
             // Path to your logo file
             String logoPath = "src/main/resources/logo.png";
             FooterPageEvent event = new FooterPageEvent(logoPath);
+            String backgroundPath = "src/main/resources/bg2.png";
+//            writer.setPageEvent(new BackgroundImagePageEvent(backgroundPath));
             writer.setPageEvent(event);
 
             document.open();

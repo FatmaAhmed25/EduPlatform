@@ -2,6 +2,7 @@ package com.edu.eduplatform.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -17,7 +18,7 @@ public class StudentEssayAnswer {
     @JoinColumn(name = "question_id")
     private Question question;
 
-
+    @Size(max = 900)
     private String answer;
 
 
