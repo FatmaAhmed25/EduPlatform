@@ -470,10 +470,6 @@ export class StreamComponent implements OnInit, OnDestroy {
       this.subscribeToCommentUpdates(announcement.id);
     });
   }
-
-  viewAssignSubmissions(assignmentId: number): void {
-    this.router.navigate(['/assignment-submissions-instructor', assignmentId]);
-  }
   fetchInitialComments(announcementId: number): void {
     console.log(`Calling getCommentsByAnnouncementId for announcement ID: ${announcementId}`); // Log before API call
     this.announcementService.getCommentsByAnnouncementId(announcementId).subscribe(comments => {
@@ -484,7 +480,7 @@ export class StreamComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  
   subscribeToCommentUpdates(announcementId: number): void {
     const topic = `/topic/announcement/${announcementId}/comments`;
     console.log(`Subscribing to topic: ${topic}`);
@@ -497,7 +493,7 @@ export class StreamComponent implements OnInit, OnDestroy {
     });
     this.commentSubscriptions.set(announcementId, subscription);
   }
-
+  
   getUsername(userId: string): Observable<string> {
     if (this.userCache.has(userId)) {
       return of(this.userCache.get(userId) as string);
@@ -511,26 +507,26 @@ export class StreamComponent implements OnInit, OnDestroy {
       );
     }
   }
-
+  
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString();
   }
-
+  
   showModal = false;
   newContent = { title: '', type: '', content: '' };
-
+  
   openPublishModal() {
     this.showModal = true;
   }
-
+  
   closePublishModal() {
     this.showModal = false;
   }
-
+  
   publishContent() {
     this.closePublishModal();
   }
-
+  
   viewQuiz(quizId: string): void {
     this.router.navigate(['/mcq-quiz-viewer', quizId]);
   }
@@ -557,6 +553,10 @@ export class StreamComponent implements OnInit, OnDestroy {
       }
     );
   }
+  
 
-
+  viewAssignSubmissions(assignmentId: number): void {
+    this.router.navigate(['/assignment-submissions-instructor', assignmentId]);
+  }
+  
 }

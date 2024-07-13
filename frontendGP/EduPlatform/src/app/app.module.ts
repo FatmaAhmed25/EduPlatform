@@ -25,7 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { SafeUrlPipe } from 'src/app/file-viewer-dialog/safe-url.pipe';
 import { WebSocketService } from 'src/app/services/websocket-service/websocket.service';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Routes } from '@angular/router';
 import { HomepageComponent } from './homepage/homepage.component';
 import { LectureService } from 'src/app/services/lectureService/lecture.service';
 import { LectureComponent } from 'src/app/modules/student/lecture/lecture.component';
@@ -102,7 +102,7 @@ import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-d
     }),
     MatSnackBarModule,
     MatSelectModule,
-    CommonModule
+    CommonModule,
   ],
   providers: [EnrolledCoursesService,AuthService,AuthGuard,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

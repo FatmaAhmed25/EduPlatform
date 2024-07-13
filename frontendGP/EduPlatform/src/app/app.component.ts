@@ -23,11 +23,6 @@ export class AppComponent {
         const isSubmissionSection = event.url === '/upcoming-quizzes';
         const isUpComingSubmissionSection = event.url === '/submitted-quizzes';
         const isProfileSection = event.url === '/student-profile';  
-        console.log('isRootOrLogin:', isRootOrLogin);
-        console.log('isTakeQuizRoute:', isTakeQuizRoute);
-        console.log('isFeatureSection:', isFeatureSection);
-        console.log('isSubmissionSection:', isSubmissionSection);
-        console.log('isUpComingSubmissionSection:', isUpComingSubmissionSection);
 
         this.showSidebar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection);
         this.showNavbar = !(isRootOrLogin || isTakeQuizRoute || isFeatureSection || isSubmissionSection || isUpComingSubmissionSection || isProfileSection);
