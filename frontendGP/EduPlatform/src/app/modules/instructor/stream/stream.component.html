@@ -1,4 +1,4 @@
-<div class="container" @pageAnimation>
+<div class="container" @pageAnimations>
   <!-- Left side panel -->
   
   <!-- Main Content -->
@@ -150,18 +150,22 @@
           <div *ngIf="assignments.length === 0" class="no-assignments">
             <p>No assignments assigned.</p>
           </div>
-          <div *ngFor="let assignment of assignments" class="assignment-card announcement-card" (click)="viewAssignSubmissions(assignment.id)">
+          <div *ngFor="let assignment of assignments" class="assignment-card announcement-card" (click)="viewSubmissions(assignment.id)">
             <div class="announcement-header">
               <h3>{{ assignment.title }}</h3>
               <p class="announcement-content">{{ assignment.content }}</p>
             </div>
-            
+      
             <div *ngIf="assignment.fileName" class="announcement-file">
               <img src="assets/images/preview.png" alt="File Thumbnail" class="file-thumbnail" (click)="openFileLink(assignment)">
               <a (click)="openFileLink(assignment)" class="announcement-file-link">
-                {{ getFileName(assignment.fileName)  }}
+                {{ getFileName(assignment.fileName) }}
               </a>
             </div>
+      
+            <button class="btn submit-btn" (click)="viewSubmissions(assignment.id)">
+              View Submissions
+            </button>
           </div>
         </div>
       </mat-tab>

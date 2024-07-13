@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" @formAnimations>
   <form [formGroup]="quizForm" class="assessment-form" (ngSubmit)="navigateToGenerateQuiz()">
     <h3>Create New Assessment</h3>
     <div class="form-group">
@@ -49,7 +49,7 @@
     <button type="submit" class="btn-next" (click)="navigateToGenerateQuiz()">Next</button>
   </form>
 </div>
-<div class="container">
+<div class="container" @formAnimations>
   <div class="advanced-menu">
     <i class='bx bxs-plus-square'></i>
     <button>Advanced menu</button>

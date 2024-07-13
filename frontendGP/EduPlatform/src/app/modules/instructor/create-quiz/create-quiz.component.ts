@@ -3,11 +3,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Quiz } from 'src/app/models/Quiz';
 import { CreateQuizService } from 'src/app/services/creat-quiz-service/create-quiz.service';
-
+import { trigger, transition, style, animate } from '@angular/animations';
 @Component({
   selector: 'app-create-quiz',
   templateUrl: './create-quiz.component.html',
-  styleUrls: ['./create-quiz.component.scss']
+  styleUrls: ['./create-quiz.component.scss'],
+  animations: [
+    trigger('formAnimations', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('500ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class CreateQuizComponent {
   assessmentTypes = [

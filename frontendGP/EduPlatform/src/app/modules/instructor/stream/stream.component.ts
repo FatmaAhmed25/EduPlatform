@@ -63,7 +63,8 @@ export class StreamComponent implements OnInit, OnDestroy {
     private stream: StreamService,
     private clipboard: Clipboard,
     private snackBar: MatSnackBar,
-    private router: Router 
+    private router: Router ,
+    private assignmentService: AssignmentSubmissionsService
 
   ) {}
 
@@ -463,7 +464,13 @@ export class StreamComponent implements OnInit, OnDestroy {
       });
     }
   }
-
+  viewSubmissions(assignmentId: number): void {
+    this.router.navigate([
+      '/assignment-submissions-instructor',
+      assignmentId,
+      this.courseId,
+    ]);
+  }
   subscribeToAnnouncementTopics(): void {
     this.announcements.forEach(announcement => {
       this.fetchInitialComments(announcement.id);

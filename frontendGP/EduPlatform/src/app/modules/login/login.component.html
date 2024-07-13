@@ -20,12 +20,10 @@
 
     
   
-   <header>
-    <div class="container">
-        <!-- <div class="img">
-            <img src="../../assets/images/logo_black.png" alt="">
-        </div> -->
-        <div class="box">
+   <header [@pageAnimations]>
+    <div class="container" >
+
+        <div class="box" >
             <span class="borderline"></span>
             <form (ngSubmit)="onSubmit()">
                 <h2>Sign in</h2>
@@ -42,7 +40,7 @@
                         {{ isPasswordVisible ? '🙉' : '🙈' }}
                     </div>
                 </div>
-                <input class="submit" type="submit" value="Login">
+                <input class="submit" type="submit" value="Login" >
             </form>
         </div>    
     </div>

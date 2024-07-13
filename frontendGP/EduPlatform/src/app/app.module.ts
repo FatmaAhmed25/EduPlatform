@@ -59,6 +59,7 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { AnnouncementUpdateDialogComponent } from './modules/instructor/announcement-update-dialog/announcement-update-dialog.component';
 import { CommonModule } from '@angular/common';
 import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-dashboard.component';
+import { ScrollToTopButtonComponent } from './components/scroll-to-top-button/scroll-to-top-button.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,7 @@ import { AdminDashboardComponent } from './modules/admin/admin-dashboard/admin-d
     UsersProfileComponent,
     UserPopupComponent,
     ImportDialogComponent,
-    AnnouncementUpdateDialogComponent,AdminDashboardComponent
+    AnnouncementUpdateDialogComponent,AdminDashboardComponent, ScrollToTopButtonComponent
   ],
   imports: [
     MatSelectModule,
