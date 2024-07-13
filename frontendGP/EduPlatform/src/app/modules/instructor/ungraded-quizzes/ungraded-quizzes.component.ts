@@ -35,6 +35,6 @@ export class UngradedQuizzesComponent implements OnInit {
   }
 
   navigateToAutoGrade(quizId: number): void {
-    window.location.href = `/auto-grade/${quizId}`;
+    window.location.href = `/students-submissions/${quizId}`;
   }
 }

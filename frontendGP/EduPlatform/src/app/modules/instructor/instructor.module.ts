@@ -27,9 +27,13 @@ import { McqQuizViewerInstructorComponent } from './mcq-quiz-viewer-instructor/m
 import { QuizSubmissionsComponent } from './quiz-submissions/quiz-submissions.component';
 import { QuizSubmissionsListComponent } from './quiz-submissions-list/quiz-submissions-list.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
-import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
-import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.component';
+import { StudentsSubmissionsComponent } from './students-submissions/students-submissions/students-submissions.component';
+import { UploadPdfComponent } from './upload-pdfs/upload-pdf/upload-pdf.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UngradedQuizzesComponent } from './ungraded-quizzes/ungraded-quizzes.component';
+import { AssignmentSubmissionsComponent } from './assignment-submissions/assignment-submissions.component';
+
+
 
 @NgModule({
   declarations: [
@@ -50,8 +54,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     QuizSubmissionsComponent,
     QuizSubmissionsListComponent,
     AssignmentsComponent,
+    UngradedQuizzesComponent,
+    StudentsSubmissionsComponent,
     AssignmentSubmissionsComponent,
-    UngradedQuizzesComponent
+    UploadPdfComponent
   ],
   imports: [
     CommonModule,

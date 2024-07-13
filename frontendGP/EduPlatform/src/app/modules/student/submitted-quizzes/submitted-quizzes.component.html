@@ -47,7 +47,7 @@
                               <td class="py-2 px-4 border-b border-b-gray-50">
                                   <a *ngIf="quiz.quizSubmission?.cheatingStatus === 'SUSPICIOUS' || quiz.quizSubmission?.cheatingStatus === 'CHEATING'"
                                      href="javascript:void(0)"
-                                     (click)="downloadCheatingReport(quiz.quizSubmission.id)"
+                                     (click)="downloadCheatingReport(quiz.quizSubmission.cheatingReport.id)"
                                      class="blue-link">
                                       {{ quiz.quizSubmission.cheatingStatus }}
                                   </a>

@@ -18,9 +18,26 @@ import { LecturesComponent } from '../lectures/lectures.component';
 import { LabsComponent } from '../labs/labs.component';
 import { AssignmentsComponent } from '../assignments/assignments.component';
 import { Router } from '@angular/router';
+import { trigger, style, transition, animate, query, stagger } from '@angular/animations';
+import { AssignmentSubmissionsService } from 'src/app/services/assignmentSubmission/assignment-submissions.service';
 @Component({
   selector: 'app-stream',
   templateUrl: './stream.component.html',
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        query('.container, .left-panel, .main-content, .side-panel', [
+          style({ opacity: 0, transform: 'translateY(-100px)' }),
+          stagger(100, [
+            animate(
+              '500ms ease-out',
+              style({ opacity: 1, transform: 'translateY(0)' })
+            ),
+          ]),
+        ]),
+      ]),
+    ]),
+  ],
   styleUrls: ['./stream.component.scss']
 })
 export class StreamComponent implements OnInit, OnDestroy {
@@ -181,12 +198,19 @@ export class StreamComponent implements OnInit, OnDestroy {
 
   copyCoursePassword(): void {
     if (this.course?.courseCode) {
-      this.clipboard.copy(this.course.courseCode);
-      console.log('Course Password copied to clipboard:', this.course.courseCode);
-      this.showCopyMessage();
+      this.clipboard.copy(this.course.password);
+      console.log('Course Password copied to clipboard:', this.course.password);
+      this.showCopyMessagePass();
     }
   }
-
+  showCopyMessagePass(): void {
+    this.snackBar.open('Course password copied to clipboard', 'Close', {
+      duration: 2000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center',
+      panelClass: ['snackbar-success']
+    });
+  }
   showCopyMessage(): void {
     this.snackBar.open('Course code copied to clipboard', 'Close', {
       duration: 2000,

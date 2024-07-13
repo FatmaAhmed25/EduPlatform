@@ -9,8 +9,8 @@ import re
 app = Flask(__name__)
 
 # Constants for API URL, email, and password
-EMAIL = "fatmaahmed2901@gmail.com"
-PASSWD = "/2)BvnK/r,x6P5~"
+EMAIL = "ymart2002@gmail.com"
+PASSWD = "Usef488*588*"
 cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
 sign = Login(EMAIL, PASSWD)
 cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
@@ -121,7 +121,7 @@ def grade_answers():
     }), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005, debug=True)
+    app.run(host='0.0.0.0', port=5006, debug=True)
 
 
 # # Function to generate PDF with quiz questions and user answers

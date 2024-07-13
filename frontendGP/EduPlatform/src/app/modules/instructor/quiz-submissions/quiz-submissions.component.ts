@@ -44,17 +44,17 @@ export class QuizSubmissionsComponent implements OnInit {
       }
     );
   }
-  downloadQuizSubmissionPdf(submissionId: number, quizId: number): void {
-    const studentId = Number(localStorage.getItem('userID'));
+  downloadQuizSubmissionPdf(studentId: number, quizId: number): void {
+    // const studentId = Number(localStorage.getItem('userID'));
     
-    if (!isNaN(studentId) && submissionId && quizId) {
+    if (!isNaN(studentId) && quizId) {
       this.quizSubmissionsService.downloadSubmissionPdf(studentId, quizId).subscribe(
         (data: Blob) => {
           const blob = new Blob([data], { type: 'application/pdf' });
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `Quiz_Submission_${submissionId}.pdf`; // Set the filename for download
+          a.download = `Quiz_Submission_${studentId}.pdf`; // Set the filename for download
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);

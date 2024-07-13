@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" @pageAnimation>
   <!-- Left side panel -->
   
   <!-- Main Content -->
@@ -17,6 +17,7 @@
               Announce Something!
             </button>
           </div>
+          
           
           <div *ngFor="let announcement of announcements" class="announcement-card">
             <div class="announcement-actions">
@@ -171,7 +172,7 @@
           <div class="assignment-header">
             <button class="add-announcement-btn" (click)="navigateToUngradedQuizzes()">
               <i class="fa fa-file-alt add-assignment-icon"></i>
-              Grade assignments
+              Grade quizzes
             </button>
           </div><br>
           <h2>Quizzes</h2>
@@ -205,6 +206,15 @@
         <div class="course-code-wrapper">
           <input matInput [value]="course?.courseCode" readonly>
           <mat-icon class="copy-icon" (click)="copyCourseCode()">content_copy</mat-icon>
+        </div>
+      </mat-form-field>
+    </div>
+    <div class="course-info">
+      <mat-form-field appearance="fill" class="course-code-field">
+        <h3>Course password</h3>
+        <div class="course-code-wrapper">
+          <input matInput [value]="course?.password" readonly>
+          <mat-icon class="copy-icon" (click)="copyCoursePassword()">content_copy</mat-icon>
         </div>
       </mat-form-field>
     </div>
