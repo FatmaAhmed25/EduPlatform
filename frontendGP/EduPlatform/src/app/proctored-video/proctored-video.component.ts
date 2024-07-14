@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter,Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import * as faceapi from '@vladmandic/face-api';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as dayjs from 'dayjs';
 import { ProctoredVideoService } from '../services/proctored-service/proctored-video.service';
-import {StudentQuizService} from '../services/Student-quiz-service/student-quiz.service';
+import { StudentQuizService } from '../services/Student-quiz-service/student-quiz.service';
 
 @Component({
   selector: 'app-proctored-video',
@@ -17,7 +17,6 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   @Output() cheatingDetected = new EventEmitter<string>();
   @Input() quizId!: number;
 
-  
   displayText: string = '';
   private socket!: Socket;
   private detectionInterval: any;
@@ -25,7 +24,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   isVideoVisible: boolean = false;
   mediaStream: MediaStream | null = null;
 
-  constructor(private proctoredVideoService: ProctoredVideoService , private studentQuizService: StudentQuizService) {}
+  constructor(private proctoredVideoService: ProctoredVideoService, private studentQuizService: StudentQuizService) {}
 
   ngOnInit(): void {
     this.startDetection();
@@ -42,7 +41,6 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
   toggleVideoVisibility(): void {
     this.isVideoVisible = !this.isVideoVisible;
   }
-
 
   private async startDetection() {
     await Promise.all([
@@ -97,6 +95,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
                   ctx.stroke();
                   ctx.fillText('Phone detected!', prediction.bbox[0], prediction.bbox[1] > 10 ? prediction.bbox[1] - 5 : 10);
                   this.cheatingDetected.emit('CHEATING');
+                  this.sendImage();
                 }
               });
             } else {
@@ -107,6 +106,7 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
               console.log('User is absent');
             } else if (detections.length > 1) { // More than one person
               this.cheatingDetected.emit('SUSPICIOUS');
+              this.sendImage();
             }
           }, 100);
         });
@@ -157,5 +157,28 @@ export class ProctoredVideoComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  private async sendImage() {
+    const canvas = this.canvasEl.nativeElement;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(this.videoEl.nativeElement, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/jpeg', 0.8);
+      const formattedDate = dayjs().format('YYYY-MM-DD_HH-mm-ss');
+      const blob = await fetch(imageData).then(res => res.blob());
+      const file = new File([blob], `detected_${formattedDate}.jpg`, { type: 'image/jpeg' });
+      const userID = localStorage.getItem("userID");
+      if (userID && this.quizId) {
+        this.proctoredVideoService.savePhoto(userID, this.quizId, file).subscribe(
+          response => {
+            console.log('Photo saved successfully', response);
+          },
+          error => {
+            console.error('Failed to save photo', error);
+          }
+        );
+      }
+    }
   }
 }

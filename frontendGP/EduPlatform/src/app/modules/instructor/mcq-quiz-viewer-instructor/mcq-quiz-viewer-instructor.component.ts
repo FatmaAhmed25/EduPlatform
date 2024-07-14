@@ -19,6 +19,7 @@ export class McqQuizViewerInstructorComponent {
   validationErrors: string[] = [];
   quizId: any = null;
   quizTitle=null;
+  courseName=null;
   instructorId: any;
   quizDuration: any;
   quizStartTime: any;
@@ -36,6 +37,7 @@ export class McqQuizViewerInstructorComponent {
         console.log(response);
         this.quiz = response;
         this.quizTitle = response.title;
+        this.courseName = response.courseName;
         
         // Parsing start and end time
         const startDate = new Date(response.startTime);

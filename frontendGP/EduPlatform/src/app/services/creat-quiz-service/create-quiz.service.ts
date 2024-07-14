@@ -115,7 +115,13 @@ export class CreateQuizService {
   getQuizForInstructor(quizID:any): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     const instructorId = localStorage.getItem('userID');
-    const courseId = 1;
+
+    if (!this.quiz) {
+      console.error('Quiz is not defined.');
+      return of({ error: 'Quiz is not defined. Please set the quiz before trying to access it.' });
+    }
+
+    const courseId = this.quiz.courseId;
     const quizId =quizID.toString();
     return this.http.get<any>(`${this.apiUrl}/${instructorId}/${courseId}/${quizId}/instructor`, { headers }).pipe(
       catchError(error => {

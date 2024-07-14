@@ -16,7 +16,7 @@ export class QuizSubmissionsComponent implements OnInit {
   submissions: instructorQuizSubmissionDTO[] = [];
   // submissions: any[] = [];
   quizId!: number;
-  instructorId: string = localStorage.getItem("userID")!; // Replace with actual instructor ID
+  instructorId: string = localStorage.getItem("userID")!; 
   constructor(private snackBar:MatSnackBar, private cheatingReportService: CheatingReportService,private quizSubmissionsService: QuizSubmissionsService,private route: ActivatedRoute ) {}
 
   ngOnInit(): void {

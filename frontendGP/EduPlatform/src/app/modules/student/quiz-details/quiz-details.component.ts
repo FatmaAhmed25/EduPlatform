@@ -242,9 +242,14 @@ export class QuizDetailsComponent implements OnInit, OnDestroy {
   }
 
   handleCheatingDetected(event: string): void {
-    this.cheatingStatus = event;
-    console.log('Cheating status updated:', this.cheatingStatus);
+    if (this.cheatingStatus !== 'CHEATING') {
+      this.cheatingStatus = event;
+      console.log('Cheating status updated:', this.cheatingStatus);
+    } else {
+      console.log('Cheating status already set to CHEATING, not updating.');
+    }
   }
+  
 
   submitQuiz(): void {
     if (this.quiz) {

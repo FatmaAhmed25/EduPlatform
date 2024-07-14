@@ -54,9 +54,9 @@
                                   <span class="inline-block p-1 rounded bg-emerald-500/10 text-emerald-500 font-medium text-[12px] leading-none "style="color:#5E5DF0">{{ submission.quizSubmission.totalGrade }}</span>
                                 </td>
                                 <td class="py-2 px-4 border-b border-b-gray-50">
-                                    <a *ngIf="submission.quizSubmission?.cheatingStatus === 'SUSPISIOUS' || submission.quizSubmission?.cheatingStatus === 'CHEATING'"
+                                    <a *ngIf="submission.quizSubmission?.cheatingStatus === 'SUSPICIOUS' || submission.quizSubmission?.cheatingStatus === 'CHEATING'"
                                        href="javascript:void(0)"
-                                       (click)="downloadCheatingReport(submission.quizSubmission.id)">
+                                       (click)="downloadCheatingReport(submission.quizSubmission.cheatingReport.id)">
                                       {{ submission.quizSubmission.cheatingStatus }}
                                     </a>
                                     <a *ngIf="submission.quizSubmission?.cheatingStatus === 'PASSED' ">

@@ -62,39 +62,49 @@ export class CreateQuizComponent implements OnInit {
     }
   }
 
-  navigateToGenerateQuiz() {
-    if (this.quizForm.invalid) {
-      this.quizForm.markAllAsTouched();
-      return;
-    }
-
-    const startDate = this.quizForm.get('startDate')?.value;
-    const startTime = this.quizForm.get('startTime')?.value;
-    const endDate = this.quizForm.get('endDate')?.value;
-    const endTime = this.quizForm.get('endTime')?.value;
-    const selectedCourse = this.quizForm.get('selectedCourse')?.value;
-
-    const quizData = {
-      typeOfAssessment: this.quizForm.get('typeOfAssessment')?.value,
-      assessmentName: this.quizForm.get('assessmentName')?.value,
-      startDate: new Date(`${startDate}T${startTime}`).toISOString(),
-      endDate: new Date(`${endDate}T${endTime}`).toISOString(),
-      numOfQuestions: this.quizForm.get('numOfQuestions')?.value,
-      courseName: selectedCourse.title,
-      courseId: selectedCourse.courseId,
-      instructorId: localStorage.getItem('userID')!,
-    };
-
-    this.quizService.setQuiz(quizData);
-
-    if (quizData.typeOfAssessment === 'manual-mcq') {
-      this.router.navigate(['/manual-mcq-quiz']);
-    } else if (quizData.typeOfAssessment === 'manual-essay') {
-      this.router.navigate(['/manual-essay-quiz']);
-    } else {
-      this.router.navigate(['/ai-generate-quiz']);
-    }
+ navigateToGenerateQuiz() {
+  if (this.quizForm.invalid) {
+    this.quizForm.markAllAsTouched();
+    return;
   }
+
+  const startDate = this.quizForm.get('startDate')?.value;
+  const startTime = this.quizForm.get('startTime')?.value;
+  const endDate = this.quizForm.get('endDate')?.value;
+  const endTime = this.quizForm.get('endTime')?.value;
+  const selectedCourse = this.quizForm.get('selectedCourse')?.value;
+
+  const startDateTime = new Date(`${startDate}T${startTime}`);
+  const endDateTime = new Date(`${endDate}T${endTime}`);
+
+  // Adjusting for local timezone
+  const offsetStart = startDateTime.getTimezoneOffset();
+  const offsetEnd = endDateTime.getTimezoneOffset();
+
+  startDateTime.setMinutes(startDateTime.getMinutes() - offsetStart);
+  endDateTime.setMinutes(endDateTime.getMinutes() - offsetEnd);
+
+  const quizData = {
+    typeOfAssessment: this.quizForm.get('typeOfAssessment')?.value,
+    assessmentName: this.quizForm.get('assessmentName')?.value,
+    startDate: startDateTime.toISOString(),
+    endDate: endDateTime.toISOString(),
+    numOfQuestions: this.quizForm.get('numOfQuestions')?.value,
+    courseName: selectedCourse.title,
+    courseId: selectedCourse.courseId,
+    instructorId: localStorage.getItem('userID')!,
+  };
+
+  this.quizService.setQuiz(quizData);
+
+  if (quizData.typeOfAssessment === 'manual-mcq') {
+    this.router.navigate(['/manual-mcq-quiz']);
+  } else if (quizData.typeOfAssessment === 'manual-essay') {
+    this.router.navigate(['/manual-essay-quiz']);
+  } else {
+    this.router.navigate(['/ai-generate-quiz']);
+  }
+}
 
   setTypeOfAssessment(type: any) {
     this.quizForm.patchValue({ typeOfAssessment: type.value });

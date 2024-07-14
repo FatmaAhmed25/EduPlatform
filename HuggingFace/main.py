@@ -10,8 +10,8 @@ from reportlab.pdfgen import canvas
 app = Flask(__name__)
 
 # Log in to huggingface and grant authorization to huggingchat
-EMAIL = "fatmaahmed2901@gmail.com"
-PASSWD = "/2)BvnK/r,x6P5~"
+EMAIL = "ymart2002@gmail.com"
+PASSWD = "Usef488*588*"
 cookie_path_dir = "./cookies/"  # NOTE: trailing slash (/) is required to avoid errors
 sign = Login(EMAIL, PASSWD)
 cookies = sign.login(cookie_dir_path=cookie_path_dir, save_cookies=True)
